@@ -6,7 +6,7 @@ public class PlacementSystem : MonoBehaviour
 {
     // Start is called before the first frame update
     [SerializeField] 
-    private GameObject mouseIndicator, cellIndicator;
+    private GameObject mouseIndicator; //cellIndicator;
     
 
     [SerializeField] 
@@ -20,9 +20,9 @@ public class PlacementSystem : MonoBehaviour
 
 
         Vector3 mousePosition = inputManager.GetSelectedMapPosition();
-        Vector3Int gridPosition = grid.WorldToCell(mousePosition);
+      //  Vector3Int gridPosition = grid.WorldToCell(mousePosition);
         mouseIndicator.transform.position = mousePosition;
-        cellIndicator.transform.position = grid.CellToWorld(gridPosition);
+       //cellIndicator.transform.position = grid.CellToWorld(gridPosition);
 
 
     }
