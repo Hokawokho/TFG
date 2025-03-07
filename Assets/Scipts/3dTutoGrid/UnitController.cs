@@ -48,6 +48,9 @@ public class UnitController : MonoBehaviour
 
                 if(hit.transform.tag == "Tile"){
 
+                    Vector2Int tileCords = hit.transform.GetComponent<Tile>().cords;
+                    Debug.Log($"Has hecho clic en la casilla: {tileCords}");
+
                     if(unitSelected ){
 
                         //Vector2Int targetCords = hit.transform.GetComponent<Labeler>().cords;
@@ -111,6 +114,9 @@ public class UnitController : MonoBehaviour
             float travelPercent = 0f;
             //porcentaje de progreso de movimiento
 
+            //Esto es para mantener la altura de la unidad cuando se mueva
+            endPosition.y = selectedUnit.position.y + travelPercent;
+
             selectedUnit.LookAt(endPosition);
             //Esta linea es per si foren figures complexes, que miren a la endPosition (es a dir que es giren)
 
@@ -125,6 +131,10 @@ public class UnitController : MonoBehaviour
             }
 
         }
+
+        //Aço es per a desseleccionar la unitat++++++++++++++
+        unitSelected = false;
+        selectedUnit = null;
 
 
 

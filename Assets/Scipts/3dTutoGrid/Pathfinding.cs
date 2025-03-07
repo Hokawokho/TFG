@@ -105,8 +105,20 @@ public class Pathfinding : MonoBehaviour
 
             if(grid.ContainsKey(neighborCoords)){
 
-                neighbors.Add(grid[neighborCoords]);
+                //neighbors.Add(grid[neighborCoords]);
+
+                //RETOQUE PARA CONECTADOS NODES++++++++++++++++++++++
+                Node neighbor = grid[neighborCoords];
+
+                //EXTRA PA CONECTADOS NODES
+                if (!currentNode.blockedConnections.Contains(direction) && 
+                !neighbor.blockedConnections.Contains(-direction)) 
+                {
+                    neighbors.Add(neighbor);
+                }
             }
+
+            
             //Açò es per a no afegir nodes que no estiguen en el Grid
         }
 
