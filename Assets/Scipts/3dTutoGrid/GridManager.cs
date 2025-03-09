@@ -51,6 +51,9 @@ public class GridManager : MonoBehaviour
         if(grid.ContainsKey(coordinates)){
 
             grid[coordinates].walkable = false;
+           // FindObjectOfType<Pathfinding>().GetNewPath();
+            
+            //LA ÚLTIMA LINEA RESETEA L'ALGORITME, LLEVAR DESPRÉS.....+++++++++++++++++++
         }
     }
 

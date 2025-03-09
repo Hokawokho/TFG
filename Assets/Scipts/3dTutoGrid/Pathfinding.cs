@@ -62,8 +62,15 @@ public class Pathfinding : MonoBehaviour
 
     void BreadthFirstSearch(Vector2Int coordinates){
 
+        // if(startNode != null && grid[startCords].walkable) startNode.walkable = true;
+        // if(targetNode != null &&grid[targetCords].walkable)targetNode.walkable = true;
         startNode.walkable = true;
         targetNode.walkable = true;
+        
+        //EXPLICACIÓN ANTERIORES IF:
+        //accede al nodo en el diccionario 'grid' usando las coordenadas startCords = grid[startCords]
+        //verifica si es walkable
+        //Probar a posteriori si a partir de la 2na busqueda funciona
 
         frontier.Clear();
         reached.Clear();
@@ -111,7 +118,7 @@ public class Pathfinding : MonoBehaviour
                 Node neighbor = grid[neighborCoords];
 
                 //EXTRA PA CONECTADOS NODES
-                if (!currentNode.blockedConnections.Contains(direction) && 
+                if (neighbor.walkable && !currentNode.blockedConnections.Contains(direction) && 
                 !neighbor.blockedConnections.Contains(-direction)) 
                 {
                     neighbors.Add(neighbor);
