@@ -91,7 +91,8 @@ public class Pathfinding : MonoBehaviour
             if(currentNode.cords == targetCords){
                 
                 isRunning = false;
-                currentNode.walkable = false;
+                //currentNode.walkable = false;
+                gridManager.BlockNode(currentNode.cords);
                 //este ultim es pa que no es puga anar al Tile on estiga una unitat
             }
         }
@@ -178,6 +179,14 @@ public class Pathfinding : MonoBehaviour
 
         startCords = startCoordinates;
         targetCords = targetCoordinates;
+
+        if (!grid.ContainsKey(startCords) || !grid.ContainsKey(targetCords))
+    {
+        Debug.LogError($"No se encontró el nodo en la cuadrícula: {startCords} o {targetCords}");
+        return;
+    }
+    //Pa comprobar si el node existeix+++++++
+
         startNode = grid[this.startCords];
         targetNode = grid[this.targetCords];
         GetNewPath();

@@ -56,6 +56,17 @@ public class GridManager : MonoBehaviour
             //LA ÚLTIMA LINEA RESETEA L'ALGORITME, LLEVAR DESPRÉS.....+++++++++++++++++++
         }
     }
+    
+    
+    public void UnblockNode(Vector2Int coordinates)
+    {   //Gaste esta funció pa desbloquejar durant l'execució de la rotació
+
+        if (grid.ContainsKey(coordinates))
+        {
+            grid[coordinates].walkable = true;
+        }
+    }
+
 
     public void ResetNodes(){
 
@@ -67,12 +78,24 @@ public class GridManager : MonoBehaviour
         }
     }
 
+    
+
+
+
     public Vector2Int GetCoordinatesFromPosition(Vector3 position){
 
         Vector2Int coordinates = new Vector2Int();
 
-        coordinates.x = Mathf.RoundToInt(position.x / unityGridSize);
-        coordinates.y = Mathf.RoundToInt(position.z / unityGridSize);
+        // coordinates.x = Mathf.RoundToInt(position.x / unityGridSize);
+        // coordinates.y = Mathf.RoundToInt(position.z / unityGridSize);
+        
+        
+        
+        coordinates.x = Mathf.FloorToInt(position.x / unityGridSize);
+        coordinates.y = Mathf.FloorToInt(position.z / unityGridSize);
+        
+        //++REDONDEJAR CAP A BAIX PER ELS NUMS NEGATIUS+++++++++++++
+        
 
         return coordinates;
     }
@@ -90,9 +113,11 @@ public class GridManager : MonoBehaviour
 
     private void CreateGrid()
     {
-        for (int x = 0; x < gridSize.x; x++)
-        {
-            for (int y = 0; y < gridSize.y; y++)
+        // for (int x = 0; x < gridSize.x; x++)
+        // {
+        //     for (int y = 0; y < gridSize.y; y++)
+        for (int x = -gridSize.x; x < gridSize.x; x++){
+            for (int y = -gridSize.y; y < gridSize.y; y++)
             {
 
                 Vector2Int cords = new Vector2Int(x, y);

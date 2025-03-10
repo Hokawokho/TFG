@@ -7,6 +7,7 @@ public class Tile : MonoBehaviour
     
 
     [SerializeField] bool blocked;
+    //Açò es pa ficar si 'BLOCKED' des del editor. Si no es necesari per a després simplement llevar-ho!!!!!!!!!!!!!!!!
     public Vector2Int cords;
 
     GridManager gridManager;
@@ -20,6 +21,7 @@ public class Tile : MonoBehaviour
             gridManager.BlockNode(cords);
 
         }
+        //Açò es fa soles a l'inici del programa, retocar després-+-+-++-+-+-+-+-+-+!!!!!!!!!!!!!
 
     }
 

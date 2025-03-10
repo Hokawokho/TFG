@@ -51,6 +51,11 @@ public class UnitController : MonoBehaviour
                     Vector2Int tileCords = hit.transform.GetComponent<Tile>().cords;
                     Debug.Log($"Has hecho clic en la casilla: {tileCords}");
 
+                    if(gridManager.GetNode(tileCords) != null && !gridManager.GetNode(tileCords).walkable) {
+                        Debug.Log("No se puede mover en esta casilla");
+                        return;
+                    }
+
                     if(unitSelected ){
 
                         //Vector2Int targetCords = hit.transform.GetComponent<Labeler>().cords;
