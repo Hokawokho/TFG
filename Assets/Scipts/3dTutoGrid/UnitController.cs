@@ -7,15 +7,15 @@ using UnityEngine;
 public class UnitController : MonoBehaviour
 {
 
-    Transform selectedUnit;
-    bool unitSelected = false;
+    public Transform selectedUnit;
+    public bool unitSelected = false;
 
     [SerializeField] float movementSpeed = 1f;
     GridManager gridManager;
 
 
     List<Node> path = new List<Node>();
-    Pathfinding pathFinder;
+    public Pathfinding pathFinder;
 
 
 
@@ -85,7 +85,7 @@ public class UnitController : MonoBehaviour
         
     }
 
-    void RecalculatePath(bool resetPath){
+    public void RecalculatePath(bool resetPath){
 
         Vector2Int coordinates = new Vector2Int();
         if(resetPath){
@@ -134,14 +134,9 @@ public class UnitController : MonoBehaviour
                 yield return new WaitForEndOfFrame();
                 //Açò es per a acabar la Corrutina+++++++++++
             }
-
         }
-
         //Aço es per a desseleccionar la unitat++++++++++++++
         unitSelected = false;
         selectedUnit = null;
-
-
-
     }
 }

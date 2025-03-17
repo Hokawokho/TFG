@@ -15,6 +15,11 @@ public class Rotation : MonoBehaviour
     private GridManager gridManager;
     //Açò es per a cridar a les funcions de l'escript i bloquejar nodes
 
+    private UnitController unitController;
+    private List<Transform> unitsRedirigir = new List<Transform>(); // Lista de todas las unidades seleccionadas
+    //GIR-ADD+-+-+-+-+-+-+-+-+
+
+
 
 
     void Start()
@@ -25,6 +30,10 @@ public class Rotation : MonoBehaviour
         gridManager.BlockNode(new Vector2Int(5,5));
         //Aquí es per a inicialitzar la llista de nodes bloquejats
 
+        unitController = FindObjectOfType<UnitController>();
+        //Açó es per a moure de una casilla x a una y en Gir
+        //GIR-ADD+-+-+-+-+-+-+-+-+
+
         
     }
 
@@ -34,16 +43,71 @@ public class Rotation : MonoBehaviour
 
 
         if(Input.GetKeyDown(KeyCode.R) &&!isRotating){
+
+            SelectAllUnits();
+
+           // MovePositionRotation(new Vector2Int(6,6), new Vector2Int(8,8));
+            //GIR-ADD+-+-+-+-+-+-+-+-+
+
             targetRotation = transform.eulerAngles.y + rotationAngle;
             //EL 'Mathf.Repeat' ES PER A PROVAR SI EN EL 'case 0' HO LLIG MILLOR
             gridManager.ResetNodes();
             StartCoroutine(RotateSmoothly());
         
         }
-        
-        
-        
-        
+    }
+
+    void SelectAllUnits (){
+
+        unitsRedirigir.Clear();
+        GameObject[] units = GameObject.FindGameObjectsWithTag("Unit");
+
+        foreach (GameObject unit in units)
+        {
+            unitsRedirigir.Add(unit.transform);
+        }
+
+    }
+
+
+    
+    //GIR-ADD+-+-+-+-+-+-+-+-+INICI
+    // private void MovePositionRotation(Vector2Int from, Vector2Int to)
+    private void MovePositionRotation(Dictionary<Vector2Int, Vector2Int> casillasRedir)
+    {
+        if(unitController == null || unitsRedirigir.Count == 0) return;
+
+
+        foreach(Transform unit in unitsRedirigir){
+
+            int posX = Mathf.RoundToInt(unit.position.x)/ gridManager.UnityGridSize;
+            int posY = Mathf.RoundToInt(unit.position.z)/ gridManager.UnityGridSize;
+            Vector2Int unitPosition = new Vector2Int(posX, posY);
+
+            if(casillasRedir.ContainsKey(unitPosition))
+        {
+                Vector2Int dest = casillasRedir[unitPosition];
+                Debug.Log($"Unidad detectada en {unitPosition}, moviéndola a {dest}");
+
+                unitController.selectedUnit = unit;
+                unitController.unitSelected = true;
+                //Açò es per a marcar la unitat com a selecciona
+
+                unitController.pathFinder.SetNewDestination(unitPosition, dest);
+                unitController.RecalculatePath(true);
+
+                return;
+                //NO HACE FALTA--pero si ya encontramos la unidad nos podemos salir de este.
+        }
+
+        }
+    }
+    //GIR-ADD+-+-+-+-+-+-+-+-+FIN
+
+   
+    private void unselectAllUnits(){
+
+        unitsRedirigir.Clear();
 
     }
 
@@ -62,10 +126,12 @@ public class Rotation : MonoBehaviour
             transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.Euler(0, targetRotation, 0), rotationSpeed * Time.deltaTime);
             yield return null;
         }
-        transform.rotation = Quaternion.Euler(0, targetRotation, 0); // Asegurar que la rotación finaliza exactamente en el ángulo deseado
+        transform.rotation = Quaternion.Euler(0, targetRotation, 0); 
+        // Asegurar que la rotación finaliza exactamente en el ángulo deseado
         isRotating = false;
 
         BlockNodeBasedOnRotation();
+        unselectAllUnits();
     }
 
     private void BlockNodeBasedOnRotation()
@@ -92,6 +158,15 @@ public class Rotation : MonoBehaviour
 
             case 1:
                 newBlockedNode =new Vector2Int(2,2);
+                Dictionary<Vector2Int, Vector2Int> casillasRedir = new Dictionary<Vector2Int, Vector2Int>();
+                // {
+                //     { new Vector2Int(6,6), new Vector2Int(8,8) },
+                //     { new Vector2Int(7,7), new Vector2Int(2,2) }
+                // };
+                casillasRedir.Add(new Vector2Int(6,6), new Vector2Int(8,8));
+                casillasRedir.Add(new Vector2Int(7,7), new Vector2Int(4,4));
+
+                MovePositionRotation(casillasRedir);
                 break;
 
             case 2:
@@ -100,6 +175,7 @@ public class Rotation : MonoBehaviour
 
             case 3:
                 newBlockedNode =new Vector2Int(4,4);
+                //MovePositionRotation(new Vector2Int(6,6), new Vector2Int(8,8));
                 break;
 
 
