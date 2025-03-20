@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Rotation : MonoBehaviour
@@ -77,30 +78,39 @@ public class Rotation : MonoBehaviour
     {
         if(unitController == null || unitsRedirigir.Count == 0) return;
 
-
         foreach(Transform unit in unitsRedirigir){
 
             int posX = Mathf.RoundToInt(unit.position.x)/ gridManager.UnityGridSize;
             int posY = Mathf.RoundToInt(unit.position.z)/ gridManager.UnityGridSize;
             Vector2Int unitPosition = new Vector2Int(posX, posY);
 
+            //gridManager.UnblockNode(unitPosition);
+
             if(casillasRedir.ContainsKey(unitPosition))
-        {
+            {
                 Vector2Int dest = casillasRedir[unitPosition];
                 Debug.Log($"Unidad detectada en {unitPosition}, moviéndola a {dest}");
+
+                
 
                 unitController.selectedUnit = unit;
                 unitController.unitSelected = true;
                 //Açò es per a marcar la unitat com a selecciona
 
-                unitController.pathFinder.SetNewDestination(unitPosition, dest);
-                unitController.RecalculatePath(true);
+                // unitController.pathFinder.SetNewDestination(unitPosition, dest);
+                // unitController.RecalculatePath(true);
+                Vector3 pos = gridManager.GetPositionFromCoordinates(dest);;
+                pos.y = unitController.selectedUnit.position.y;
+                unitController.selectedUnit.position = pos;
+                //+-++-+-+
 
-                return;
+                gridManager.BlockNode(dest);
+                unitController.RecalculatePath(true, false);
+
                 //NO HACE FALTA--pero si ya encontramos la unidad nos podemos salir de este.
+            }
         }
-
-        }
+        return;
     }
     //GIR-ADD+-+-+-+-+-+-+-+-+FIN
 
@@ -118,7 +128,7 @@ public class Rotation : MonoBehaviour
 
     }
 
-    private System.Collections.IEnumerator RotateSmoothly()
+    private IEnumerator RotateSmoothly()
     {
         isRotating = true;
         while (Mathf.Abs(Mathf.Repeat(transform.eulerAngles.y - targetRotation, 360)) > 0.1f)
@@ -138,18 +148,14 @@ public class Rotation : MonoBehaviour
     {
         if(gridManager == null) return;
 
-        foreach (Vector2Int node in previousBlockedNodes)
-        {
-            gridManager.UnblockNode(node);
-        }
-        previousBlockedNodes.Clear();   
+        // UnblockPreviousNodes();
 
        // gridManager.ResetNodes(); // Reset tots els nodes per a bloquejar nous
 
        
         Vector2Int newBlockedNode = Vector2Int.zero;
         int rotationState = Mathf.RoundToInt(targetRotation / 90f) % 4; // 0, 1, 2, 3 para cada rotación
-
+        Dictionary<Vector2Int, Vector2Int> casillasRedir = new Dictionary<Vector2Int, Vector2Int>();
         switch(rotationState)
         {
             case 0:
@@ -158,13 +164,16 @@ public class Rotation : MonoBehaviour
 
             case 1:
                 newBlockedNode =new Vector2Int(2,2);
-                Dictionary<Vector2Int, Vector2Int> casillasRedir = new Dictionary<Vector2Int, Vector2Int>();
+                // Dictionary<Vector2Int, Vector2Int> casillasRedir = new Dictionary<Vector2Int, Vector2Int>();
+
                 // {
                 //     { new Vector2Int(6,6), new Vector2Int(8,8) },
                 //     { new Vector2Int(7,7), new Vector2Int(2,2) }
                 // };
-                casillasRedir.Add(new Vector2Int(6,6), new Vector2Int(8,8));
+                casillasRedir.Add(new Vector2Int(3,0), new Vector2Int(0,6));
                 casillasRedir.Add(new Vector2Int(7,7), new Vector2Int(4,4));
+                gridManager.UnblockNode(new Vector2Int(3,0));
+                gridManager.UnblockNode(new Vector2Int(7,7));
 
                 MovePositionRotation(casillasRedir);
                 break;
@@ -183,6 +192,19 @@ public class Rotation : MonoBehaviour
         gridManager.BlockNode(newBlockedNode);
         previousBlockedNodes.Add(newBlockedNode);
     }
+
+//     private void UnblockPreviousNodes()
+// {
+//     foreach (Vector2Int node in previousBlockedNodes)
+//     {
+//         gridManager.UnblockNode(node);
+//     }
+//     previousBlockedNodes.Clear();
+// }
+    
+
+
+    
 
 }
 

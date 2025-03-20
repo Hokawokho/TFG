@@ -62,7 +62,7 @@ public class UnitController : MonoBehaviour
                         Vector2Int targetCords = hit.transform.GetComponent<Tile>().cords;
                         Vector2Int startCords = new Vector2Int((int)selectedUnit.transform.position.x, (int)selectedUnit.transform.position.z) / gridManager.UnityGridSize;
                         pathFinder.SetNewDestination(startCords, targetCords);
-                        RecalculatePath(true);
+                        RecalculatePath(true, true);
 
                         //selectedUnit.transform.position = new Vector3(targetCords.x, selectedUnit.position.y, targetCords.y);
                     }
@@ -85,7 +85,7 @@ public class UnitController : MonoBehaviour
         
     }
 
-    public void RecalculatePath(bool resetPath){
+    public void RecalculatePath(bool resetPath, bool followPath){
 
         Vector2Int coordinates = new Vector2Int();
         if(resetPath){
@@ -96,10 +96,24 @@ public class UnitController : MonoBehaviour
 
             coordinates =gridManager.GetCoordinatesFromPosition(transform.position);
         }
+
+        //19/3------------Desbloquear tile de la posició anterior,
+        //Al rotar per alguna raó no funciona, per això esta acó.
+        // Vector2Int previousCoords = gridManager.GetCoordinatesFromPosition(transform.position);
+        // gridManager.UnblockNode(previousCoords);
+
+        //19/3------------------FIN
+        //---+-+-+ PER ARA NO FUNCIONA, NO HI HA CAP CAMBI
+
+
         StopAllCoroutines();
         path.Clear();
         path = pathFinder.GetNewPath(coordinates);
-        StartCoroutine(FollowPath());
+        
+        
+        if(followPath){
+            StartCoroutine(FollowPath());
+        }
     }
    
    
