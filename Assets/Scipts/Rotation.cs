@@ -20,6 +20,11 @@ public class Rotation : MonoBehaviour
     private List<Transform> unitsRedirigir = new List<Transform>(); // Lista de todas las unidades seleccionadas
     //GIR-ADD+-+-+-+-+-+-+-+-+
 
+    //FOLLOWER-ADD+++++++++++INI
+    FollowerUnit followerUnit;
+
+    //FOLLOWER-ADD+++++++++++FIN
+
 
 
 
@@ -35,6 +40,9 @@ public class Rotation : MonoBehaviour
         //Açó es per a moure de una casilla x a una y en Gir
         //GIR-ADD+-+-+-+-+-+-+-+-+
 
+        //FOLLOWER-ADD+-+-+-+-+-+-+-+-+INITIAL
+        followerUnit = FindObjectOfType<FollowerUnit>();
+        //FOLLOWER-ADD+-+-+-+-+-+-+-+-+FIN
         
     }
 
@@ -47,6 +55,18 @@ public class Rotation : MonoBehaviour
 
             SelectAllUnits();
 
+
+            //FOLLOWER-ADD+-+-+-+-+-+-+-+-+INITIAL
+
+            
+            // if(followerUnit != null)
+            // {
+
+            //     followerUnit.ChangeFollowing();
+            // }
+            //FOLLOWER-ADD+-+-+-+-+-+-+-+-+FINAL
+
+
            // MovePositionRotation(new Vector2Int(6,6), new Vector2Int(8,8));
             //GIR-ADD+-+-+-+-+-+-+-+-+
 
@@ -54,6 +74,8 @@ public class Rotation : MonoBehaviour
             //EL 'Mathf.Repeat' ES PER A PROVAR SI EN EL 'case 0' HO LLIG MILLOR
             gridManager.ResetNodes();
             StartCoroutine(RotateSmoothly());
+
+            
         
         }
     }
@@ -141,6 +163,14 @@ public class Rotation : MonoBehaviour
         isRotating = false;
 
         BlockNodeBasedOnRotation();
+
+        // FOLLOWER-ADD: Restaurar el constraint inicial DESPUÉS de rotar
+        if (followerUnit != null)
+        {
+            followerUnit.RestoreFollowing();
+        }
+        // FOLLOWER-ADD++++++++++++++++++++++FINAL
+
         unselectAllUnits();
     }
 
