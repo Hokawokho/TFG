@@ -5226,7 +5226,7 @@ PositionConstraint:
   serializedVersion: 2
   m_Weight: 1
   m_TranslationAtRest: {x: -1.5, y: 1.0740004, z: -4.5}
-  m_TranslationOffset: {x: -2.75, y: -2.1918857, z: -2.75}
+  m_TranslationOffset: {x: -5.5, y: -5.45, z: -5.5}
   m_AffectTranslationX: 1
   m_AffectTranslationY: 1
   m_AffectTranslationZ: 1
@@ -5235,8 +5235,8 @@ PositionConstraint:
   m_Sources:
   - sourceTransform: {fileID: 1975332964}
     weight: 1
-  - sourceTransform: {fileID: 89522505}
-    weight: 1
+  - sourceTransform: {fileID: 970482607}
+    weight: 0
 --- !u!114 &624932724
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5247,6 +5247,18 @@ MonoBehaviour:
   m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f43fedbcdba0ece41ade11601daf2f5b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &624932728
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 624932719}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2bbcb1cc786cf54885e6437efc1566d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!4 &625473155 stripped
@@ -17661,6 +17673,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 5283385824228949686, guid: bcaf21c7d172ea649a51b42cf8628e50, type: 3}
       insertIndex: -1
       addedObject: {fileID: 624932724}
+    - targetCorrespondingSourceObject: {fileID: 5283385824228949686, guid: bcaf21c7d172ea649a51b42cf8628e50, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 624932728}
   m_SourcePrefab: {fileID: 100100000, guid: bcaf21c7d172ea649a51b42cf8628e50, type: 3}
 --- !u!1001 &1850198711
 PrefabInstance:
