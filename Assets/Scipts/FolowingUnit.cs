@@ -11,6 +11,8 @@ public class FolowingUnit : MonoBehaviour
     private bool isFirstActive = true;
     //Açò per a alternar entre el primer i el segon constraint
 
+    private Transform detectedTarget = null;
+
     private Vector3 offsetSource1 = new Vector3(-5.5f,-5.5f,-5.5f);
     private Vector3 offsetSource2 = new Vector3 (0,1.066227912f,0);
 
@@ -29,9 +31,9 @@ public class FolowingUnit : MonoBehaviour
             source1.weight = 1;
             positionConstraint.SetSource(0, source1);
 
-            ConstraintSource source2 = positionConstraint.GetSource(1);
-            source2.weight = 0;
-            positionConstraint.SetSource(1, source2);
+            // ConstraintSource source2 = positionConstraint.GetSource(1);
+            // source2.weight = 0;
+            // positionConstraint.SetSource(1, source2);
 
             positionConstraint.translationOffset = offsetSource1;
 
@@ -54,7 +56,7 @@ public class FolowingUnit : MonoBehaviour
             Vector3 currentPosition = transform.position;
 
             //  Desactivamos temporalmente el constraint
-            positionConstraint.constraintActive = false;
+            //positionConstraint.constraintActive = false;
 
             
 
@@ -62,11 +64,31 @@ public class FolowingUnit : MonoBehaviour
             source1.weight = isFirstActive? 1 : 0;
             positionConstraint.SetSource(0, source1);
 
-            ConstraintSource source2 = positionConstraint.GetSource(1);
+            // ConstraintSource source2 = positionConstraint.GetSource(1);
 
-            //si true 0-> si false 1
-            source2.weight = isFirstActive? 0 : 1;
-            positionConstraint.SetSource(1, source2);
+            // //si true 0-> si false 1
+            // source2.weight = isFirstActive? 0 : 1;
+            // positionConstraint.SetSource(1, source2);
+
+
+            
+            if(!isFirstActive && detectedTarget != null){
+                ConstraintSource source2 = new ConstraintSource{
+                    sourceTransform = detectedTarget,
+                    weight = 1f
+                };
+                positionConstraint.AddSource(source2);
+
+                positionConstraint.translationOffset = currentPosition - detectedTarget.position;
+            }
+            else{
+                if(positionConstraint.sourceCount > 1){
+
+                    positionConstraint.RemoveSource(1);
+                }
+
+                positionConstraint.translationOffset = offsetSource1;
+            }
 
             //Mantenemos la posición actual del objeto antes de reactivar el constraint
            // transform.position = currentPosition;
@@ -80,20 +102,41 @@ public class FolowingUnit : MonoBehaviour
             // Vector3 newAtRest = activeSource.InverseTransformPoint(currentPosition);
             // positionConstraint.translationAtRest = newAtRest;
             
+            
+            
+            
+            //++++++            ATENCIÓN ESTAS 2 SI FINCIONAN!!!!!!!!!!!!!!!!!!!!!!!!
+            // Vector3 newOffset = currentPosition - (isFirstActive ? source1.sourceTransform.position : source2.sourceTransform.position);
+            // positionConstraint.translationOffset = newOffset;
 
-            Vector3 newOffset = currentPosition - (isFirstActive ? source1.sourceTransform.position : source2.sourceTransform.position);
-            positionConstraint.translationOffset = newOffset;
+
+
 
             //positionConstraint.translationOffset = isFirstActive?  offsetSource1 : offsetSource2;
 
-            positionConstraint.constraintActive = true;
+            //positionConstraint.constraintActive = true;
             
-            if(source2.weight != 0){
-                Debug.Log($"Following: {positionConstraint.GetSource(1)}");
-            }
-            else{
-                Debug.Log($"Following:  {positionConstraint.GetSource(0)}");
-            }
+             Debug.Log($"Following: {(isFirstActive ? "Source 1" : detectedTarget.name)}");
+        }
+    }
+
+
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(detectedTarget == null){
+
+            detectedTarget = other.transform;
+            Debug.Log($"New target detected: {detectedTarget.name}");
+        }
+    }
+    
+     private void OnTriggerExit(Collider other)
+    {
+        if (detectedTarget == other.transform) // Elimina la referencia si el objeto sale
+        {
+            Debug.Log($"Perdido: {detectedTarget.name}");
+            detectedTarget = null;
         }
     }
 }
