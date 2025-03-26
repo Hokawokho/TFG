@@ -20,10 +20,6 @@ public class Rotation : MonoBehaviour
     private List<Transform> unitsRedirigir = new List<Transform>(); // Lista de todas las unidades seleccionadas
     //GIR-ADD+-+-+-+-+-+-+-+-+
 
-    //FOLLOWER-ADD+++++++++++INI
-    FollowerUnit followerUnit;
-
-    //FOLLOWER-ADD+++++++++++FIN
 
 
 
@@ -39,11 +35,6 @@ public class Rotation : MonoBehaviour
         unitController = FindObjectOfType<UnitController>();
         //Açó es per a moure de una casilla x a una y en Gir
         //GIR-ADD+-+-+-+-+-+-+-+-+
-
-        //FOLLOWER-ADD+-+-+-+-+-+-+-+-+INITIAL
-        followerUnit = FindObjectOfType<FollowerUnit>();
-        //FOLLOWER-ADD+-+-+-+-+-+-+-+-+FIN
-        
     }
 
     
@@ -163,13 +154,6 @@ public class Rotation : MonoBehaviour
         isRotating = false;
 
         BlockNodeBasedOnRotation();
-
-        // FOLLOWER-ADD: Restaurar el constraint inicial DESPUÉS de rotar
-        if (followerUnit != null)
-        {
-            followerUnit.RestoreFollowing();
-        }
-        // FOLLOWER-ADD++++++++++++++++++++++FINAL
 
         unselectAllUnits();
     }
