@@ -16,10 +16,14 @@ public class FolowingUnit : MonoBehaviour
     private Vector3 offsetSource1 = new Vector3(-5.5f,-5.5f,-5.5f);
     private Vector3 offsetSource2 = new Vector3 (0,1.066227912f,0);
 
+    public  RaycastDebugger raycastDebugger;
+
     // Start is called before the first frame update
     void Start()
     {
         positionConstraint = GetComponent<PositionConstraint>();
+
+        raycastDebugger = FindObjectOfType<RaycastDebugger>();
 
 
         //REVISAR+++++++++++
@@ -48,6 +52,9 @@ public class FolowingUnit : MonoBehaviour
     void Update()
     {
 
+        detectedTarget = raycastDebugger.detectedHit;
+
+
         if(Input.GetKeyDown(KeyCode.Alpha1)){
 
             isFirstActive = !isFirstActive;
@@ -72,14 +79,15 @@ public class FolowingUnit : MonoBehaviour
 
 
             
-            if(!isFirstActive && detectedTarget != null){
+            if(!isFirstActive && detectedTarget != null && positionConstraint.sourceCount < 2){
                 ConstraintSource source2 = new ConstraintSource{
                     sourceTransform = detectedTarget,
                     weight = 1f
                 };
                 positionConstraint.AddSource(source2);
 
-                positionConstraint.translationOffset = currentPosition - detectedTarget.position;
+                // positionConstraint.translationOffset = currentPosition - detectedTarget.position;
+                positionConstraint.translationOffset =  offsetSource2;
             }
             else{
                 if(positionConstraint.sourceCount > 1){
@@ -122,21 +130,21 @@ public class FolowingUnit : MonoBehaviour
 
 
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if(detectedTarget == null){
+    // private void OnTriggerEnter(Collider other)
+    // {
+    //     if(detectedTarget == null){
 
-            detectedTarget = other.transform;
-            Debug.Log($"New target detected: {detectedTarget.name}");
-        }
-    }
+    //         detectedTarget = other.transform;
+    //         Debug.Log($"Following: {(isFirstActive ? "Source 1" : detectedTarget?.name ?? "None")}");
+    //     }
+    // }
     
-     private void OnTriggerExit(Collider other)
-    {
-        if (detectedTarget == other.transform) // Elimina la referencia si el objeto sale
-        {
-            Debug.Log($"Perdido: {detectedTarget.name}");
-            detectedTarget = null;
-        }
-    }
+    //  private void OnTriggerExit(Collider other)
+    // {
+    //     if (detectedTarget == other.transform) // Elimina la referencia si el objeto sale
+    //     {
+    //         Debug.Log($"Perdido: {detectedTarget.name}");
+    //         detectedTarget = null;
+    //     }
+    // }
 }
