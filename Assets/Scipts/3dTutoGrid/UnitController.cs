@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 //using System.Numerics;
@@ -17,6 +18,9 @@ public class UnitController : MonoBehaviour
     List<Node> path = new List<Node>();
     public Pathfinding pathFinder;
 
+    //+++-++-+-+-+COSTE-ADD+++++++++++++INICIO
+    [SerializeField] List<UnitMovementData> unitMovementList = new List<UnitMovementData>();
+    //+++-++-+-+-+COSTE-ADD+++++++++++++FIN
 
 
     // Start is called before the first frame update
@@ -29,6 +33,22 @@ public class UnitController : MonoBehaviour
 
         
     }
+
+    
+    
+
+
+    //+++-++-+-+-+COSTE-ADD+++++++++++++INICIO
+    public UnitMovementData GetUnitData(GameObject unit){
+
+        return unitMovementList.Find(data => data.unitData == unit);
+        Debug.Log($"La unidad es: {unit}");
+        
+        //
+    }
+    //+++-++-+-+-+COSTE-ADD+++++++++++++FIN
+
+
 
     // Update is called once per frame
     void Update()
@@ -61,6 +81,9 @@ public class UnitController : MonoBehaviour
                         //Vector2Int targetCords = hit.transform.GetComponent<Labeler>().cords;
                         Vector2Int targetCords = hit.transform.GetComponent<Tile>().cords;
                         Vector2Int startCords = new Vector2Int((int)selectedUnit.transform.position.x, (int)selectedUnit.transform.position.z) / gridManager.UnityGridSize;
+
+                        int distance = CalculatePathCost(startCords, targetCords);
+
                         pathFinder.SetNewDestination(startCords, targetCords);
                         RecalculatePath(true, true);
 
@@ -83,6 +106,13 @@ public class UnitController : MonoBehaviour
 
         }
         
+    }
+
+    private int CalculatePathCost(Vector2Int start, Vector2Int target){
+
+        List<Node> pathCost = pathFinder.GetNewPath(/*start,*/ target);
+        return pathCost.Count -1;
+
     }
 
     public void RecalculatePath(bool resetPath, bool followPath){

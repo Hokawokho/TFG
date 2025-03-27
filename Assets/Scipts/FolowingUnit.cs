@@ -14,7 +14,8 @@ public class FolowingUnit : MonoBehaviour
     private Transform detectedTarget = null;
 
     private Vector3 offsetSource1 = new Vector3(-5.5f,-5.5f,-5.5f);
-    private Vector3 offsetSource2 = new Vector3 (0,1.066227912f,0);
+    //private Vector3 offsetSource2 = new Vector3 (0,1.066227912f,0);
+    private Vector3 offsetSource2 = new Vector3 (0,2.07f,0);
 
     public  RaycastDebugger raycastDebugger;
 
@@ -27,7 +28,7 @@ public class FolowingUnit : MonoBehaviour
 
 
         //REVISAR+++++++++++
-        //Este if no es necesari pq ho estic tocant des de l'editor, pero per si decas esta.
+        //Este if no es necesari pq ho estic tocant des de l'editor, pero per si de cas esta.
         //Si no fique mes elements a futur ELIMINAR if-+-+-+-+-+-+-+
         if(positionConstraint.sourceCount >=2){
 
