@@ -187,9 +187,23 @@ public class Pathfinding : MonoBehaviour
     }
     //Pa comprobar si el node existeix+++++++
 
-        startNode = grid[this.startCords];
-        targetNode = grid[this.targetCords];
-        GetNewPath();
+        startNode = grid[startCords];
+        targetNode = grid[targetCords];
+
+                //COSTE - ADD++++++++++++++++++++++ INICIO
+
+    if (startNode == null || targetNode == null) {
+        Debug.LogError("Los nodos de inicio o destino son nulos.");
+        return;
+    }
+    //COSTE - ADD++++++++++++++++++++++ FIN
+
+        List<Node> path = GetNewPath();
+        if(path.Count == 0 ){
+
+            Debug.LogWarning($"No se encontró camino valido");
+        }
+        //COSTE - ADD++++++++++++++++++++++ FIN
 
         //Açò es pa resetear l'algoritme
     }

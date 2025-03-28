@@ -41,8 +41,9 @@ public class UnitController : MonoBehaviour
     //+++-++-+-+-+COSTE-ADD+++++++++++++INICIO
     public UnitMovementData GetUnitData(GameObject unit){
 
+      Debug.Log($"La unidad es: {unit}");
+
         return unitMovementList.Find(data => data.unitData == unit);
-        Debug.Log($"La unidad es: {unit}");
         
         //
     }
@@ -69,7 +70,7 @@ public class UnitController : MonoBehaviour
                 if(hit.transform.tag == "Tile"){
 
                     Vector2Int tileCords = hit.transform.GetComponent<Tile>().cords;
-                    Debug.Log($"Has hecho clic en la casilla: {tileCords}");
+                    
 
                     if(gridManager.GetNode(tileCords) != null && !gridManager.GetNode(tileCords).walkable) {
                         Debug.Log("No se puede mover en esta casilla");
@@ -85,7 +86,15 @@ public class UnitController : MonoBehaviour
                         int distance = CalculatePathCost(startCords, targetCords);
 
                         pathFinder.SetNewDestination(startCords, targetCords);
-                        RecalculatePath(true, true);
+                        List<Node> pathPosible = pathFinder.GetNewPath();
+                        if(pathPosible.Count > 0){
+
+                            RecalculatePath(true,true);
+                        } 
+                        else{
+
+                            Debug.LogWarning("Camino no encontrad por coste");
+                        }
 
                         //selectedUnit.transform.position = new Vector3(targetCords.x, selectedUnit.position.y, targetCords.y);
                     }
