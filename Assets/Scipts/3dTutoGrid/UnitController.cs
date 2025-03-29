@@ -83,17 +83,42 @@ public class UnitController : MonoBehaviour
                         Vector2Int targetCords = hit.transform.GetComponent<Tile>().cords;
                         Vector2Int startCords = new Vector2Int((int)selectedUnit.transform.position.x, (int)selectedUnit.transform.position.z) / gridManager.UnityGridSize;
 
+                        // int distance = CalculatePathCost(startCords, targetCords);
+
+                        //COSTE - ADD+++++++++++++ INICIO
+
+                        // pathFinder.SetNewDestination(startCords, targetCords);
+                        // List<Node> pathPosible = pathFinder.GetNewPath();
+
+                        //UnitMovementData unitData = GetUnitData(selectedUnit.gameObject);
+                        // if (unitData != null && distance <= unitData.maxTiles) 
+                        // {
+                            
+                        //     RecalculatePath(true, true);
+                        // }
+                        //COSTE - ADD+++++++++++++ FIN
+
+
                         int distance = CalculatePathCost(startCords, targetCords);
+                        UnitMovementData unitData = GetUnitData(selectedUnit.gameObject);
 
-                        pathFinder.SetNewDestination(startCords, targetCords);
-                        List<Node> pathPosible = pathFinder.GetNewPath();
-                        if(pathPosible.Count > 0){
+                        //pathFinder.SetNewDestination(startCords, targetCords);
+                        //List<Node> pathPosible = pathFinder.GetNewPath();
+                        //CalculatePathCost(startCords, targetCords);
+                        // if(pathPosible.Count > 0){
 
+                        //     RecalculatePath(true,true);
+                        // } 
+                        // else{
+
+                        //     Debug.LogWarning("Camino no encontrad por coste");
+                        // }
+                        if( distance <= unitData.maxTiles){
                             RecalculatePath(true,true);
-                        } 
+                        }
                         else{
 
-                            Debug.LogWarning("Camino no encontrad por coste");
+                            Debug.LogWarning("Esta demasiado lejos");
                         }
 
                         //selectedUnit.transform.position = new Vector3(targetCords.x, selectedUnit.position.y, targetCords.y);
@@ -118,23 +143,37 @@ public class UnitController : MonoBehaviour
     }
 
     private int CalculatePathCost(Vector2Int start, Vector2Int target){
+        
 
-        List<Node> pathCost = pathFinder.GetNewPath(/*start,*/ target);
-        return pathCost.Count -1;
+        pathFinder.SetNewDestination(start, target);
+        List<Node> pathCost = pathFinder.GetNewPath();
+        int cost = pathCost.Count -1;
+        Debug.Log($"Costo del camino: {cost}, Nodos en el camino: {pathCost.Count}");
+
+        //UnitMovementData unitData = GetUnitData(selectedUnit.gameObject);
+        //GetUnitData(selectedUnit.gameObject);
+
+        return cost;
 
     }
 
     public void RecalculatePath(bool resetPath, bool followPath){
 
-        Vector2Int coordinates = new Vector2Int();
-        if(resetPath){
+        
 
-            coordinates = pathFinder.StartCords;
-        }
-        else{
+        //FORMA DE OPTIMIZAR-HO
+        Vector2Int coordinates = resetPath ? pathFinder.StartCords : gridManager.GetCoordinatesFromPosition(transform.position);
 
-            coordinates =gridManager.GetCoordinatesFromPosition(transform.position);
-        }
+        //Vector2Int coordinates = new Vector2Int();
+        // if(resetPath){
+        //     coordinates = pathFinder.StartCords;
+        // }
+        // else{
+        //     coordinates =gridManager.GetCoordinatesFromPosition(transform.position);
+        // }
+
+
+
 
         //19/3------------Desbloquear tile de la posició anterior,
         //Al rotar per alguna raó no funciona, per això esta acó.
@@ -148,10 +187,17 @@ public class UnitController : MonoBehaviour
         StopAllCoroutines();
         path.Clear();
         path = pathFinder.GetNewPath(coordinates);
+
+        Debug.Log($"Nodos en el camino: {path.Count}");
         
         
-        if(followPath){
+        if(followPath && path.Count > 0){
             StartCoroutine(FollowPath());
+        }
+
+        else{
+
+            Debug.LogWarning("No hay camino posible");
         }
     }
    

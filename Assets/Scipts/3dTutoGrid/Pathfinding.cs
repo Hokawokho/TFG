@@ -153,6 +153,14 @@ public class Pathfinding : MonoBehaviour
         List<Node> path = new List<Node>();
         Node currentNode = targetNode;
         
+        //COSTE - ADD+++++++++++++ INICIO
+
+        if (currentNode == null) {
+        Debug.LogError("El nodo de destino es nulo.");
+        return path;
+        }
+        //COSTE - ADD+++++++++++++ FIN
+
         path.Add(currentNode);
         currentNode.path = true;
         
@@ -181,22 +189,22 @@ public class Pathfinding : MonoBehaviour
         targetCords = targetCoordinates;
 
         if (!grid.ContainsKey(startCords) || !grid.ContainsKey(targetCords))
-    {
-        Debug.LogError($"No se encontró el nodo en la cuadrícula: {startCords} o {targetCords}");
-        return;
-    }
-    //Pa comprobar si el node existeix+++++++
+        {
+            Debug.LogError($"No se encontró el nodo en la cuadrícula: {startCords} o {targetCords}");
+            return;
+        }
+        //Pa comprobar si el node existeix+++++++
 
         startNode = grid[startCords];
         targetNode = grid[targetCords];
 
                 //COSTE - ADD++++++++++++++++++++++ INICIO
 
-    if (startNode == null || targetNode == null) {
-        Debug.LogError("Los nodos de inicio o destino son nulos.");
-        return;
-    }
-    //COSTE - ADD++++++++++++++++++++++ FIN
+        if (startNode == null || targetNode == null) {
+            Debug.LogError("Los nodos de inicio o destino son nulos.");
+            return;
+        }
+        //COSTE - ADD++++++++++++++++++++++ FIN
 
         List<Node> path = GetNewPath();
         if(path.Count == 0 ){
