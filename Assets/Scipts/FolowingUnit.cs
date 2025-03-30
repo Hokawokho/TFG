@@ -14,8 +14,9 @@ public class FolowingUnit : MonoBehaviour
     private Transform detectedTarget = null;
 
     private Vector3 offsetSource1 = new Vector3(-5.5f,-5.5f,-5.5f);
-    //private Vector3 offsetSource2 = new Vector3 (0,1.066227912f,0);
-    private Vector3 offsetSource2 = new Vector3 (0,2.07f,0);
+    private Vector3 offsetSource2 = new Vector3 (0,0.512f,0);
+    // private Vector3 offsetSource2 = new Vector3 (0,2.07f,0);
+
 
     public  RaycastDebugger raycastDebugger;
 

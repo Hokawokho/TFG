@@ -30,7 +30,7 @@ public class RaycastDebugger : MonoBehaviour
 
             detectedHit = hit.transform;
 
-            //Debug.LogWarning($"RAYO IMPACTÓ a {hit.collider.name} en {hit.point}");
+            Debug.LogWarning($"RAYO IMPACTÓ a {hit.collider.name} en {hit.point}");
             Debug.DrawRay(startPosition, direction * hit.distance, Color.red, 3f);
 
         }
@@ -39,7 +39,7 @@ public class RaycastDebugger : MonoBehaviour
 
             detectedHit = null;
 
-            //Debug.Log($" RAYO NO IMPACTÓ a nada. Dirección: {direction}");
+            Debug.Log($" RAYO NO IMPACTÓ a nada. Dirección: {direction}");
             Debug.DrawRay(startPosition, direction * rayDistance, Color.blue, 3f);
         }
     }

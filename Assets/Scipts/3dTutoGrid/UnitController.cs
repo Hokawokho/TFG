@@ -41,7 +41,7 @@ public class UnitController : MonoBehaviour
     //+++-++-+-+-+COSTE-ADD+++++++++++++INICIO
     public UnitMovementData GetUnitData(GameObject unit){
 
-      Debug.Log($"La unidad es: {unit}");
+      //Debug.Log($"La unidad es: {unit}");
 
         return unitMovementList.Find(data => data.unitData == unit);
         
@@ -70,6 +70,7 @@ public class UnitController : MonoBehaviour
                 if(hit.transform.tag == "Tile"){
 
                     Vector2Int tileCords = hit.transform.GetComponent<Tile>().cords;
+                    Debug.Log($"Casilla seleccionada: {tileCords.x}, {tileCords.y}");
                     
 
                     if(gridManager.GetNode(tileCords) != null && !gridManager.GetNode(tileCords).walkable) {
@@ -188,7 +189,7 @@ public class UnitController : MonoBehaviour
         path.Clear();
         path = pathFinder.GetNewPath(coordinates);
 
-        Debug.Log($"Nodos en el camino: {path.Count}");
+        //Debug.Log($"Nodos en el camino: {path.Count}");
         
         
         if(followPath && path.Count > 0){
