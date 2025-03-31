@@ -2960,7 +2960,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7515728464451627079, guid: 8a241d2256f16ea4b8d2e7c1b6146869, type: 3}
       propertyPath: m_Layer
-      value: 6
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7583743110490913709, guid: 8a241d2256f16ea4b8d2e7c1b6146869, type: 3}
       propertyPath: m_Name
@@ -5883,6 +5883,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2bbcb1cc786cf54885e6437efc1566d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  offsetSource2: {x: 0, y: 0.512, z: 0}
   raycastDebugger: {fileID: 1975332967}
 --- !u!4 &625473155 stripped
 Transform:
@@ -6995,7 +6996,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7515728464451627079, guid: 8a241d2256f16ea4b8d2e7c1b6146869, type: 3}
       propertyPath: m_Layer
-      value: 6
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7583743110490913709, guid: 8a241d2256f16ea4b8d2e7c1b6146869, type: 3}
       propertyPath: m_Name
@@ -7003,7 +7004,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7583743110490913709, guid: 8a241d2256f16ea4b8d2e7c1b6146869, type: 3}
       propertyPath: m_Layer
-      value: 0
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 7719847373210712878, guid: 8a241d2256f16ea4b8d2e7c1b6146869, type: 3}
       propertyPath: m_Enabled
@@ -7537,7 +7538,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7583743110490913709, guid: 8a241d2256f16ea4b8d2e7c1b6146869, type: 3}
       propertyPath: m_Layer
-      value: 0
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 7719847373210712878, guid: 8a241d2256f16ea4b8d2e7c1b6146869, type: 3}
       propertyPath: m_IsTrigger
@@ -9401,7 +9402,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7583743110490913709, guid: 8a241d2256f16ea4b8d2e7c1b6146869, type: 3}
       propertyPath: m_Layer
-      value: 0
+      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -11622,7 +11623,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7583743110490913709, guid: 8a241d2256f16ea4b8d2e7c1b6146869, type: 3}
       propertyPath: m_Layer
-      value: 0
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 7719847373210712878, guid: 8a241d2256f16ea4b8d2e7c1b6146869, type: 3}
       propertyPath: m_Enabled
@@ -14401,7 +14402,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7583743110490913709, guid: 8a241d2256f16ea4b8d2e7c1b6146869, type: 3}
       propertyPath: m_Layer
-      value: 0
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 7719847373210712878, guid: 8a241d2256f16ea4b8d2e7c1b6146869, type: 3}
       propertyPath: m_Enabled
@@ -18999,7 +19000,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7583743110490913709, guid: 8a241d2256f16ea4b8d2e7c1b6146869, type: 3}
       propertyPath: m_Layer
-      value: 0
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 7719847373210712878, guid: 8a241d2256f16ea4b8d2e7c1b6146869, type: 3}
       propertyPath: m_Enabled
@@ -21007,9 +21008,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rayDistance: 100
   customDirection: {x: -5.5, y: -5.85, z: -5.5}
-  ignoreLayer:
+  targetLayer:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 128
 --- !u!4 &1977158592 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3610532394567904285, guid: 44762fd7c150cb542839de1cee6241a3, type: 3}
@@ -21156,7 +21157,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4356558718437918795, guid: e24b1e0914994174db14ce5dd2491ce3, type: 3}
       propertyPath: unitMovementList.Array.data[0].maxTiles
-      value: 4
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 4356558718437918795, guid: e24b1e0914994174db14ce5dd2491ce3, type: 3}
       propertyPath: unitMovementList.Array.data[0].unitData
@@ -21164,7 +21165,7 @@ PrefabInstance:
       objectReference: {fileID: 1975332956}
     - target: {fileID: 4356558718437918795, guid: e24b1e0914994174db14ce5dd2491ce3, type: 3}
       propertyPath: unitMovementList.Array.data[1].maxTiles
-      value: 2
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 4356558718437918795, guid: e24b1e0914994174db14ce5dd2491ce3, type: 3}
       propertyPath: unitMovementList.Array.data[1].unitData

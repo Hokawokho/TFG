@@ -185,7 +185,7 @@ public class Rotation : MonoBehaviour
                 //     { new Vector2Int(7,7), new Vector2Int(2,2) }
                 // };
                 casillasRedir.Add(new Vector2Int(3,0), new Vector2Int(0,6));
-                casillasRedir.Add(new Vector2Int(7,7), new Vector2Int(4,4));
+                casillasRedir.Add(new Vector2Int(7,7), new Vector2Int(7,2));
                 gridManager.UnblockNode(new Vector2Int(3,0));
                 gridManager.UnblockNode(new Vector2Int(7,7));
 

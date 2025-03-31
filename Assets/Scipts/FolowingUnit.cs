@@ -14,8 +14,15 @@ public class FolowingUnit : MonoBehaviour
     private Transform detectedTarget = null;
 
     private Vector3 offsetSource1 = new Vector3(-5.5f,-5.5f,-5.5f);
-    private Vector3 offsetSource2 = new Vector3 (0,0.512f,0);
-    // private Vector3 offsetSource2 = new Vector3 (0,2.07f,0);
+    
+    //Offset altura base ESTIMADO
+    public Vector3 offsetSource2 = new Vector3 (0,0.512f,0);
+    //Offset altura 1 ESTIMADO
+    //private Vector3 offsetSource2 = new Vector3 (0,1.512f,0);
+    //private Vector3 offsetSource2 = new Vector3 (0,1.025f,0);
+    
+    //Offset altura 2 ESTIMADO
+    //private Vector3 offsetSource2 = new Vector3 (0,2.045f,0);
 
 
     public  RaycastDebugger raycastDebugger;
@@ -88,8 +95,16 @@ public class FolowingUnit : MonoBehaviour
                 };
                 positionConstraint.AddSource(source2);
 
-                // positionConstraint.translationOffset = currentPosition - detectedTarget.position;
-                positionConstraint.translationOffset =  offsetSource2;
+                Collider targetCollider = detectedTarget.GetComponent<Collider>();
+
+                if(targetCollider!= null){
+                    float peakCollider = targetCollider.bounds.max.y;
+                    positionConstraint.translationOffset = new Vector3(0, peakCollider + offsetSource2.y/*- detectedTarget.position.y*/, 0);
+
+                }
+
+                
+                //positionConstraint.translationOffset =  offsetSource2;
             }
             else{
                 if(positionConstraint.sourceCount > 1){
@@ -99,54 +114,14 @@ public class FolowingUnit : MonoBehaviour
 
                 positionConstraint.translationOffset = offsetSource1;
             }
-
-            //Mantenemos la posición actual del objeto antes de reactivar el constraint
-           // transform.position = currentPosition;
-
-            // Vector3 newAtRest = currentPosition - (isFirstActive ? source1.sourceTransform.position : source2.sourceTransform.position);
-            // positionConstraint.translationAtRest = newAtRest;
-
-            // Transform activeSource = isFirstActive ? source1.sourceTransform : source2.sourceTransform;
-
-
-            // Vector3 newAtRest = activeSource.InverseTransformPoint(currentPosition);
-            // positionConstraint.translationAtRest = newAtRest;
-            
-            
-            
             
             //++++++            ATENCIÓN ESTAS 2 SI FINCIONAN!!!!!!!!!!!!!!!!!!!!!!!!
             // Vector3 newOffset = currentPosition - (isFirstActive ? source1.sourceTransform.position : source2.sourceTransform.position);
             // positionConstraint.translationOffset = newOffset;
 
 
-
-
-            //positionConstraint.translationOffset = isFirstActive?  offsetSource1 : offsetSource2;
-
-            //positionConstraint.constraintActive = true;
             
              Debug.Log($"Following: {(isFirstActive ? "Source 1" : detectedTarget.name)}");
         }
     }
-
-
-
-    // private void OnTriggerEnter(Collider other)
-    // {
-    //     if(detectedTarget == null){
-
-    //         detectedTarget = other.transform;
-    //         Debug.Log($"Following: {(isFirstActive ? "Source 1" : detectedTarget?.name ?? "None")}");
-    //     }
-    // }
-    
-    //  private void OnTriggerExit(Collider other)
-    // {
-    //     if (detectedTarget == other.transform) // Elimina la referencia si el objeto sale
-    //     {
-    //         Debug.Log($"Perdido: {detectedTarget.name}");
-    //         detectedTarget = null;
-    //     }
-    // }
 }
