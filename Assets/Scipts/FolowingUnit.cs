@@ -8,7 +8,7 @@ public class FolowingUnit : MonoBehaviour
 
     private PositionConstraint positionConstraint;
     
-    private bool isFirstActive = true;
+    public bool isFirstActive = true;
     //Açò per a alternar entre el primer i el segon constraint
 
     private Transform detectedTarget = null;
@@ -44,9 +44,7 @@ public class FolowingUnit : MonoBehaviour
             source1.weight = 1;
             positionConstraint.SetSource(0, source1);
 
-            // ConstraintSource source2 = positionConstraint.GetSource(1);
-            // source2.weight = 0;
-            // positionConstraint.SetSource(1, source2);
+            
 
             positionConstraint.translationOffset = offsetSource1;
 
@@ -58,70 +56,133 @@ public class FolowingUnit : MonoBehaviour
     }
 
     // Update is called once per frame
+    // void Update()
+    // {
+
+    //     detectedTarget = raycastDebugger.detectedHit;
+
+
+    //     if(Input.GetKeyDown(KeyCode.Alpha1)){
+    //         //Provat en aço DEMA-+-+-+-+-+-+-+
+    //         isFirstActive = !isFirstActive;
+
+    //         //  Guardamos la posición actual antes de cambiar
+    //         Vector3 currentPosition = transform.position;
+
+            
+
+            
+
+    //         ConstraintSource source1 = positionConstraint.GetSource(0);
+    //         source1.weight = isFirstActive? 1 : 0;
+    //         positionConstraint.SetSource(0, source1);
+
+          
+
+
+            
+    //         if(!isFirstActive && detectedTarget != null && positionConstraint.sourceCount < 2){
+    //             ConstraintSource source2 = new ConstraintSource{
+    //                 sourceTransform = detectedTarget,
+    //                 weight = 1f
+    //             };
+    //             positionConstraint.AddSource(source2);
+
+    //             Collider targetCollider = detectedTarget.GetComponent<Collider>();
+
+    //             if(targetCollider!= null){
+    //                 float peakCollider = targetCollider.bounds.max.y;
+    //                 positionConstraint.translationOffset = new Vector3(0, peakCollider + offsetSource2.y/*- detectedTarget.position.y*/, 0);
+
+    //             }
+
+                
+                
+    //         }
+    //         else{
+    //             if(positionConstraint.sourceCount > 1){
+
+    //                 positionConstraint.RemoveSource(1);
+    //             }
+
+    //             positionConstraint.translationOffset = offsetSource1;
+    //         }
+            
+            
+
+            
+    //          Debug.Log($"Following: {(isFirstActive ? "Source 1" : detectedTarget.name)}");
+    //     }
+    // }
+
     void Update()
     {
 
-        detectedTarget = raycastDebugger.detectedHit;
 
 
         if(Input.GetKeyDown(KeyCode.Alpha1)){
-
-            isFirstActive = !isFirstActive;
-
-            //  Guardamos la posición actual antes de cambiar
-            Vector3 currentPosition = transform.position;
-
-            //  Desactivamos temporalmente el constraint
-            //positionConstraint.constraintActive = false;
-
-            
-
-            ConstraintSource source1 = positionConstraint.GetSource(0);
-            source1.weight = isFirstActive? 1 : 0;
-            positionConstraint.SetSource(0, source1);
-
-            // ConstraintSource source2 = positionConstraint.GetSource(1);
-
-            // //si true 0-> si false 1
-            // source2.weight = isFirstActive? 0 : 1;
-            // positionConstraint.SetSource(1, source2);
-
-
-            
-            if(!isFirstActive && detectedTarget != null && positionConstraint.sourceCount < 2){
-                ConstraintSource source2 = new ConstraintSource{
-                    sourceTransform = detectedTarget,
-                    weight = 1f
-                };
-                positionConstraint.AddSource(source2);
-
-                Collider targetCollider = detectedTarget.GetComponent<Collider>();
-
-                if(targetCollider!= null){
-                    float peakCollider = targetCollider.bounds.max.y;
-                    positionConstraint.translationOffset = new Vector3(0, peakCollider + offsetSource2.y/*- detectedTarget.position.y*/, 0);
-
-                }
-
-                
-                //positionConstraint.translationOffset =  offsetSource2;
+            isFirstActive = !isFirstActive;;
+            if(!isFirstActive){
+            UpdateFollowerPosition();
             }
             else{
-                if(positionConstraint.sourceCount > 1){
 
-                    positionConstraint.RemoveSource(1);
-                }
-
-                positionConstraint.translationOffset = offsetSource1;
+                FollowerToParent();
             }
             
-            //++++++            ATENCIÓN ESTAS 2 SI FINCIONAN!!!!!!!!!!!!!!!!!!!!!!!!
-            // Vector3 newOffset = currentPosition - (isFirstActive ? source1.sourceTransform.position : source2.sourceTransform.position);
-            // positionConstraint.translationOffset = newOffset;
-
-
-            
-             Debug.Log($"Following: {(isFirstActive ? "Source 1" : detectedTarget.name)}");
         }
     }
+
+
+    public void UpdateFollowerPosition() {
+    
+
+        //isFirstActive = !isFirstActive;
+        detectedTarget = raycastDebugger.detectedHit;
+
+        ConstraintSource source1 = positionConstraint.GetSource(0);
+        // source1.weight = isFirstActive ? 1 : 0;
+        source1.weight = 0;
+        positionConstraint.SetSource(0, source1);
+        
+        if (positionConstraint.sourceCount > 1)
+            {
+                positionConstraint.RemoveSource(1);
+            }
+
+        if (/*!isFirstActive &&*/ detectedTarget != null && positionConstraint.sourceCount < 2)
+        {
+            ConstraintSource source2 = new ConstraintSource
+            {
+                sourceTransform = detectedTarget,
+                weight = 1f
+            };
+            positionConstraint.AddSource(source2);
+
+            Collider targetCollider = detectedTarget.GetComponent<Collider>();
+            if (targetCollider != null)
+            {
+                float peakCollider = targetCollider.bounds.max.y;
+                positionConstraint.translationOffset = new Vector3(0, peakCollider + offsetSource2.y, 0);
+            }
+
+        }Debug.Log($"Following: {(isFirstActive ? "Source 1" : detectedTarget.name)}");
+    }
+
+     public void FollowerToParent(){
+
+        {
+            if (positionConstraint.sourceCount > 1)
+            {
+                positionConstraint.RemoveSource(1);
+            }
+            positionConstraint.translationOffset = offsetSource1;
+
+            ConstraintSource source1 = positionConstraint.GetSource(0);
+            source1.weight = isFirstActive ? 1 : 0;
+            positionConstraint.SetSource(0, source1);
+        }
+        Debug.Log($"Following: {(isFirstActive ? "Source 1" : detectedTarget.name)}");
+     }
+    
 }

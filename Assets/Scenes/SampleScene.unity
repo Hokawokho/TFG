@@ -5883,6 +5883,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2bbcb1cc786cf54885e6437efc1566d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isFirstActive: 1
   offsetSource2: {x: 0, y: 0.512, z: 0}
   raycastDebugger: {fileID: 1975332967}
 --- !u!4 &625473155 stripped

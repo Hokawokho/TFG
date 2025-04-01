@@ -20,6 +20,8 @@ public class Rotation : MonoBehaviour
     private List<Transform> unitsRedirigir = new List<Transform>(); // Lista de todas las unidades seleccionadas
     //GIR-ADD+-+-+-+-+-+-+-+-+
 
+    private FolowingUnit folowingUnit;
+
 
 
 
@@ -35,6 +37,8 @@ public class Rotation : MonoBehaviour
         unitController = FindObjectOfType<UnitController>();
         //Açó es per a moure de una casilla x a una y en Gir
         //GIR-ADD+-+-+-+-+-+-+-+-+
+
+        folowingUnit = FindObjectOfType<FolowingUnit>();
     }
 
     
@@ -43,27 +47,15 @@ public class Rotation : MonoBehaviour
 
 
         if(Input.GetKeyDown(KeyCode.R) &&!isRotating){
-
-            SelectAllUnits();
-
-
-            //FOLLOWER-ADD+-+-+-+-+-+-+-+-+INITIAL
-
             
-            // if(followerUnit != null)
-            // {
-
-            //     followerUnit.ChangeFollowing();
-            // }
-            //FOLLOWER-ADD+-+-+-+-+-+-+-+-+FINAL
-
-
-           // MovePositionRotation(new Vector2Int(6,6), new Vector2Int(8,8));
+            folowingUnit.UpdateFollowerPosition();
+            SelectAllUnits();
             //GIR-ADD+-+-+-+-+-+-+-+-+
 
             targetRotation = transform.eulerAngles.y + rotationAngle;
             //EL 'Mathf.Repeat' ES PER A PROVAR SI EN EL 'case 0' HO LLIG MILLOR
             gridManager.ResetNodes();
+            //folowingUnit.VisualUnit(true);
             StartCoroutine(RotateSmoothly());
 
             
@@ -144,6 +136,12 @@ public class Rotation : MonoBehaviour
     private IEnumerator RotateSmoothly()
     {
         isRotating = true;
+        
+        //PROVA 1-+-+-+-+-+-+-+
+        //folowingUnit.VisualUnit(true);
+        //PROVA 1-+-+-+-+-+-+-+
+
+
         while (Mathf.Abs(Mathf.Repeat(transform.eulerAngles.y - targetRotation, 360)) > 0.1f)
         {
             transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.Euler(0, targetRotation, 0), rotationSpeed * Time.deltaTime);
@@ -153,9 +151,16 @@ public class Rotation : MonoBehaviour
         // Asegurar que la rotación finaliza exactamente en el ángulo deseado
         isRotating = false;
 
+
+        //PROVA 1-+-+-+-+-+-+-+
+        //folowingUnit.VisualUnit(true);
+        //PROVA 1-+-+-+-+-+-+-+
+
         BlockNodeBasedOnRotation();
 
         unselectAllUnits();
+
+        folowingUnit.FollowerToParent();
     }
 
     private void BlockNodeBasedOnRotation()
@@ -178,12 +183,7 @@ public class Rotation : MonoBehaviour
 
             case 1:
                 newBlockedNode =new Vector2Int(2,2);
-                // Dictionary<Vector2Int, Vector2Int> casillasRedir = new Dictionary<Vector2Int, Vector2Int>();
 
-                // {
-                //     { new Vector2Int(6,6), new Vector2Int(8,8) },
-                //     { new Vector2Int(7,7), new Vector2Int(2,2) }
-                // };
                 casillasRedir.Add(new Vector2Int(3,0), new Vector2Int(0,6));
                 casillasRedir.Add(new Vector2Int(7,7), new Vector2Int(7,2));
                 gridManager.UnblockNode(new Vector2Int(3,0));
@@ -206,7 +206,6 @@ public class Rotation : MonoBehaviour
         gridManager.BlockNode(newBlockedNode);
         previousBlockedNodes.Add(newBlockedNode);
     }
-
 //     private void UnblockPreviousNodes()
 // {
 //     foreach (Vector2Int node in previousBlockedNodes)
@@ -215,17 +214,4 @@ public class Rotation : MonoBehaviour
 //     }
 //     previousBlockedNodes.Clear();
 // }
-    
-
-
-    
-
 }
-
-
-
-// if(Input.GetKey(KeyCode.R)){
-
-        //     transform.Rotate(Vector3.up, rotationSpeed * Time.deltaTime);
-
-        // }
