@@ -120,17 +120,17 @@ public class FolowingUnit : MonoBehaviour
 
 
 
-        if(Input.GetKeyDown(KeyCode.Alpha1)){
-            isFirstActive = !isFirstActive;;
-            if(!isFirstActive){
-            UpdateFollowerPosition();
-            }
-            else{
+        // if(Input.GetKeyDown(KeyCode.Alpha1)){
+        //     isFirstActive = !isFirstActive;;
+        //     if(!isFirstActive){
+        //     UpdateFollowerPosition();
+        //     }
+        //     else{
 
-                FollowerToParent();
-            }
+        //         FollowerToParent();
+        //     }
             
-        }
+        // }
     }
 
 

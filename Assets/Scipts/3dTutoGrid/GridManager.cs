@@ -27,11 +27,41 @@ public class GridManager : MonoBehaviour
         // Bloquear conexiones específicas
     // BlockConnection(new Vector2Int(2,2), new Vector2Int(2,3));
     // BlockConnection(new Vector2Int(4,5), new Vector2Int(4,6));
-    BlockConnection(new Vector2Int(8,8), new Vector2Int(7,8));
-    BlockConnection(new Vector2Int(6,8), new Vector2Int(7,8));
+    //BlockConnection(new Vector2Int(8,8), new Vector2Int(7,8));
+    //BlockConnection(new Vector2Int(6,8), new Vector2Int(7,8));
 
 
     }
+
+
+
+
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            ShowBlockedNodes();
+        }
+    }
+
+    private void ShowBlockedNodes()
+    {
+        List<Vector2Int> blockedNodes = new List<Vector2Int>();
+        foreach (var entry in grid)
+        {
+            if (!entry.Value.walkable)
+            {
+                blockedNodes.Add(entry.Key);
+            }
+        }
+
+        Debug.Log("Casillas bloqueadas: " + string.Join(", ", blockedNodes));
+    }
+
+
+
+
 
     public Node GetNode(Vector2Int coordinates)
     {
