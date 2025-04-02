@@ -121,16 +121,9 @@ public class Rotation : MonoBehaviour
 
                 //NO HACE FALTA--pero si ya encontramos la unidad nos podemos salir de este.
             }return;
-            //  else
-            // {
-
-            //     unit.position = Quaternion.Euler(0, targetRotation, 0) * unit.position;
-        
-            // }
         }
-        //return;
     }
-    //GIR-ADD+-+-+-+-+-+-+-+-+FIN
+
 
    
     private void unselectAllUnits(){

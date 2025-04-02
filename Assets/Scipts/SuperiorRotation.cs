@@ -17,38 +17,14 @@ public class SuperiorRotation : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
-    //     if(Input.GetKeyDown(KeyCode.Alpha1)){
-
-    //         currentRotation += 90f;
-    //         if (currentRotation >= 360f)
-    //         {
-    //             currentRotation = 0f; // Reiniciar la rotación
-    //         }
-
-    //         transform.rotation = Quaternion.Euler(0, currentRotation, 0);
-
-    //     }
-     }
-
-    // public void RotateTopMap(){
-
-    //     currentRotation += 90f;
-    //         if (currentRotation >= 360f)
-    //         {
-    //             currentRotation = 0f; // Reiniciar la rotación
-    //         }
-
-    //         transform.rotation = Quaternion.Euler(0, currentRotation, 0);
-
-    // }
+    }
 
     public void RotateTopMap()
     {
         currentRotation += 90f;
         if (currentRotation >= 360f)
         {
-            currentRotation = 0f; // Reiniciar la rotación
+            currentRotation = 0f; 
         }
         transform.rotation = Quaternion.Euler(0, currentRotation, 0);
         
