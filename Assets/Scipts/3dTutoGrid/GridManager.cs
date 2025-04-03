@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -31,6 +32,12 @@ public class GridManager : MonoBehaviour
     BlockConnection(new Vector2Int(6,8), new Vector2Int(7,8));
 
 
+    }
+
+    private void Update()
+    {   
+        if(Input.GetKeyDown(KeyCode.Alpha2))
+        ShowBlockNodes();   
     }
 
     public Node GetNode(Vector2Int coordinates)
@@ -109,6 +116,19 @@ public class GridManager : MonoBehaviour
         position.z = coordinates.y * unityGridSize;
 
         return position;
+    }
+    
+    void ShowBlockNodes(){
+
+        List<Vector2Int> blockedNodes = new List<Vector2Int>();
+        foreach(var entry in grid){
+
+            if(!entry.Value.walkable){
+
+                blockedNodes.Add(entry.Key);
+            }
+        }
+        Debug.Log("Blocked nodes: " + string.Join(",", blockedNodes));
     }
 
     private void CreateGrid()
