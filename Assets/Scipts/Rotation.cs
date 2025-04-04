@@ -22,6 +22,8 @@ public class Rotation : MonoBehaviour
 
     private FolowingUnit folowingUnit;
 
+    private TopFolowingUnit topFolowingUnit;
+
 
 
 
@@ -39,6 +41,8 @@ public class Rotation : MonoBehaviour
         //GIR-ADD+-+-+-+-+-+-+-+-+
 
         folowingUnit = FindObjectOfType<FolowingUnit>();
+
+        topFolowingUnit = FindObjectOfType<TopFolowingUnit>();
     }
 
     
@@ -152,16 +156,24 @@ public class Rotation : MonoBehaviour
         isRotating = false;
 
 
-        //PROVA 1-+-+-+-+-+-+-+
-        //folowingUnit.VisualUnit(true);
-        //PROVA 1-+-+-+-+-+-+-+
-
         BlockNodeBasedOnRotation();
 
         unselectAllUnits();
 
-        folowingUnit.FollowerToParent();
-    }
+        yield return null; // Esperamos un frame para asegurar que la rotación ha terminado completamente
+
+        if (topFolowingUnit != null)
+        {
+            yield return StartCoroutine(topFolowingUnit.MoveToRaycastHit());
+        }
+
+        yield return null; // Esperamos otro frame por seguridad
+
+        if (folowingUnit != null)
+        {
+            folowingUnit.FollowerToParent();
+            }
+        }
 
     private void BlockNodeBasedOnRotation()
     {

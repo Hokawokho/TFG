@@ -32,8 +32,9 @@ public class FolowingUnit : MonoBehaviour
     {
         positionConstraint = GetComponent<PositionConstraint>();
 
-        raycastDebugger = FindObjectOfType<RaycastDebugger>();
-
+        if(raycastDebugger == null){
+            raycastDebugger = FindObjectOfType<RaycastDebugger>();
+        }
 
         //REVISAR+++++++++++
         //Este if no es necesari pq ho estic tocant des de l'editor, pero per si de cas esta.
@@ -120,17 +121,27 @@ public class FolowingUnit : MonoBehaviour
 
 
 
-        if(Input.GetKeyDown(KeyCode.Alpha1)){
-            isFirstActive = !isFirstActive;;
-            if(!isFirstActive){
-            UpdateFollowerPosition();
-            }
-            else{
+        // if(Input.GetKeyDown(KeyCode.Alpha1)){
+        //     isFirstActive = !isFirstActive;;
+        //     if(!isFirstActive){
+        //     UpdateFollowerPosition();
+        //     if (raycastDebugger != null)
+        //     {
+        //         Debug.Log($"[Raycast Emisor] Se está teniendo en cuenta el raycast lanzado por: {raycastDebugger.gameObject.name}");
+        //         }
+        //     }
+        //     else{
 
-                FollowerToParent();
-            }
+        //         FollowerToParent();
+        //     }
             
-        }
+        // }
+        // if (Input.GetKeyDown(KeyCode.Alpha3))
+        //     {
+        //         UpdateFollowerPosition();
+        //     }
+
+        
     }
 
 
@@ -166,7 +177,7 @@ public class FolowingUnit : MonoBehaviour
                 positionConstraint.translationOffset = new Vector3(0, peakCollider + offsetSource2.y, 0);
             }
 
-        }Debug.Log($"Following: {(isFirstActive ? "Source 1" : detectedTarget.name)}");
+        }//Debug.Log($"Following: {(isFirstActive ? "Source 1" : detectedTarget.name)}");
     }
 
      public void FollowerToParent(){
