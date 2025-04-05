@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 2862268778314549197}
   - component: {fileID: 1022359719955805432}
   - component: {fileID: 3359167656863406151}
+  - component: {fileID: 5098343577427409547}
   m_Layer: 0
   m_Name: Plane
   m_TagString: Tile
@@ -102,7 +103,7 @@ MeshCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 5
   m_Convex: 1
   m_CookingOptions: 30
@@ -121,6 +122,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   blocked: 0
   cords: {x: 0, y: 0}
+--- !u!65 &5098343577427409547
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 208457547681662051}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 8.270016, y: 1.2391776, z: 8.349991}
+  m_Center: {x: 0.16672134, y: -0.52958435, z: 0.005273819}
 --- !u!1 &417454905087165804
 GameObject:
   m_ObjectHideFlags: 0

@@ -9,6 +9,8 @@ public class GridManager : MonoBehaviour
 
     [SerializeField] int unityGridSize;
 
+    private BlockingTrigger trigger;
+
     public int UnityGridSize{
 
         get { return unityGridSize; }}
@@ -24,6 +26,7 @@ public class GridManager : MonoBehaviour
     private void Awake()
     {
         CreateGrid();
+        trigger = FindObjectOfType<BlockingTrigger>();
 
         // Bloquear conexiones específicas
     // BlockConnection(new Vector2Int(2,2), new Vector2Int(2,3));

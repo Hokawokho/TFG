@@ -92,7 +92,7 @@ public class Pathfinding : MonoBehaviour
                 
                 isRunning = false;
                 //currentNode.walkable = false;
-                gridManager.BlockNode(currentNode.cords);
+                //gridManager.BlockNode(currentNode.cords);
                 //este ultim es pa que no es puga anar al Tile on estiga una unitat
             }
         }
