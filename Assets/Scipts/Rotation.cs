@@ -140,10 +140,6 @@ public class Rotation : MonoBehaviour
     private IEnumerator RotateSmoothly()
     {
         isRotating = true;
-        
-        //PROVA 1-+-+-+-+-+-+-+
-        //folowingUnit.VisualUnit(true);
-        //PROVA 1-+-+-+-+-+-+-+
 
 
         while (Mathf.Abs(Mathf.Repeat(transform.eulerAngles.y - targetRotation, 360)) > 0.1f)
@@ -162,6 +158,7 @@ public class Rotation : MonoBehaviour
 
         yield return null; // Esperamos un frame para asegurar que la rotación ha terminado completamente
 
+        //PARA MOVER EL TOP-UNIT DONDE DIGA DOWN-UNIT
         if (topFolowingUnit != null)
         {
             yield return StartCoroutine(topFolowingUnit.MoveToRaycastHit());
@@ -169,6 +166,8 @@ public class Rotation : MonoBehaviour
 
         yield return null; // Esperamos otro frame por seguridad
 
+
+        //PARA PONER EL SOURCE DEL CONSTRAINT OTRA VEZ EN EL TOP-UNIT
         if (folowingUnit != null)
         {
             folowingUnit.FollowerToParent();
@@ -214,6 +213,12 @@ public class Rotation : MonoBehaviour
                 break;
 
 
+        }
+
+        if (previousBlockedNodes.Count > 0)
+        {
+            Vector2Int lastBlocked = previousBlockedNodes[previousBlockedNodes.Count - 1];
+            gridManager.UnblockNode(lastBlocked);
         }
         gridManager.BlockNode(newBlockedNode);
         previousBlockedNodes.Add(newBlockedNode);
