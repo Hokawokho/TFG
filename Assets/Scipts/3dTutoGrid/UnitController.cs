@@ -129,9 +129,23 @@ public class UnitController : MonoBehaviour
 
 
                 if(hit.transform.tag == "Unit"){
+                    
+
+                    // Si había una unidad seleccionada antes, ocultar su interfaz
+                    if (unitSelected && selectedUnit != null)
+                    {
+                        CanvasGroup previousCanvas = selectedUnit.GetComponentInChildren<CanvasGroup>();
+                        if (previousCanvas != null)
+                            previousCanvas.alpha = 0f;
+                    }
+
 
                     selectedUnit = hit.transform;
                     unitSelected = true;
+
+                    CanvasGroup canvas = selectedUnit.GetComponentInChildren<CanvasGroup>();
+                    if (canvas != null)
+                        canvas.alpha = 1f;
 
                 }
 
@@ -236,6 +250,18 @@ public class UnitController : MonoBehaviour
             }
         }
         //Aço es per a desseleccionar la unitat++++++++++++++
+        unitSelected = false;
+        selectedUnit = null;
+
+
+        // I açò per a desactivar la UI de dita Unitat
+        if (selectedUnit != null)
+        {
+            CanvasGroup canvas = selectedUnit.GetComponentInChildren<CanvasGroup>();
+            if (canvas != null)
+                canvas.alpha = 0f;
+        }
+
         unitSelected = false;
         selectedUnit = null;
     }
