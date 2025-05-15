@@ -10207,6 +10207,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rotationAngle: 90
   rotationSpeed: 100
+  keyToPress: 32
 --- !u!4 &970482607
 Transform:
   m_ObjectHideFlags: 0
@@ -11092,6 +11093,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rotationAngle: 90
   rotationSpeed: 200
+  keyToPress: 32
 --- !u!4 &1017249054 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3610532394567904285, guid: 44762fd7c150cb542839de1cee6241a3, type: 3}
@@ -16958,6 +16960,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rotationAngle: 90
   rotationSpeed: 200
+  keyToPress: 32
 --- !u!4 &1513886551 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3610532394567904285, guid: 44762fd7c150cb542839de1cee6241a3, type: 3}
@@ -24147,6 +24150,14 @@ PrefabInstance:
     - target: {fileID: 417454905087165804, guid: 44762fd7c150cb542839de1cee6241a3, type: 3}
       propertyPath: m_Layer
       value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 1022359719955805432, guid: 44762fd7c150cb542839de1cee6241a3, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2862268778314549197, guid: 44762fd7c150cb542839de1cee6241a3, type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3610532394567904285, guid: 44762fd7c150cb542839de1cee6241a3, type: 3}
       propertyPath: m_LocalPosition.x

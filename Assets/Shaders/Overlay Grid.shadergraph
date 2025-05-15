@@ -176,8 +176,8 @@
     "m_ShaderOutputName": "_tiling",
     "m_StageCapability": 2,
     "m_Value": {
-        "x": 10.0,
-        "y": 10.0
+        "x": 1.0,
+        "y": 1.0
     },
     "m_DefaultValue": {
         "x": 0.0,
@@ -220,7 +220,7 @@
     "m_Hidden": false,
     "m_ShaderOutputName": "_width",
     "m_StageCapability": 2,
-    "m_Value": 0.8999999761581421,
+    "m_Value": 0.800000011920929,
     "m_DefaultValue": 0.0,
     "m_Labels": []
 }
@@ -654,8 +654,8 @@
     "m_ShaderOutputName": "_offset",
     "m_StageCapability": 2,
     "m_Value": {
-        "x": 10.0,
-        "y": 10.0
+        "x": 0.0,
+        "y": 0.0
     },
     "m_DefaultValue": {
         "x": 0.0,
