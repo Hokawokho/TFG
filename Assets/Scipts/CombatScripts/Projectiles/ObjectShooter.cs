@@ -7,7 +7,7 @@ public class ObjectShooter : MonoBehaviour
     
     public string poolTag;
     public float creationRate = .5f;
-    public KeyCode keyToPress = KeyCode.Space;
+    public KeyCode keyToPress;
 
     private float timeOfLastSpawn;
 

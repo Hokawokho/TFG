@@ -25,6 +25,9 @@ public class Rotation : MonoBehaviour
     private TopFolowingUnit topFolowingUnit;
 
 
+    public KeyCode keyToPress = KeyCode.Space;
+
+
 
 
 
@@ -50,7 +53,7 @@ public class Rotation : MonoBehaviour
     {
 
 
-        if(Input.GetKeyDown(KeyCode.R) &&!isRotating){
+        if(Input.GetKeyDown(keyToPress) &&!isRotating){
             
             folowingUnit.UpdateFollowerPosition();
             SelectAllUnits();
