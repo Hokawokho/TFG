@@ -11,6 +11,8 @@ public class UnitController : MonoBehaviour
     public Transform selectedUnit;
     public bool unitSelected = false;
 
+    private Transform lastSelectedUnit= null;
+
     [SerializeField] float movementSpeed = 1f;
     GridManager gridManager;
 
@@ -129,10 +131,24 @@ public class UnitController : MonoBehaviour
 
 
                 if(hit.transform.tag == "Unit"){
+                    
+
+                    // Si había una unidad seleccionada antes, ocultar su interfaz
+                    if (lastSelectedUnit != null)
+                    {
+                        CanvasGroup previousCanvas = selectedUnit.GetComponentInChildren<CanvasGroup>();
+                        if (previousCanvas != null)
+                            previousCanvas.alpha = 0f;
+                    }
+
 
                     selectedUnit = hit.transform;
                     unitSelected = true;
 
+                    CanvasGroup canvas = selectedUnit.GetComponentInChildren<CanvasGroup>();
+                    if (canvas != null)
+                        canvas.alpha = 1f;
+                    lastSelectedUnit = selectedUnit; // actualizar
                 }
 
 
@@ -236,7 +252,22 @@ public class UnitController : MonoBehaviour
             }
         }
         //Aço es per a desseleccionar la unitat++++++++++++++
+
+
+        if (selectedUnit != null)
+        {
+            CanvasGroup canvas = selectedUnit.GetComponentInChildren<CanvasGroup>();
+            if (canvas != null)
+                canvas.alpha = 0f;
+        }
+
+
         unitSelected = false;
+        lastSelectedUnit= null;
         selectedUnit = null;
+
+
+        // I açò per a desactivar la UI de dita Unitat
+        
     }
 }
