@@ -16,6 +16,8 @@ public class UnitController : MonoBehaviour
     [SerializeField] float movementSpeed = 1f;
     GridManager gridManager;
 
+    ChangingShaderTopTiles changingShaderTopTiles;
+
 
     List<Node> path = new List<Node>();
     public Pathfinding pathFinder;
@@ -70,6 +72,10 @@ public class UnitController : MonoBehaviour
             if(hasHit){
 
                 if(hit.transform.tag == "Tile"){
+                    
+                    //Esto es para quitar los tiles de ataque
+                    ChangingShaderTopTiles.ClearAllHighlights();
+
 
                     Vector2Int tileCords = hit.transform.GetComponent<Tile>().cords;
                     Debug.Log($"Casilla seleccionada: {tileCords.x}, {tileCords.y}");
@@ -130,8 +136,9 @@ public class UnitController : MonoBehaviour
                 }
 
 
-                if(hit.transform.tag == "Unit"){
-                    
+                if (hit.transform.tag == "Unit")
+                {
+
 
                     // Si había una unidad seleccionada antes, ocultar su interfaz
                     if (lastSelectedUnit != null)
@@ -149,6 +156,14 @@ public class UnitController : MonoBehaviour
                     if (canvas != null)
                         canvas.alpha = 1f;
                     lastSelectedUnit = selectedUnit; // actualizar
+
+
+                    //Açò es per Tiles Cuerpo a Cuerpo
+                    Vector2Int unitCoords = gridManager.GetCoordinatesFromPosition(selectedUnit.position);
+                    ChangingShaderTopTiles.ClearAllHighlights();
+
+                    // Resalta las 4 adyacentes
+                    ChangingShaderTopTiles.HighlightTilesAround(unitCoords, gridManager);
                 }
 
 
