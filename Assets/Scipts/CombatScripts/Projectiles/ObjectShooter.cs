@@ -25,7 +25,7 @@ public class ObjectShooter : MonoBehaviour
 
 
 
-        if (Input.GetKey(keyToPress) &&
+        if (Input.GetKeyDown(keyToPress) &&
            Time.time >= timeOfLastSpawn + creationRate)
         {
             GameObject projectile = ObjectPooler.Instance.SpawnFromPool(poolTag, transform.position, Quaternion.identity, transform.root.gameObject);

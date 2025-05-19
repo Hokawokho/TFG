@@ -12,7 +12,7 @@ public class Tile : MonoBehaviour
 
     GridManager gridManager;
 
-    void Start()
+    void Awake()
     {
         SetCords();
 

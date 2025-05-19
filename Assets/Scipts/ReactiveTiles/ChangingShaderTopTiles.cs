@@ -8,7 +8,7 @@ public class ChangingShaderTopTiles : MonoBehaviour
     private MeshRenderer meshRenderer;
     private Tile parentTile;
     private static Dictionary<Vector2Int, ChangingShaderTopTiles> tilesMap = new Dictionary<Vector2Int, ChangingShaderTopTiles>();
-    void Awake()
+    void Start()
     {
         meshRenderer = GetComponent<MeshRenderer>();
         meshRenderer.enabled = false;        
@@ -38,12 +38,12 @@ public class ChangingShaderTopTiles : MonoBehaviour
     {
         ClearAllHighlights();
 
-        Vector2Int[] dirs = {
-            Vector2Int.up,
-            Vector2Int.down,
-            Vector2Int.left,
-            Vector2Int.right
-        };
+        Vector2Int[] dirs = {Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right};
+            
+            
+            
+            
+        
 
         foreach (var dir in dirs)
         {
@@ -60,6 +60,83 @@ public class ChangingShaderTopTiles : MonoBehaviour
         }
     }
 
+
+    public static void HighlightLineTiles(Vector2Int center, GridManager grid)
+    {
+        // 1) Limpiar cualquier highlight previo
+        ClearAllHighlights();
+
+        Vector2Int[] dirs = {Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right};
+
+        // 3) Para cada dirección, avanzamos paso a paso hasta que se acabe la rejilla
+        foreach (var dir in dirs)
+        {
+            int step = 1;
+            while (true)
+            {
+                Vector2Int pos = center + dir * step;
+                // 3a) Salir si estamos fuera de la rejilla
+                if (grid.GetNode(pos) == null)
+                    break;
+
+                // 3b) Salir si el nodo está bloqueado
+                //if (!grid.GetNode(pos).walkable)
+                //    break;
+
+                // 3c) Si hay instancia de ChangingShaderTopTiles, mostrarla
+                if (tilesMap.TryGetValue(pos, out var tile))
+                    tile.Show();
+                else
+                    // si no hay tile (por cómo esté construido el grid), paramos
+                    break;
+
+                step++;
+            }
+        }
+    }
+
+    public static void HighlightCostTiles(Vector2Int center, GridManager grid, int range)
+    {
+        ClearAllHighlights();
+
+        Vector2Int[] dirs = { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
+
+        var visited = new HashSet<Vector2Int> { center };
+        //a diferencia del Map este es sols 1 valor, val pa vore si ja esta guardat o no
+        // millor HashSet pa busqueda en amplaria != profunditat (on es millor una pila)
+                    
+        
+        var queue = new Queue<(Vector2Int pos, int dist)>();
+        queue.Enqueue((center, 0));
+
+    // 3) Recorre en anchura hasta 'range'
+        while (queue.Count > 0)
+        {
+            var (pos, dist) = queue.Dequeue();
+
+            // No queremos resaltar la casilla de origen (dist == 0)
+            if (dist > 0 && tilesMap.TryGetValue(pos, out var tile))
+                tile.Show();
+
+            // Si ya llegamos al rango máximo, no expandimos más
+            if (dist == range)
+                continue;
+
+            // Explorar vecinos
+            foreach (var dir in dirs)
+            {
+                var next = pos + dir;
+                if (visited.Contains(next))
+                    continue;
+                visited.Add(next);
+
+                var node = grid.GetNode(next);
+                // Solo avanzamos si existe nodo y está caminable
+                if (node != null && node.walkable)
+                    queue.Enqueue((next, dist + 1));
+            }
+        }
+}
 
 
 

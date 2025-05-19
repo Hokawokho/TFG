@@ -184,7 +184,7 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8173454}
   m_Enabled: 1
-  m_Alpha: 1
+  m_Alpha: 0
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
@@ -17854,6 +17854,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 9
       objectReference: {fileID: 0}
+    - target: {fileID: 1010794001482386708, guid: 44762fd7c150cb542839de1cee6241a3, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3610532394567904285, guid: 44762fd7c150cb542839de1cee6241a3, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -19888,7 +19892,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   poolTag: laser-prov
   creationRate: 0.5
-  keyToPress: 100
+  keyToPress: 101
   currentDirection: {x: 0, y: 0, z: 1}
 --- !u!1001 &1795939999
 PrefabInstance:
@@ -22166,12 +22170,24 @@ PrefabInstance:
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 4356558718437918795, guid: e24b1e0914994174db14ce5dd2491ce3, type: 3}
+      propertyPath: keyToCloseAttack
+      value: 97
+      objectReference: {fileID: 0}
+    - target: {fileID: 4356558718437918795, guid: e24b1e0914994174db14ce5dd2491ce3, type: 3}
+      propertyPath: keyToRangeAttack
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4356558718437918795, guid: e24b1e0914994174db14ce5dd2491ce3, type: 3}
+      propertyPath: keyToResetMovement
+      value: 102
+      objectReference: {fileID: 0}
+    - target: {fileID: 4356558718437918795, guid: e24b1e0914994174db14ce5dd2491ce3, type: 3}
       propertyPath: unitMovementList.Array.size
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4356558718437918795, guid: e24b1e0914994174db14ce5dd2491ce3, type: 3}
       propertyPath: unitMovementList.Array.data[0].maxTiles
-      value: 10
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 4356558718437918795, guid: e24b1e0914994174db14ce5dd2491ce3, type: 3}
       propertyPath: unitMovementList.Array.data[0].unitData

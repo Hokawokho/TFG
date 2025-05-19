@@ -10,5 +10,14 @@ public class UnitMovementData
 {
         public GameObject unitData;
         public int maxTiles;
+
+        public int remainingTiles;
+
         public float movementSpeed;
+
+        public void ResetMovement()
+        {
+                remainingTiles = maxTiles;
+        }
+    
 }
