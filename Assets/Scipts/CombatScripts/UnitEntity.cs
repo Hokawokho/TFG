@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class UnitEntity : MonoBehaviour
 {
- public delegate void Notify();
+    public delegate void Notify();
     public event Notify OnWakeEvent;
     public event Notify OnDieEvent;
 
@@ -27,7 +27,7 @@ public class UnitEntity : MonoBehaviour
     {
         if (!enabled) return;
         hitpoints.hitPoints -= damage;
-         if (hitpoints.hitPoints <= 0)
+        if (hitpoints.hitPoints <= 0)
         {
             hitpoints.hitPoints = 0;
             Die();
@@ -41,5 +41,13 @@ public class UnitEntity : MonoBehaviour
     {
         OnDieEvent?.Invoke();
         enabled = false;
+    }
+
+
+    public void ResetActions()
+    {
+        
+        
+
     }
 }
