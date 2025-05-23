@@ -21,7 +21,7 @@ public class UnitController : MonoBehaviour
     public Pathfinding pathFinder;
 
     //+++-++-+-+-+COSTE-ADD+++++++++++++INICIO
-    [SerializeField] List<UnitMovementData> unitMovementList = new List<UnitMovementData>();
+    [SerializeField] public List<UnitMovementData> unitMovementList = new List<UnitMovementData>();
     //+++-++-+-+-+COSTE-ADD+++++++++++++FIN
 
 
@@ -29,7 +29,7 @@ public class UnitController : MonoBehaviour
 
     public KeyCode keyToRangeAttack;
 
-    public KeyCode keyToResetMovement;
+    // public KeyCode keyToResetMovement;
 
     // Start is called before the first frame update
     void Awake()
@@ -39,12 +39,12 @@ public class UnitController : MonoBehaviour
 
         pathFinder = FindObjectOfType<Pathfinding>();
 
-        foreach (var data in unitMovementList)
-        {
+        // foreach (var data in unitMovementList)
+        // {
 
-            Debug.Log("Movimiento de Unidades reseteado");
-            data.ResetMovement();
-        }
+        //     Debug.Log("Movimiento de Unidades reseteado");
+        //     data.ResetMovement();
+        // }
 
         
     }
@@ -74,13 +74,13 @@ public class UnitController : MonoBehaviour
 
 
         //RESETEAR MOVEMENT -> F
-        if (Input.GetKeyDown(keyToResetMovement))
-        {
-            foreach (var data in unitMovementList)
-            {
-                data.ResetMovement();
-            }
-        }
+        // if (Input.GetKeyDown(keyToResetMovement))
+        // {
+        //     foreach (var data in unitMovementList)
+        //     {
+        //         data.ResetMovement();
+        //     }
+        // }
     }
 
     private void HandleMouseKeys()

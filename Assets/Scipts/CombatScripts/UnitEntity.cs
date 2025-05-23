@@ -12,6 +12,9 @@ public class UnitEntity : MonoBehaviour
     public event NotifyDamage OnHitEvent;
     public HitPoints hitpoints;
 
+    public int maxActions = 2;
+    public int currentActions;
+
     protected virtual void Start()
     {
         hitpoints = Instantiate(hitpoints);
@@ -23,6 +26,13 @@ public class UnitEntity : MonoBehaviour
         enabled = true;
         OnWakeEvent?.Invoke();
     }
+
+
+    public bool IsAlive => hitpoints.hitPoints > 0;
+
+    public bool HasActionsRemaining => currentActions > 0;
+
+
     public void TakeDamage(int damage)
     {
         if (!enabled) return;
@@ -46,7 +56,15 @@ public class UnitEntity : MonoBehaviour
 
     public void ResetActions()
     {
-        
+
+        currentActions = maxActions;
+
+    }
+
+    public void UseAction()
+    {
+        if (currentActions <= 0) return ;
+        currentActions--;
         
 
     }
