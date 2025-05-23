@@ -55,8 +55,9 @@ public class Rotation : MonoBehaviour
 
         if(Input.GetKeyDown(keyToPress) &&!isRotating){
             
-            folowingUnit.UpdateFollowerPosition();
+            
             SelectAllUnits();
+            folowingUnit.UpdateFollowerPosition();
             //GIR-ADD+-+-+-+-+-+-+-+-+
 
             targetRotation = transform.eulerAngles.y + rotationAngle;
