@@ -15,19 +15,20 @@ public class UnitController : MonoBehaviour
 
     [SerializeField] float movementSpeed = 1f;
     GridManager gridManager;
+    
 
 
     List<Node> path = new List<Node>();
     public Pathfinding pathFinder;
 
-    //+++-++-+-+-+COSTE-ADD+++++++++++++INICIO
     [SerializeField] public List<UnitMovementData> unitMovementList = new List<UnitMovementData>();
-    //+++-++-+-+-+COSTE-ADD+++++++++++++FIN
 
+    //Teclas de ataque    
+    public KeyCode keyToCloseAttack = KeyCode.A;
+    public KeyCode keyToRangeAttack = KeyCode.D;
+    public KeyCode keyToConfirmAttack = KeyCode.E;
 
-    public KeyCode keyToCloseAttack;
-
-    public KeyCode keyToRangeAttack;
+    private ObjectShooter shooter;
 
     // public KeyCode keyToResetMovement;
 

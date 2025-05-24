@@ -19,6 +19,7 @@ public class UnitEntity : MonoBehaviour
     {
         hitpoints = Instantiate(hitpoints);
         hitpoints.hitPoints = hitpoints.initialHitPoints;
+        //ResetActions();
     }
 
     public void Wake()

@@ -27,9 +27,11 @@ public class TurnManager : MonoBehaviour
 
         unitMovemenList = unitController.unitMovementList;
 
+        RegisterExistingUnits();
+
         ResetAll();
         // Registro de unidades ya colocadas en escena
-        RegisterExistingUnits();
+        
 
 
         StartCoroutine(SetupGame());
@@ -39,7 +41,8 @@ public class TurnManager : MonoBehaviour
     }
 
 
-    void ResetAll() {
+    void ResetAll()
+    {
 
         foreach (var data in unitMovemenList)
         {
@@ -47,6 +50,19 @@ public class TurnManager : MonoBehaviour
             Debug.Log("Movimiento de Unidades reseteado");
             data.ResetMovement();
         }
+
+        foreach (var data in playerUnits) {
+            data.ResetActions();
+        }
+
+        foreach (var data in enemyUnits)
+        {
+            data.ResetActions();
+        }
+        
+
+        
+        
 
     }
 

@@ -12,10 +12,15 @@ public class ObjectShooter : MonoBehaviour
     private float timeOfLastSpawn;
 
     public Vector3 currentDirection = new Vector3(0f, 0f, 1f);
-    
+
+    private UnitEntity unitEntity;
+
     void Start()
     {
         timeOfLastSpawn = -creationRate;
+        unitEntity = transform.root.GetComponent<UnitEntity>();
+        if (unitEntity != null)
+            Debug.LogWarning($"[{name}] No tiene UnitEntity en el padre");
     }
     void Update()
     {
@@ -28,6 +33,18 @@ public class ObjectShooter : MonoBehaviour
         if (Input.GetKeyDown(keyToPress) &&
            Time.time >= timeOfLastSpawn + creationRate)
         {
+
+            if (unitEntity != null)
+            {
+
+                if (!unitEntity.HasActionsRemaining)
+                {
+                    Debug.Log("La unidad seleccionada no tiene acciones restantes");
+                    return;
+
+                }
+                unitEntity.UseAction();
+            }
             GameObject projectile = ObjectPooler.Instance.SpawnFromPool(poolTag, transform.position, Quaternion.identity, transform.root.gameObject);
 
 
