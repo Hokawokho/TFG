@@ -65,7 +65,17 @@ public class Rotation : MonoBehaviour
             GatherAllFollowers();
 
             foreach (var unit in downFollowers)
-            {
+            {   
+
+                //esconder la UI de las unidades.
+                CanvasGroup previousCanvas = unit.GetComponentInChildren<CanvasGroup>();
+                if (previousCanvas != null)
+                    previousCanvas.alpha = 0f;
+
+                
+
+
+
                 unit.UpdateFollowerPosition();
 
                 // var downFollower = unit.GetComponent<FolowingUnit>();

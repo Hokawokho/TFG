@@ -34,6 +34,8 @@ public class UnitController : MonoBehaviour
     public enum AttackMode { None, Melee, Range}
     private AttackMode currentAttackMode = AttackMode.None;
 
+    private TurnManager turnManager;
+
     // public KeyCode keyToResetMovement;
 
     // Start is called before the first frame update
@@ -44,6 +46,8 @@ public class UnitController : MonoBehaviour
 
         pathFinder = FindObjectOfType<Pathfinding>();
 
+        turnManager = FindObjectOfType<TurnManager>();
+
         // foreach (var data in unitMovementList)
         // {
 
@@ -51,7 +55,7 @@ public class UnitController : MonoBehaviour
         //     data.ResetMovement();
         // }
 
-        
+
     }
 
     
@@ -124,7 +128,20 @@ public class UnitController : MonoBehaviour
 
                 if (hit.transform.tag == "Unit")
                 {
-                    SelectUnit(hit.transform);
+
+                    //TODO: Quan acabe amb el debugging aplicar açò també en el turno del jugador pals enemics (Després ja implementar selecció estil FE)    
+
+                    //Si turno del enemigo no se pueden seleccionar los Player+++
+                if (turnManager.State == TurnManager.GameState.ENEMYTURN)
+                {
+                    if (hit.transform.GetComponent<Player>() != null)
+                        return;
+                }
+
+
+
+                
+                SelectUnit(hit.transform);
                 }
             }
         
@@ -175,7 +192,7 @@ public class UnitController : MonoBehaviour
 
         if (Input.GetKeyDown(keyToRangeAttack))
         {
-            if (currentAttackMode == AttackMode.Melee)
+            if (currentAttackMode == AttackMode.Range)
                 ExitAttackMode();
             else
                 EnterAttackMode(AttackMode.Range);
@@ -296,6 +313,9 @@ public class UnitController : MonoBehaviour
             {
 
                 Debug.LogWarning("Esta demasiado lejos");
+                CanvasGroup canvas = selectedUnit.GetComponentInChildren<CanvasGroup>();
+                if (canvas != null)
+                    canvas.alpha = 0f;
             }
 
             //selectedUnit.transform.position = new Vector3(targetCords.x, selectedUnit.position.y, targetCords.y);
@@ -334,6 +354,25 @@ public class UnitController : MonoBehaviour
     
 
     }
+
+    public void DeselectCurrentUnit()
+{
+    // Si había una unidad seleccionada, ocultamos su UI
+    if (selectedUnit != null)
+    {
+        var canvas = selectedUnit.GetComponentInChildren<CanvasGroup>();
+        if (canvas != null)
+            canvas.alpha = 0f;
+    }
+
+    selectedUnit = null;
+    unitSelected = false;
+    lastSelectedUnit = null;
+
+    // Limpiar tiles 
+    ChangingShaderTopTiles.ClearAllHighlights();
+}
+
 
     private int CalculatePathCost(Vector2Int start, Vector2Int target)
     {
@@ -435,16 +474,17 @@ public class UnitController : MonoBehaviour
         {
             CanvasGroup canvas = selectedUnit.GetComponentInChildren<CanvasGroup>();
             if (canvas != null)
-                canvas.alpha = 0f;
+                canvas.alpha = 1f;
+
+            Vector2Int unitCoords = gridManager.GetCoordinatesFromPosition(selectedUnit.position);
+            var unitData = GetUnitData(selectedUnit.gameObject);
+            ChangingShaderTopTiles.HighlightCostTiles(unitCoords, gridManager, unitData.remainingTiles);
         }
 
-
-        unitSelected = false;
-        lastSelectedUnit= null;
-        selectedUnit = null;
-
-
-        // I açò per a desactivar la UI de dita Unitat
+        //Si interesa deseleccionar la unitat descomentar açò.
+        // unitSelected = false;
+        // lastSelectedUnit= null;
+        // selectedUnit = null;
         
     }
 }

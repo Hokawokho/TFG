@@ -7,8 +7,6 @@ public class ObjectShooter : MonoBehaviour
     
     public string poolTag;
     public float creationRate = .5f;
-    public KeyCode keyToPress;
-
     private float timeOfLastSpawn;
 
     public Vector3 currentDirection = new Vector3(0f, 0f, 1f);

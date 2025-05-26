@@ -1839,7 +1839,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   poolTag: laser-prov
   creationRate: 0.5
-  keyToPress: 101
   currentDirection: {x: 0, y: 0, z: 1}
 --- !u!1001 &152695978
 PrefabInstance:
@@ -3244,16 +3243,32 @@ PrefabInstance:
       value: Cesped (27)
       objectReference: {fileID: 0}
     - target: {fileID: 7719847373210712878, guid: 8a241d2256f16ea4b8d2e7c1b6146869, type: 3}
+      propertyPath: m_Size.x
+      value: 0.72805166
+      objectReference: {fileID: 0}
+    - target: {fileID: 7719847373210712878, guid: 8a241d2256f16ea4b8d2e7c1b6146869, type: 3}
       propertyPath: m_Size.y
-      value: 1.0356992
+      value: 0.99367297
+      objectReference: {fileID: 0}
+    - target: {fileID: 7719847373210712878, guid: 8a241d2256f16ea4b8d2e7c1b6146869, type: 3}
+      propertyPath: m_Size.z
+      value: 0.70370483
       objectReference: {fileID: 0}
     - target: {fileID: 7719847373210712878, guid: 8a241d2256f16ea4b8d2e7c1b6146869, type: 3}
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7719847373210712878, guid: 8a241d2256f16ea4b8d2e7c1b6146869, type: 3}
+      propertyPath: m_Center.x
+      value: 0.019236088
+      objectReference: {fileID: 0}
+    - target: {fileID: 7719847373210712878, guid: 8a241d2256f16ea4b8d2e7c1b6146869, type: 3}
       propertyPath: m_Center.y
-      value: 0.017847199
+      value: -0.0031663342
+      objectReference: {fileID: 0}
+    - target: {fileID: 7719847373210712878, guid: 8a241d2256f16ea4b8d2e7c1b6146869, type: 3}
+      propertyPath: m_Center.z
+      value: 0.00058472157
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -5136,7 +5151,8 @@ MonoBehaviour:
   State: 0
   playerUnits: []
   enemyUnits: []
-  keyToResetMovement: 102
+  keyToResetMovement: 114
+  keyToEndTurn: 102
 --- !u!1001 &500897901
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -21285,7 +21301,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   poolTag: laser-prov
   creationRate: 0.5
-  keyToPress: 101
   currentDirection: {x: 0, y: 0, z: 1}
 --- !u!1001 &1795939999
 PrefabInstance:

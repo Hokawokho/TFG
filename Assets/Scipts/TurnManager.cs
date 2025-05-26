@@ -14,7 +14,9 @@ public class TurnManager : MonoBehaviour
 
     private UnitController unitController;
 
-    public KeyCode keyToResetMovement = KeyCode.F;
+    public KeyCode keyToResetMovement = KeyCode.R;
+
+    public KeyCode keyToEndTurn = KeyCode.F;
 
     private List<UnitMovementData> unitMovemenList;
 
@@ -31,12 +33,11 @@ public class TurnManager : MonoBehaviour
 
         ResetAll();
         // Registro de unidades ya colocadas en escena
-        
 
 
+        //TODO: RETOCAR  PARA EN START de 'SetupGame()' HACER ALGO MÁS-+-+-+-+
         StartCoroutine(SetupGame());
 
-        
 
     }
 
@@ -104,6 +105,21 @@ public class TurnManager : MonoBehaviour
             ResetAll();
         }
 
+
+        //Botón Finalizar Turno
+
+        if (Input.GetKeyDown(keyToEndTurn) && (State == GameState.PLAYERTURN || State == GameState.ENEMYTURN))
+        {
+            
+            var next = State == GameState.PLAYERTURN
+                ? GameState.ENEMYTURN
+                : GameState.PLAYERTURN;
+            //ChangingShaderTopTiles.ClearAllHighlights();
+            StartCoroutine(ChangeState(next));
+        }
+
+
+
         if (State == GameState.PLAYERTURN)
         {
             bool done = true;
@@ -121,6 +137,14 @@ public class TurnManager : MonoBehaviour
 
 
         }
+    }
+
+    private void OnGUI()
+    {
+        Rect labelRect = new Rect(10, 70, 200, 30);
+        string text = $"Turno : {State}";
+        GUI.Label(labelRect, text);
+
     }
 
 
@@ -151,11 +175,12 @@ public class TurnManager : MonoBehaviour
         // Reset actions for all player units
         //foreach (var unit in playerUnits)
         //{
-            //ResetAll();
+        //ResetAll();
         //}
 
         // Notify UI
         //UIManager.Instance.UpdateTurnText("Player");
+        ResetAll();
     }
 
 
@@ -191,18 +216,30 @@ public class TurnManager : MonoBehaviour
         // Simple AI: loop through enemy units
         foreach (var unit in enemyUnits)
         {
-                // Wait until AI action done
-                //yield return StartCoroutine(unit.PerformAI());
-            
+            // Wait until AI action done
+            //yield return StartCoroutine(unit.PerformAI());
+
         }
 
-        // After all enemy actions, back to player
-        yield return new WaitForSeconds(0.5f);
-        StartCoroutine(ChangeState(GameState.PLAYERTURN));
+
+        yield break;
+        // TODO: AÑADIR LOS METODO DE LLAMADA A IA AQUI
+
+
+        // yield return new WaitForSeconds(0.5f);
+        // StartCoroutine(ChangeState(GameState.PLAYERTURN));
     }
 
     private IEnumerator ChangeState(GameState newState)
     {
+
+        // Si vamos a comenzar el turno enemigo, antes deseleccionamos
+        if (newState == GameState.ENEMYTURN || newState == GameState.PLAYERTURN)
+        {
+            unitController.DeselectCurrentUnit();
+        }
+
+
         State = newState;
         yield return new WaitForSeconds(0.3f);
 
