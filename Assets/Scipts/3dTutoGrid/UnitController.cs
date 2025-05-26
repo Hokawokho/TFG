@@ -30,6 +30,10 @@ public class UnitController : MonoBehaviour
 
     private ObjectShooter shooter;
 
+
+    public enum AttackMode { None, Melee, Range}
+    private AttackMode currentAttackMode = AttackMode.None;
+
     // public KeyCode keyToResetMovement;
 
     // Start is called before the first frame update
@@ -127,28 +131,116 @@ public class UnitController : MonoBehaviour
     }
 
 
+    // private void HandleHotKeys()
+    // {
+    //     if (!unitSelected) return;
+
+    //     Vector2Int unitCoords = gridManager.GetCoordinatesFromPosition(selectedUnit.position);
+    //     //ChangingShaderTopTiles.ClearAllHighlights();
+
+    //     // Resalta las 4 adyacentes
+    //     if (Input.GetKeyDown(keyToCloseAttack))
+    //     {
+    //         ChangingShaderTopTiles.ClearAllHighlights();
+    //         ChangingShaderTopTiles.HighlightTilesAround(unitCoords, gridManager);
+    //     }
+
+    //     if (Input.GetKeyDown(keyToRangeAttack))
+    //     {
+    //         ChangingShaderTopTiles.ClearAllHighlights();
+    //         ChangingShaderTopTiles.HighlightLineTiles(unitCoords, gridManager);
+    //     }
+
+        
+
+
+
+    // }
+
     private void HandleHotKeys()
     {
         if (!unitSelected) return;
 
-        Vector2Int unitCoords = gridManager.GetCoordinatesFromPosition(selectedUnit.position);
+        //Vector2Int unitCoords = gridManager.GetCoordinatesFromPosition(selectedUnit.position);
         //ChangingShaderTopTiles.ClearAllHighlights();
 
         // Resalta las 4 adyacentes
         if (Input.GetKeyDown(keyToCloseAttack))
         {
-            ChangingShaderTopTiles.ClearAllHighlights();
-            ChangingShaderTopTiles.HighlightTilesAround(unitCoords, gridManager);
+            if (currentAttackMode == AttackMode.Melee)
+                ExitAttackMode();
+            else
+                EnterAttackMode(AttackMode.Melee);
         }
 
         if (Input.GetKeyDown(keyToRangeAttack))
         {
-            ChangingShaderTopTiles.ClearAllHighlights();
-            ChangingShaderTopTiles.HighlightLineTiles(unitCoords, gridManager);
+            if (currentAttackMode == AttackMode.Melee)
+                ExitAttackMode();
+            else
+                EnterAttackMode(AttackMode.Range);
+        }
+
+        if (currentAttackMode == AttackMode.Range && Input.GetKeyDown(keyToConfirmAttack))
+        {
+
+            ConfirmAttack();
         }
 
 
+    }
 
+
+    private void EnterAttackMode(AttackMode mode)
+    {
+        //ExitAttackMode();
+        ChangingShaderTopTiles.ClearAllHighlights();
+        currentAttackMode = mode;
+
+        Vector2Int unitCoords = gridManager.GetCoordinatesFromPosition(selectedUnit.position);
+
+        if (mode == AttackMode.Melee)
+            ChangingShaderTopTiles.HighlightTilesAround(unitCoords, gridManager);
+
+        else if (mode == AttackMode.Range)
+            ChangingShaderTopTiles.HighlightLineTiles(unitCoords, gridManager);
+
+        shooter = selectedUnit.GetComponentInChildren<ObjectShooter>();
+    }
+
+
+    private void ConfirmAttack()
+    {
+
+        if (shooter == null)
+        {
+
+            Debug.LogWarning("La unidad no tiene Weapon");
+            return;
+        }
+         bool fired = shooter.TryShoot();
+        if (!fired)
+            Debug.Log("No puede disparar (cooldown o sin acciones)");
+        else
+            ExitAttackMode();
+
+    }
+
+
+    //Per a tornar a mostrar el movimient i no el rango de ataque+++
+    private void ExitAttackMode()
+    {
+
+        currentAttackMode = AttackMode.None;
+        ChangingShaderTopTiles.ClearAllHighlights();
+
+        Vector2Int unitCoords = gridManager.GetCoordinatesFromPosition(selectedUnit.position);
+        var unitData = GetUnitData(selectedUnit.gameObject);
+        if (unitData != null)
+        {
+            // Resaltar todas las tiles al alcance de la unidad
+            ChangingShaderTopTiles.HighlightCostTiles(unitCoords, gridManager, unitData.remainingTiles);
+        }
     }
 
 

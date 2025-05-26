@@ -28,10 +28,11 @@ public class ObjectShooter : MonoBehaviour
 
         ShotDirection();
 
+    }
 
-
-        if (Input.GetKeyDown(keyToPress) &&
-           Time.time >= timeOfLastSpawn + creationRate)
+    public bool TryShoot()
+    {
+        if (Time.time >= timeOfLastSpawn + creationRate)
         {
 
             if (unitEntity != null)
@@ -40,7 +41,7 @@ public class ObjectShooter : MonoBehaviour
                 if (!unitEntity.HasActionsRemaining)
                 {
                     Debug.Log("La unidad seleccionada no tiene acciones restantes");
-                    return;
+                    return false;
 
                 }
                 unitEntity.UseAction();
@@ -67,8 +68,9 @@ public class ObjectShooter : MonoBehaviour
 
             timeOfLastSpawn = Time.time;
         }
-    }
 
+        return true;
+    }
 
     void ShotDirection(){
 
