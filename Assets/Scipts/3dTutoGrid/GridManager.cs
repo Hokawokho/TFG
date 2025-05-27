@@ -120,18 +120,30 @@ public class GridManager : MonoBehaviour
 
         return position;
     }
-    
+
+
+
+    //TODO: Llevar açò al final, es sols per vore els nodes Blocked++++++++++++++++++++++
+
     void ShowBlockNodes(){
 
-        List<Vector2Int> blockedNodes = new List<Vector2Int>();
-        foreach(var entry in grid){
+        Debug.Log("Blocked nodes: " + string.Join(",", BlockedNodeList()));
+    }
 
-            if(!entry.Value.walkable){
+
+    public List<Vector2Int> BlockedNodeList()
+    {
+        List<Vector2Int> blockedNodes = new List<Vector2Int>();
+        foreach (var entry in grid)
+        {
+
+            if (!entry.Value.walkable)
+            {
 
                 blockedNodes.Add(entry.Key);
             }
         }
-        Debug.Log("Blocked nodes: " + string.Join(",", blockedNodes));
+        return blockedNodes;
     }
 
     private void CreateGrid()
@@ -139,7 +151,8 @@ public class GridManager : MonoBehaviour
         // for (int x = 0; x < gridSize.x; x++)
         // {
         //     for (int y = 0; y < gridSize.y; y++)
-        for (int x = -gridSize.x; x < gridSize.x; x++){
+        for (int x = -gridSize.x; x < gridSize.x; x++)
+        {
             for (int y = -gridSize.y; y < gridSize.y; y++)
             {
 

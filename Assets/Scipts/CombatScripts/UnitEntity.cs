@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class UnitEntity : MonoBehaviour
 {
- public delegate void Notify();
+    public delegate void Notify();
     public event Notify OnWakeEvent;
     public event Notify OnDieEvent;
 
@@ -12,10 +12,14 @@ public class UnitEntity : MonoBehaviour
     public event NotifyDamage OnHitEvent;
     public HitPoints hitpoints;
 
+    public int maxActions = 2;
+    public int currentActions;
+
     protected virtual void Start()
     {
         hitpoints = Instantiate(hitpoints);
         hitpoints.hitPoints = hitpoints.initialHitPoints;
+        //ResetActions();
     }
 
     public void Wake()
@@ -23,11 +27,18 @@ public class UnitEntity : MonoBehaviour
         enabled = true;
         OnWakeEvent?.Invoke();
     }
+
+
+    public bool IsAlive => hitpoints.hitPoints > 0;
+
+    public bool HasActionsRemaining => currentActions > 0;
+
+
     public void TakeDamage(int damage)
     {
         if (!enabled) return;
         hitpoints.hitPoints -= damage;
-         if (hitpoints.hitPoints <= 0)
+        if (hitpoints.hitPoints <= 0)
         {
             hitpoints.hitPoints = 0;
             Die();
@@ -41,5 +52,21 @@ public class UnitEntity : MonoBehaviour
     {
         OnDieEvent?.Invoke();
         enabled = false;
+    }
+
+
+    public void ResetActions()
+    {
+
+        currentActions = maxActions;
+
+    }
+
+    public void UseAction()
+    {
+        if (currentActions <= 0) return ;
+        currentActions--;
+        
+
     }
 }

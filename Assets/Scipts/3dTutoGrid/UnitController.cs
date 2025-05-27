@@ -15,25 +15,47 @@ public class UnitController : MonoBehaviour
 
     [SerializeField] float movementSpeed = 1f;
     GridManager gridManager;
+    
 
 
     List<Node> path = new List<Node>();
     public Pathfinding pathFinder;
 
-    //+++-++-+-+-+COSTE-ADD+++++++++++++INICIO
-    [SerializeField] List<UnitMovementData> unitMovementList = new List<UnitMovementData>();
-    //+++-++-+-+-+COSTE-ADD+++++++++++++FIN
+    [SerializeField] public List<UnitMovementData> unitMovementList = new List<UnitMovementData>();
 
+    //Teclas de ataque    
+    public KeyCode keyToCloseAttack = KeyCode.A;
+    public KeyCode keyToRangeAttack = KeyCode.D;
+    public KeyCode keyToConfirmAttack = KeyCode.E;
+
+    private ObjectShooter shooter;
+
+
+    public enum AttackMode { None, Melee, Range}
+    private AttackMode currentAttackMode = AttackMode.None;
+
+    private TurnManager turnManager;
+
+    // public KeyCode keyToResetMovement;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
 
         gridManager = FindObjectOfType<GridManager>();
 
         pathFinder = FindObjectOfType<Pathfinding>();
 
-        
+        turnManager = FindObjectOfType<TurnManager>();
+
+        // foreach (var data in unitMovementList)
+        // {
+
+        //     Debug.Log("Movimiento de Unidades reseteado");
+        //     data.ResetMovement();
+        // }
+
+
     }
 
     
@@ -56,115 +78,309 @@ public class UnitController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetMouseButtonDown(0)){
-            //Si se hace click Derecho donde este el raton
+        HandleMouseKeys();
+        HandleHotKeys();
+
+
+        //RESETEAR MOVEMENT -> F
+        // if (Input.GetKeyDown(keyToResetMovement))
+        // {
+        //     foreach (var data in unitMovementList)
+        //     {
+        //         data.ResetMovement();
+        //     }
+        // }
+    }
+
+    private void HandleMouseKeys()
+    {
+        if (!Input.GetMouseButtonDown(0)) return;
+
 
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             //Marca amb un ray on estiga el nostre ratolí
-            RaycastHit hit;
-            //Detecta si el ray colisiona con algún objecte
-
-            bool hasHit = Physics.Raycast(ray, out hit);
+            // RaycastHit hit;
+            // bool hasHit = Physics.Raycast(ray, out hit);
             //Açò guarda el que s'ha seleccionat amb un ray en HIT
+            // if (hasHit)
 
-            if(hasHit){
+            //D'esta forma es més ràpid que dalt
+            if (Physics.Raycast(ray, out var hit))
 
-                if(hit.transform.tag == "Tile"){
+
+            {
+                if (hit.transform.tag == "Tile")
+                {
 
                     Vector2Int tileCords = hit.transform.GetComponent<Tile>().cords;
                     Debug.Log($"Casilla seleccionada: {tileCords.x}, {tileCords.y}");
-                    
 
-                    if(gridManager.GetNode(tileCords) != null && !gridManager.GetNode(tileCords).walkable) {
+                    if (gridManager.GetNode(tileCords) != null && !gridManager.GetNode(tileCords).walkable)
+                    {
                         Debug.Log("No se puede mover en esta casilla");
                         return;
                     }
 
-                    if(unitSelected ){
-
-                        //Vector2Int targetCords = hit.transform.GetComponent<Labeler>().cords;
-                        Vector2Int targetCords = hit.transform.GetComponent<Tile>().cords;
-                        Vector2Int startCords = new Vector2Int((int)selectedUnit.transform.position.x, (int)selectedUnit.transform.position.z) / gridManager.UnityGridSize;
-
-                        // int distance = CalculatePathCost(startCords, targetCords);
-
-                        //COSTE - ADD+++++++++++++ INICIO
-
-                        // pathFinder.SetNewDestination(startCords, targetCords);
-                        // List<Node> pathPosible = pathFinder.GetNewPath();
-
-                        //UnitMovementData unitData = GetUnitData(selectedUnit.gameObject);
-                        // if (unitData != null && distance <= unitData.maxTiles) 
-                        // {
-                            
-                        //     RecalculatePath(true, true);
-                        // }
-                        //COSTE - ADD+++++++++++++ FIN
-
-
-                        int distance = CalculatePathCost(startCords, targetCords);
-                        UnitMovementData unitData = GetUnitData(selectedUnit.gameObject);
-
-                        //pathFinder.SetNewDestination(startCords, targetCords);
-                        //List<Node> pathPosible = pathFinder.GetNewPath();
-                        //CalculatePathCost(startCords, targetCords);
-                        // if(pathPosible.Count > 0){
-
-                        //     RecalculatePath(true,true);
-                        // } 
-                        // else{
-
-                        //     Debug.LogWarning("Camino no encontrad por coste");
-                        // }
-                        if( distance <= unitData.maxTiles){
-                            RecalculatePath(true,true);
-                        }
-                        else{
-
-                            Debug.LogWarning("Esta demasiado lejos");
-                        }
-
-                        //selectedUnit.transform.position = new Vector3(targetCords.x, selectedUnit.position.y, targetCords.y);
-                    }
+                    MoveUnitTo(tileCords);
 
                 }
 
 
-                if(hit.transform.tag == "Unit"){
-                    
+                if (hit.transform.tag == "Unit")
+                {
 
-                    // Si había una unidad seleccionada antes, ocultar su interfaz
-                    if (lastSelectedUnit != null)
-                    {
-                        CanvasGroup previousCanvas = selectedUnit.GetComponentInChildren<CanvasGroup>();
-                        if (previousCanvas != null)
-                            previousCanvas.alpha = 0f;
-                    }
+                    //TODO: Quan acabe amb el debugging aplicar açò també en el turno del jugador pals enemics (Després ja implementar selecció estil FE)    
 
-
-                    selectedUnit = hit.transform;
-                    unitSelected = true;
-
-                    CanvasGroup canvas = selectedUnit.GetComponentInChildren<CanvasGroup>();
-                    if (canvas != null)
-                        canvas.alpha = 1f;
-                    lastSelectedUnit = selectedUnit; // actualizar
+                    //Si turno del enemigo no se pueden seleccionar los Player+++
+                if (turnManager.State == TurnManager.GameState.ENEMYTURN)
+                {
+                    if (hit.transform.GetComponent<Player>() != null)
+                        return;
                 }
 
 
+
+                
+                SelectUnit(hit.transform);
+                }
             }
-
-
-        }
         
     }
 
-    private int CalculatePathCost(Vector2Int start, Vector2Int target){
+
+    // private void HandleHotKeys()
+    // {
+    //     if (!unitSelected) return;
+
+    //     Vector2Int unitCoords = gridManager.GetCoordinatesFromPosition(selectedUnit.position);
+    //     //ChangingShaderTopTiles.ClearAllHighlights();
+
+    //     // Resalta las 4 adyacentes
+    //     if (Input.GetKeyDown(keyToCloseAttack))
+    //     {
+    //         ChangingShaderTopTiles.ClearAllHighlights();
+    //         ChangingShaderTopTiles.HighlightTilesAround(unitCoords, gridManager);
+    //     }
+
+    //     if (Input.GetKeyDown(keyToRangeAttack))
+    //     {
+    //         ChangingShaderTopTiles.ClearAllHighlights();
+    //         ChangingShaderTopTiles.HighlightLineTiles(unitCoords, gridManager);
+    //     }
+
         
+
+
+
+    // }
+
+    private void HandleHotKeys()
+    {
+        if (!unitSelected) return;
+
+        //Vector2Int unitCoords = gridManager.GetCoordinatesFromPosition(selectedUnit.position);
+        //ChangingShaderTopTiles.ClearAllHighlights();
+
+        // Resalta las 4 adyacentes
+        if (Input.GetKeyDown(keyToCloseAttack))
+        {
+            if (currentAttackMode == AttackMode.Melee)
+                ExitAttackMode();
+            else
+                EnterAttackMode(AttackMode.Melee);
+        }
+
+        if (Input.GetKeyDown(keyToRangeAttack))
+        {
+            if (currentAttackMode == AttackMode.Range)
+                ExitAttackMode();
+            else
+                EnterAttackMode(AttackMode.Range);
+        }
+
+        if (currentAttackMode == AttackMode.Range && Input.GetKeyDown(keyToConfirmAttack))
+        {
+
+            ConfirmAttack();
+        }
+
+
+    }
+
+
+    private void EnterAttackMode(AttackMode mode)
+    {
+        //ExitAttackMode();
+        ChangingShaderTopTiles.ClearAllHighlights();
+        currentAttackMode = mode;
+
+        Vector2Int unitCoords = gridManager.GetCoordinatesFromPosition(selectedUnit.position);
+
+        if (mode == AttackMode.Melee)
+            ChangingShaderTopTiles.HighlightTilesAround(unitCoords, gridManager);
+
+        else if (mode == AttackMode.Range)
+            ChangingShaderTopTiles.HighlightLineTiles(unitCoords, gridManager);
+
+        shooter = selectedUnit.GetComponentInChildren<ObjectShooter>();
+    }
+
+
+    private void ConfirmAttack()
+    {
+
+        if (shooter == null)
+        {
+
+            Debug.LogWarning("La unidad no tiene Weapon");
+            return;
+        }
+         bool fired = shooter.TryShoot();
+        if (!fired)
+            Debug.Log("No puede disparar (cooldown o sin acciones)");
+        else
+            ExitAttackMode();
+
+    }
+
+
+    //Per a tornar a mostrar el movimient i no el rango de ataque+++
+    private void ExitAttackMode()
+    {
+
+        currentAttackMode = AttackMode.None;
+        ChangingShaderTopTiles.ClearAllHighlights();
+
+        Vector2Int unitCoords = gridManager.GetCoordinatesFromPosition(selectedUnit.position);
+        var unitData = GetUnitData(selectedUnit.gameObject);
+        if (unitData != null)
+        {
+            // Resaltar todas las tiles al alcance de la unidad
+            ChangingShaderTopTiles.HighlightCostTiles(unitCoords, gridManager, unitData.remainingTiles);
+        }
+    }
+
+
+    private void MoveUnitTo(Vector2Int tileCords)
+    {
+
+        //Esto es para quitar los tiles de ataque
+        ChangingShaderTopTiles.ClearAllHighlights();
+
+        if (unitSelected)
+        {
+
+            //Vector2Int targetCords = hit.transform.GetComponent<Labeler>().cords;
+            Vector2Int targetCords = tileCords;
+            Vector2Int startCords = gridManager.GetCoordinatesFromPosition(selectedUnit.position);
+
+            // int distance = CalculatePathCost(startCords, targetCords);
+
+            //COSTE - ADD+++++++++++++ INICIO
+
+            // pathFinder.SetNewDestination(startCords, targetCords);
+            // List<Node> pathPosible = pathFinder.GetNewPath();
+
+            //UnitMovementData unitData = GetUnitData(selectedUnit.gameObject);
+            // if (unitData != null && distance <= unitData.maxTiles) 
+            // {
+
+            //     RecalculatePath(true, true);
+            // }
+            //COSTE - ADD+++++++++++++ FIN
+
+
+            int distance = CalculatePathCost(startCords, targetCords);
+            var unitData = GetUnitData(selectedUnit.gameObject);
+
+            //pathFinder.SetNewDestination(startCords, targetCords);
+            //List<Node> pathPosible = pathFinder.GetNewPath();
+            //CalculatePathCost(startCords, targetCords);
+            // if(pathPosible.Count > 0){
+
+            //     RecalculatePath(true,true);
+            // } 
+            // else{
+
+            //     Debug.LogWarning("Camino no encontrad por coste");
+            // }
+            if (distance <= unitData.remainingTiles)
+            {
+                unitData.remainingTiles -= distance;
+                RecalculatePath(true, true);
+            }
+            else
+            {
+
+                Debug.LogWarning("Esta demasiado lejos");
+                CanvasGroup canvas = selectedUnit.GetComponentInChildren<CanvasGroup>();
+                if (canvas != null)
+                    canvas.alpha = 0f;
+            }
+
+            //selectedUnit.transform.position = new Vector3(targetCords.x, selectedUnit.position.y, targetCords.y);
+        }
+    }
+
+    private void SelectUnit(Transform unit)
+    {
+
+        // Si había una unidad seleccionada antes, ocultar su interfaz
+        if (lastSelectedUnit != null)
+        {
+            CanvasGroup previousCanvas = selectedUnit.GetComponentInChildren<CanvasGroup>();
+            if (previousCanvas != null)
+                previousCanvas.alpha = 0f;
+        }
+
+
+        selectedUnit = unit;
+        unitSelected = true;
+
+        CanvasGroup canvas = selectedUnit.GetComponentInChildren<CanvasGroup>();
+        if (canvas != null)
+            canvas.alpha = 1f;
+        lastSelectedUnit = selectedUnit; // actualizar
+
+
+        // Obtener coords y datos de movimiento
+        Vector2Int unitCoords = gridManager.GetCoordinatesFromPosition(unit.position);
+        var unitData = GetUnitData(unit.gameObject);
+        if (unitData != null)
+        {
+            // Resaltar todas las tiles al alcance de la unidad
+            ChangingShaderTopTiles.HighlightCostTiles(unitCoords, gridManager, unitData.remainingTiles);
+        }
+    
+
+    }
+
+    public void DeselectCurrentUnit()
+{
+    // Si había una unidad seleccionada, ocultamos su UI
+    if (selectedUnit != null)
+    {
+        var canvas = selectedUnit.GetComponentInChildren<CanvasGroup>();
+        if (canvas != null)
+            canvas.alpha = 0f;
+    }
+
+    selectedUnit = null;
+    unitSelected = false;
+    lastSelectedUnit = null;
+
+    // Limpiar tiles 
+    ChangingShaderTopTiles.ClearAllHighlights();
+}
+
+
+    private int CalculatePathCost(Vector2Int start, Vector2Int target)
+    {
+
 
         pathFinder.SetNewDestination(start, target);
         List<Node> pathCost = pathFinder.GetNewPath();
-        int cost = pathCost.Count -1;
+        int cost = pathCost.Count - 1;
         Debug.Log($"Costo del camino: {cost}, Nodos en el camino: {pathCost.Count}");
 
         //UnitMovementData unitData = GetUnitData(selectedUnit.gameObject);
@@ -258,16 +474,17 @@ public class UnitController : MonoBehaviour
         {
             CanvasGroup canvas = selectedUnit.GetComponentInChildren<CanvasGroup>();
             if (canvas != null)
-                canvas.alpha = 0f;
+                canvas.alpha = 1f;
+
+            Vector2Int unitCoords = gridManager.GetCoordinatesFromPosition(selectedUnit.position);
+            var unitData = GetUnitData(selectedUnit.gameObject);
+            ChangingShaderTopTiles.HighlightCostTiles(unitCoords, gridManager, unitData.remainingTiles);
         }
 
-
-        unitSelected = false;
-        lastSelectedUnit= null;
-        selectedUnit = null;
-
-
-        // I açò per a desactivar la UI de dita Unitat
+        //Si interesa deseleccionar la unitat descomentar açò.
+        // unitSelected = false;
+        // lastSelectedUnit= null;
+        // selectedUnit = null;
         
     }
 }

@@ -18,11 +18,15 @@ public class Rotation : MonoBehaviour
 
     private UnitController unitController;
     private List<Transform> unitsRedirigir = new List<Transform>(); // Lista de todas las unidades seleccionadas
+
+    private List<FolowingUnit> downFollowers = new List<FolowingUnit>();
+    private List<TopFolowingUnit> topFollowers = new List<TopFolowingUnit>();
+
     //GIR-ADD+-+-+-+-+-+-+-+-+
 
-    private FolowingUnit folowingUnit;
+    //private FolowingUnit folowingUnit;
 
-    private TopFolowingUnit topFolowingUnit;
+    //private TopFolowingUnit topFolowingUnit;
 
 
     public KeyCode keyToPress = KeyCode.Space;
@@ -43,9 +47,9 @@ public class Rotation : MonoBehaviour
         //Açó es per a moure de una casilla x a una y en Gir
         //GIR-ADD+-+-+-+-+-+-+-+-+
 
-        folowingUnit = FindObjectOfType<FolowingUnit>();
+        // folowingUnit = FindObjectOfType<FolowingUnit>();
 
-        topFolowingUnit = FindObjectOfType<TopFolowingUnit>();
+        // topFolowingUnit = FindObjectOfType<TopFolowingUnit>();
     }
 
     
@@ -55,8 +59,30 @@ public class Rotation : MonoBehaviour
 
         if(Input.GetKeyDown(keyToPress) &&!isRotating){
             
-            folowingUnit.UpdateFollowerPosition();
+            //TODO: Revisar si es pot llevar---innecesari per ara+-+-+-+-+-+-
             SelectAllUnits();
+
+            GatherAllFollowers();
+
+            foreach (var unit in downFollowers)
+            {   
+
+                //esconder la UI de las unidades.
+                CanvasGroup previousCanvas = unit.GetComponentInChildren<CanvasGroup>();
+                if (previousCanvas != null)
+                    previousCanvas.alpha = 0f;
+
+                
+
+
+
+                unit.UpdateFollowerPosition();
+
+                // var downFollower = unit.GetComponent<FolowingUnit>();
+                // if (downFollower != null)
+                //     downFollower.UpdateFollowerPosition();
+            }
+            //folowingUnit.UpdateFollowerPosition();
             //GIR-ADD+-+-+-+-+-+-+-+-+
 
             targetRotation = transform.eulerAngles.y + rotationAngle;
@@ -67,6 +93,24 @@ public class Rotation : MonoBehaviour
 
             
         
+        }
+    }
+
+    private void GatherAllFollowers()
+    {
+
+        topFollowers.Clear();
+        downFollowers.Clear();
+
+        var allUnits = GameObject.FindGameObjectsWithTag("Unit");
+        foreach (var unit in allUnits)
+        {
+
+            var downUnit = unit.GetComponent<FolowingUnit>();
+            if (downUnit != null) downFollowers.Add(downUnit);
+
+            var topUnit = unit.GetComponent<TopFolowingUnit>();
+            if (topUnit != null) topFollowers.Add(topUnit);
         }
     }
 
@@ -150,7 +194,7 @@ public class Rotation : MonoBehaviour
             transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.Euler(0, targetRotation, 0), rotationSpeed * Time.deltaTime);
             yield return null;
         }
-        transform.rotation = Quaternion.Euler(0, targetRotation, 0); 
+        transform.rotation = Quaternion.Euler(0, targetRotation, 0);
         // Asegurar que la rotación finaliza exactamente en el ángulo deseado
         isRotating = false;
 
@@ -162,20 +206,38 @@ public class Rotation : MonoBehaviour
         yield return null; // Esperamos un frame para asegurar que la rotación ha terminado completamente
 
         //PARA MOVER EL TOP-UNIT DONDE DIGA DOWN-UNIT
-        if (topFolowingUnit != null)
+
+        foreach (var unit in topFollowers)
         {
-            yield return StartCoroutine(topFolowingUnit.MoveToRaycastHit());
+            yield return StartCoroutine(unit.MoveToRaycastHit());
+
+            // var topFollower = unit.GetComponent<TopFolowingUnit>();
+            // if (topFollower != null)
+            //     yield return StartCoroutine(topFollower.MoveToRaycastHit());
         }
+
+        // if (topFolowingUnit != null)
+        // {
+        //     yield return StartCoroutine(topFolowingUnit.MoveToRaycastHit());
+        // }
 
         yield return null; // Esperamos otro frame por seguridad
 
 
         //PARA PONER EL SOURCE DEL CONSTRAINT OTRA VEZ EN EL TOP-UNIT
-        if (folowingUnit != null)
+
+        foreach (var unit in downFollowers)
         {
-            folowingUnit.FollowerToParent();
-            }
+            unit.FollowerToParent();
+
+            // if (folowingUnit != null)
+            // {
+            //     folowingUnit.FollowerToParent();
+            // }
         }
+
+
+    }
 
     private void BlockNodeBasedOnRotation()
     {
