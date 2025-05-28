@@ -46,6 +46,7 @@ public class EnemyAIController : MonoBehaviour
 
         // 3. Buscar tiles válidas para atacar (línea recta, distancia <= 4)
         List<Vector2Int> validTiles = FindTilesToAttackFrom(targetPos, 4);
+        Dictionary<Vector2Int, int> pathCosts = new Dictionary<Vector2Int, int>();
 
         Scenario bestScenario = new Scenario(); // por defecto, -100000
 
@@ -54,10 +55,10 @@ public class EnemyAIController : MonoBehaviour
             if (!gridManager.GetNode(pos).walkable) continue;
 
             int pathCost = unitController.CalculatePathCost(selfPos, pos);
-            if (pathCost == -1|| pathCost >99) continue;
-            
+            if (pathCost == -1 || pathCost > 99) continue;
 
-            //  TODO: Testear que pasa si el objetivo no puede estar al alcance+-+-+-++-+-+-+-+
+            pathCosts[pos] = pathCost;
+
             float value = EvaluateScenario(bestTarget, pathCost);
             if (value > bestScenario.scenarioValue)
             {
@@ -70,9 +71,17 @@ public class EnemyAIController : MonoBehaviour
         {
             Debug.Log($"El mejor escenario para el enemigo es la posición [{bestScenario.targetTile}]");
             yield return MoveTo(bestScenario.targetTile);
-            
+
             yield return new WaitForSeconds(0.2f);
             yield return ShootAt(bestTarget);
+        }
+
+        else
+        {
+            Debug.Log($" No hay posiciones desde las que atacar. Me acerco al objetivo...");
+            yield return ApproachTarget(bestTarget, validTiles, pathCosts);
+
+
         }
 
         yield return new WaitForSeconds(0.5f);
@@ -107,7 +116,7 @@ public class EnemyAIController : MonoBehaviour
         return healtScore - distancePenalty;
     }
 
-    public  IEnumerator MoveTo(Vector2Int position)
+    public IEnumerator MoveTo(Vector2Int position)
     {
         //TODO: No es podria passar directament el controller desde el awake com tot lo demés???
         //UnitController controller = FindObjectOfType<UnitController>();
@@ -131,6 +140,25 @@ public class EnemyAIController : MonoBehaviour
 
         if (shooter != null)
         {
+
+            Vector3 toTarget = target.transform.position - transform.position;
+
+            Vector3 shotDirection = Vector3.zero;
+
+            if (Mathf.Abs(toTarget.x) > Mathf.Abs(toTarget.z))
+            {
+                shotDirection = toTarget.x > 0 ? Vector3.right : Vector3.left;
+            }
+            else
+            {
+                shotDirection = toTarget.z > 0 ? Vector3.forward : Vector3.back;
+            }
+
+            shooter.currentDirection = shotDirection.normalized;
+
+            Debug.Log($"{gameObject.name} apunta en dirección {shooter.currentDirection} hacia {target.gameObject.name}");
+
+
             bool fired = shooter.TryShoot();
             if (fired)
             {
@@ -148,4 +176,28 @@ public class EnemyAIController : MonoBehaviour
     }
 
 
+    private IEnumerator ApproachTarget(UnitEntity bestTarget, List<Vector2Int> validTiles, Dictionary<Vector2Int, int> pathCosts )
+    {
+
+        // List<Vector2Int> reachableTiles = new List<Vector2Int>();
+
+        UnitMovementData unitData = unitController.GetUnitData(gameObject);
+        List<Vector2Int> reachableTiles = pathCosts
+         .Where(p => p.Value <= unitData.remainingTiles)
+         .Select(p => p.Key)
+         .ToList();
+        
+        if (reachableTiles.Count > 0)
+    {
+        Vector2Int bestMove = reachableTiles
+            .OrderBy(tile => Vector2Int.Distance(tile, gridManager.GetCoordinatesFromPosition(bestTarget.transform.position))).First();
+
+        Debug.Log($"[IA] Me muevo a {bestMove} para acercarme a {bestTarget.name}");
+        yield return MoveTo(bestMove);
+    }
+    else
+    {
+        Debug.Log("[IA] No puedo acercarme a ninguna casilla relevante.");
+    }
+    }
 }
