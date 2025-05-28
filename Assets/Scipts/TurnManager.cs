@@ -216,18 +216,21 @@ public class TurnManager : MonoBehaviour
         // Simple AI: loop through enemy units
         foreach (var unit in enemyUnits)
         {
+            var ai = unit.GetComponent<EnemyAIController>();
+            if (unit.IsAlive && ai != null)
+                yield return ai.PerformAI();
             // Wait until AI action done
             //yield return StartCoroutine(unit.PerformAI());
 
         }
 
 
-        yield break;
+        // yield break;
         // TODO: AÑADIR LOS METODO DE LLAMADA A IA AQUI
 
 
-        // yield return new WaitForSeconds(0.5f);
-        // StartCoroutine(ChangeState(GameState.PLAYERTURN));
+        yield return new WaitForSeconds(0.5f);
+        StartCoroutine(ChangeState(GameState.PLAYERTURN));
     }
 
     private IEnumerator ChangeState(GameState newState)

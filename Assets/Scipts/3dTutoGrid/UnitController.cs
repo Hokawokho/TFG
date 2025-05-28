@@ -11,11 +11,11 @@ public class UnitController : MonoBehaviour
     public Transform selectedUnit;
     public bool unitSelected = false;
 
-    private Transform lastSelectedUnit= null;
+    private Transform lastSelectedUnit = null;
 
     [SerializeField] float movementSpeed = 1f;
     GridManager gridManager;
-    
+
 
 
     List<Node> path = new List<Node>();
@@ -31,10 +31,12 @@ public class UnitController : MonoBehaviour
     private ObjectShooter shooter;
 
 
-    public enum AttackMode { None, Melee, Range}
+    public enum AttackMode { None, Melee, Range }
     private AttackMode currentAttackMode = AttackMode.None;
 
     private TurnManager turnManager;
+
+    public bool isMoving = false;
 
     // public KeyCode keyToResetMovement;
 
@@ -58,17 +60,18 @@ public class UnitController : MonoBehaviour
 
     }
 
-    
-    
+
+
 
 
     //+++-++-+-+-+COSTE-ADD+++++++++++++INICIO
-    public UnitMovementData GetUnitData(GameObject unit){
+    public UnitMovementData GetUnitData(GameObject unit)
+    {
 
-      //Debug.Log($"La unidad es: {unit}");
+        //Debug.Log($"La unidad es: {unit}");
 
         return unitMovementList.Find(data => data.unitData == unit);
-        
+
         //
     }
     //+++-++-+-+-+COSTE-ADD+++++++++++++FIN
@@ -97,41 +100,41 @@ public class UnitController : MonoBehaviour
         if (!Input.GetMouseButtonDown(0)) return;
 
 
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            //Marca amb un ray on estiga el nostre ratolí
-            // RaycastHit hit;
-            // bool hasHit = Physics.Raycast(ray, out hit);
-            //Açò guarda el que s'ha seleccionat amb un ray en HIT
-            // if (hasHit)
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        //Marca amb un ray on estiga el nostre ratolí
+        // RaycastHit hit;
+        // bool hasHit = Physics.Raycast(ray, out hit);
+        //Açò guarda el que s'ha seleccionat amb un ray en HIT
+        // if (hasHit)
 
-            //D'esta forma es més ràpid que dalt
-            if (Physics.Raycast(ray, out var hit))
+        //D'esta forma es més ràpid que dalt
+        if (Physics.Raycast(ray, out var hit))
 
 
+        {
+            if (hit.transform.tag == "Tile")
             {
-                if (hit.transform.tag == "Tile")
+
+                Vector2Int tileCords = hit.transform.GetComponent<Tile>().cords;
+                Debug.Log($"Casilla seleccionada: {tileCords.x}, {tileCords.y}");
+
+                if (gridManager.GetNode(tileCords) != null && !gridManager.GetNode(tileCords).walkable)
                 {
-
-                    Vector2Int tileCords = hit.transform.GetComponent<Tile>().cords;
-                    Debug.Log($"Casilla seleccionada: {tileCords.x}, {tileCords.y}");
-
-                    if (gridManager.GetNode(tileCords) != null && !gridManager.GetNode(tileCords).walkable)
-                    {
-                        Debug.Log("No se puede mover en esta casilla");
-                        return;
-                    }
-
-                    MoveUnitTo(tileCords);
-
+                    Debug.Log("No se puede mover en esta casilla");
+                    return;
                 }
 
+                MoveUnitTo(tileCords);
 
-                if (hit.transform.tag == "Unit")
-                {
+            }
 
-                    //TODO: Quan acabe amb el debugging aplicar açò també en el turno del jugador pals enemics (Després ja implementar selecció estil FE)    
 
-                    //Si turno del enemigo no se pueden seleccionar los Player+++
+            if (hit.transform.tag == "Unit")
+            {
+
+                //TODO: Quan acabe amb el debugging aplicar açò també en el turno del jugador pals enemics (Després ja implementar selecció estil FE)    
+
+                //Si turno del enemigo no se pueden seleccionar los Player+++
                 if (turnManager.State == TurnManager.GameState.ENEMYTURN)
                 {
                     if (hit.transform.GetComponent<Player>() != null)
@@ -140,11 +143,11 @@ public class UnitController : MonoBehaviour
 
 
 
-                
+
                 SelectUnit(hit.transform);
-                }
             }
-        
+        }
+
     }
 
 
@@ -168,7 +171,7 @@ public class UnitController : MonoBehaviour
     //         ChangingShaderTopTiles.HighlightLineTiles(unitCoords, gridManager);
     //     }
 
-        
+
 
 
 
@@ -235,7 +238,7 @@ public class UnitController : MonoBehaviour
             Debug.LogWarning("La unidad no tiene Weapon");
             return;
         }
-         bool fired = shooter.TryShoot();
+        bool fired = shooter.TryShoot();
         if (!fired)
             Debug.Log("No puede disparar (cooldown o sin acciones)");
         else
@@ -261,7 +264,7 @@ public class UnitController : MonoBehaviour
     }
 
 
-    private void MoveUnitTo(Vector2Int tileCords)
+    public void MoveUnitTo(Vector2Int tileCords)
     {
 
         //Esto es para quitar los tiles de ataque
@@ -351,30 +354,30 @@ public class UnitController : MonoBehaviour
             // Resaltar todas las tiles al alcance de la unidad
             ChangingShaderTopTiles.HighlightCostTiles(unitCoords, gridManager, unitData.remainingTiles);
         }
-    
+
 
     }
 
     public void DeselectCurrentUnit()
-{
-    // Si había una unidad seleccionada, ocultamos su UI
-    if (selectedUnit != null)
     {
-        var canvas = selectedUnit.GetComponentInChildren<CanvasGroup>();
-        if (canvas != null)
-            canvas.alpha = 0f;
+        // Si había una unidad seleccionada, ocultamos su UI
+        if (selectedUnit != null)
+        {
+            var canvas = selectedUnit.GetComponentInChildren<CanvasGroup>();
+            if (canvas != null)
+                canvas.alpha = 0f;
+        }
+
+        selectedUnit = null;
+        unitSelected = false;
+        lastSelectedUnit = null;
+
+        // Limpiar tiles 
+        ChangingShaderTopTiles.ClearAllHighlights();
     }
 
-    selectedUnit = null;
-    unitSelected = false;
-    lastSelectedUnit = null;
 
-    // Limpiar tiles 
-    ChangingShaderTopTiles.ClearAllHighlights();
-}
-
-
-    private int CalculatePathCost(Vector2Int start, Vector2Int target)
+    public int CalculatePathCost(Vector2Int start, Vector2Int target)
     {
 
 
@@ -390,9 +393,10 @@ public class UnitController : MonoBehaviour
 
     }
 
-    public void RecalculatePath(bool resetPath, bool followPath){
+    public void RecalculatePath(bool resetPath, bool followPath)
+    {
 
-        
+
 
         //FORMA DE OPTIMIZAR-HO
         Vector2Int coordinates = resetPath ? pathFinder.StartCords : gridManager.GetCoordinatesFromPosition(transform.position);
@@ -422,31 +426,35 @@ public class UnitController : MonoBehaviour
         path = pathFinder.GetNewPath(coordinates);
 
         //Debug.Log($"Nodos en el camino: {path.Count}");
-        
-        
-        if(followPath && path.Count > 0){
+
+
+        if (followPath && path.Count > 0)
+        {
             StartCoroutine(FollowPath());
         }
 
-        else{
+        else
+        {
 
             Debug.LogWarning("No hay camino posible");
         }
     }
-   
-   
-    IEnumerator FollowPath(){
-    
-    //IEnumerator es para CORRUTINAS+++++++++++++++++++
-    //mes info en notes rapides
 
-        for(int i = 1; i < path.Count; i++)
+
+    IEnumerator FollowPath()
+    {
+        isMoving = true;
+
+        //IEnumerator es para CORRUTINAS+++++++++++++++++++
+        //mes info en notes rapides
+
+        for (int i = 1; i < path.Count; i++)
         // int i = 0 seria la unidad en su posición actual
         {
-            
+
 
             Vector3 startPosition = selectedUnit.position;
-            
+
             Vector3 endPosition = gridManager.GetPositionFromCoordinates(path[i].cords);
             float travelPercent = 0f;
             //porcentaje de progreso de movimiento
@@ -457,12 +465,13 @@ public class UnitController : MonoBehaviour
             selectedUnit.LookAt(endPosition);
             //Esta linea es per si foren figures complexes, que miren a la endPosition (es a dir que es giren)
 
-            while(travelPercent < 1f){
+            while (travelPercent < 1f)
+            {
                 //mientras no se aclance el destino
 
                 travelPercent += Time.deltaTime * movementSpeed;
                 selectedUnit.position = Vector3.Lerp(startPosition, endPosition, travelPercent);
-                                                        //Lerp == Mueve suavemente la unidad de start a end++++++++++++++++++++
+                //Lerp == Mueve suavemente la unidad de start a end++++++++++++++++++++
                 yield return new WaitForEndOfFrame();
                 //Açò es per a acabar la Corrutina+++++++++++
             }
@@ -485,6 +494,8 @@ public class UnitController : MonoBehaviour
         // unitSelected = false;
         // lastSelectedUnit= null;
         // selectedUnit = null;
-        
+        isMoving = false;
+
     }
+    
 }
