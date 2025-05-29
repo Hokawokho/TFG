@@ -66,23 +66,30 @@ public class EnemyAIController : MonoBehaviour
             }
         }
 
+        var unitData = unitController.GetUnitData(gameObject);
+
         // 4. Mover a la mejor casilla
         if (bestScenario.scenarioValue > -100000)
         {
-            Debug.Log($"El mejor escenario para el enemigo es la posición [{bestScenario.targetTile}]");
-            yield return MoveTo(bestScenario.targetTile);
+            int costToBestTile = pathCosts[bestScenario.targetTile];
 
-            yield return new WaitForSeconds(0.2f);
-            yield return ShootAt(bestTarget);
-        }
+            if (costToBestTile <= unitData.remainingTiles)
+            {
+                Debug.Log($"El mejor escenario para el enemigo es la posición [{bestScenario.targetTile}]");
+                yield return MoveTo(bestScenario.targetTile);
 
-        else
+                yield return new WaitForSeconds(0.2f);
+                yield return ShootAt(bestTarget);
+            }
+            else
         {
             Debug.Log($" No hay posiciones desde las que atacar. Me acerco al objetivo...");
-            yield return ApproachTarget(bestTarget, validTiles, pathCosts);
-
+            yield return ApproachTargetTile(bestScenario.targetTile, selfPos, unitData.remainingTiles);
 
         }
+        }
+
+        
 
         yield return new WaitForSeconds(0.5f);
     }
@@ -126,7 +133,7 @@ public class EnemyAIController : MonoBehaviour
         yield return new WaitUntil(() => !unitController.isMoving);
 
         //TODO: Espera extra tras acabar de moverse
-        yield return new WaitForSeconds(0.5f);
+        //yield return new WaitForSeconds(0.5f);
     }
 
     private IEnumerator ShootAt(UnitEntity target)
@@ -175,29 +182,32 @@ public class EnemyAIController : MonoBehaviour
         }
     }
 
-
-    private IEnumerator ApproachTarget(UnitEntity bestTarget, List<Vector2Int> validTiles, Dictionary<Vector2Int, int> pathCosts )
+    private IEnumerator ApproachTargetTile(Vector2Int finalTarget, Vector2Int selfPos, int maxTiles)
     {
+        pathfinding.SetNewDestination(selfPos, finalTarget);
+        List<Node> fullPath = pathfinding.GetNewPath();
+    if (fullPath == null || fullPath.Count <= 1)
+        {
+            Debug.LogWarning("[IA] No se puede calcular un camino válido");
+            yield break;
+        }
 
-        // List<Vector2Int> reachableTiles = new List<Vector2Int>();
+    // Quitamos el nodo actual (posición de la unidad)
+    fullPath.RemoveAt(0);
 
-        UnitMovementData unitData = unitController.GetUnitData(gameObject);
-        List<Vector2Int> reachableTiles = pathCosts
-         .Where(p => p.Value <= unitData.remainingTiles)
-         .Select(p => p.Key)
-         .ToList();
-        
-        if (reachableTiles.Count > 0)
+    // Recortamos el camino según los tiles disponibles
+    int stepsToTake = Mathf.Min(maxTiles, fullPath.Count);
+    if (stepsToTake <= 0)
     {
-        Vector2Int bestMove = reachableTiles
-            .OrderBy(tile => Vector2Int.Distance(tile, gridManager.GetCoordinatesFromPosition(bestTarget.transform.position))).First();
+        Debug.Log("[IA] No puedo moverme más esta ronda.");
+        yield break;
+    }
 
-        Debug.Log($"[IA] Me muevo a {bestMove} para acercarme a {bestTarget.name}");
-        yield return MoveTo(bestMove);
+    Vector2Int bestReachableTile = fullPath[stepsToTake - 1].cords;
+    Debug.Log($"[IA] Me acerco a {bestReachableTile} (lo más cerca posible)");
+    yield return MoveTo(bestReachableTile);
+
+
     }
-    else
-    {
-        Debug.Log("[IA] No puedo acercarme a ninguna casilla relevante.");
-    }
-    }
+
 }

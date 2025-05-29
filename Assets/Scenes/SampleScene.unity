@@ -23670,7 +23670,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4356558718437918795, guid: e24b1e0914994174db14ce5dd2491ce3, type: 3}
       propertyPath: unitMovementList.Array.data[0].maxTiles
-      value: 5
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 4356558718437918795, guid: e24b1e0914994174db14ce5dd2491ce3, type: 3}
       propertyPath: unitMovementList.Array.data[0].unitData
