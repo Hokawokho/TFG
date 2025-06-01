@@ -104,9 +104,12 @@ public class FolowingUnit : MonoBehaviour
 
         if (/*!isFirstActive &&*/ detectedTarget != null && positionConstraint.sourceCount < 2)
         {
+
+            BotUnitSetPosition botTracker = detectedTarget.GetComponent<BotUnitSetPosition>();
+
             ConstraintSource source2 = new ConstraintSource
             {
-                sourceTransform = detectedTarget,
+                sourceTransform = botTracker.currentContact,
                 weight = 1f
             };
             positionConstraint.AddSource(source2);
