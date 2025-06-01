@@ -9,8 +9,8 @@ public class Scenario
 
     public float scenarioValue;
 
-    private Vector2Int startTile;
-    private Vector2Int targetTile;
+    public Vector2Int startTile;
+    public Vector2Int targetTile;
 
     public bool hasAttacked;
     
