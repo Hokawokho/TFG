@@ -14,7 +14,12 @@ public class Tile : MonoBehaviour
 
     void Awake()
     {
+
         SetCords();
+    }
+
+    void Start()
+    {
 
         if (blocked)
         {
