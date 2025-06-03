@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+
 //using System.Numerics;
 using TMPro;
 using UnityEngine;
@@ -385,6 +387,12 @@ public class UnitController : MonoBehaviour
         List<Node> pathCost = pathFinder.GetNewPath();
         int cost = pathCost.Count - 1;
         Debug.Log($"Costo del camino: {cost}, Nodos en el camino: {pathCost.Count}");
+
+        string pathCoords = string.Join(" -> ",
+                pathCost.Select(n => $"{n.cords.x},{n.cords.y}")
+            );
+        Debug.Log($"Casillas en el camino: {pathCoords}");
+        
 
         //UnitMovementData unitData = GetUnitData(selectedUnit.gameObject);
         //GetUnitData(selectedUnit.gameObject);

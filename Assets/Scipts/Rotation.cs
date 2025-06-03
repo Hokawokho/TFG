@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using UnityEditor.MemoryProfiler;
 using UnityEngine;
 
 public class Rotation : MonoBehaviour
@@ -24,6 +25,10 @@ public class Rotation : MonoBehaviour
     private int currentCase = 1;
     //Açò per al bloqueig de cada tile segons l'angle de rotació
 
+    public ConnectionBlocker connectionBlocker;
+    //Millor ficar-ho des de l'editor així podem tindre replicats del mateix script sense problema
+
+
 
 
 
@@ -33,6 +38,15 @@ public class Rotation : MonoBehaviour
         gridManager = FindObjectOfType<GridManager>();
 
         unitController = FindObjectOfType<UnitController>();
+
+
+        //Si fot el bloqueig a l'inici, llevar esta línea
+        ApplyBlockingToAllTiles(currentCase);
+        
+        if (connectionBlocker != null)
+        {
+            connectionBlocker.ApplyBlocksForCase(currentCase);
+        }
 
     }
 
@@ -138,15 +152,18 @@ public class Rotation : MonoBehaviour
 
         }
     }
-   
-   
+
+
     private void OnRotationFinished()
     {
         int rotationState = Mathf.RoundToInt(targetRotation / 90f) % 4;
-        currentCase = rotationState + 1; 
+        currentCase = rotationState + 1;
 
         // APLICA bloqueo/desbloqueo a **todas** las Tiles con el nuevo case
         ApplyBlockingToAllTiles(currentCase);
+        
+        if (connectionBlocker != null)
+            connectionBlocker.ApplyBlocksForCase(currentCase);
     }
 
     private void ApplyBlockingToAllTiles(int caseNumber)

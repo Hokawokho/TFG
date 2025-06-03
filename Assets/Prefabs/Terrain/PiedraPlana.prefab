@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1102859767302787966}
   - component: {fileID: 1591115105060989355}
   - component: {fileID: 8378777925550129807}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: PiedraPlana
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3350672590083675106}
   - component: {fileID: 1451334687652635164}
   - component: {fileID: 5649736159219751116}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: CespedPlano
   m_TagString: Untagged
   m_Icon: {fileID: 0}
