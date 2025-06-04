@@ -114,7 +114,7 @@ public class FolowingUnit : MonoBehaviour
             Collider targetCollider = detectedTarget.GetComponent<Collider>();
             if (targetCollider != null)
             {
-                float peakCollider = targetCollider.bounds.max.y;
+                float peakCollider = targetCollider.bounds.max.y - detectedTarget.position.y;
                 positionConstraint.translationOffset = new Vector3(0, peakCollider + offsetSource2.y, 0);
             }
 
