@@ -143,6 +143,12 @@ public class UnitController : MonoBehaviour
                         return;
                 }
 
+                if (unitSelected && hit.transform == selectedUnit)
+                {
+                    DeselectCurrentUnit();
+                    return;
+                }
+
 
 
 
@@ -346,13 +352,19 @@ public class UnitController : MonoBehaviour
         if (canvas != null)
             canvas.alpha = 1f;
         lastSelectedUnit = selectedUnit; // actualizar
-
+    
 
         // Obtener coords y datos de movimiento
         Vector2Int unitCoords = gridManager.GetCoordinatesFromPosition(unit.position);
         var unitData = GetUnitData(unit.gameObject);
         if (unitData != null)
-        {
+        {   
+            //Volver a tener en cuenta colisiones para el mesh del layer corresponent
+            var layerChanger = unit.GetComponentInParent<LayerRenderChanger>();
+            if (layerChanger != null)
+            {
+                layerChanger.ResumeCollisions();
+            }
             // Resaltar todas las tiles al alcance de la unidad
             ChangingShaderTopTiles.HighlightCostTiles(unitCoords, gridManager, unitData.remainingTiles);
         }

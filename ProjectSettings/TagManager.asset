@@ -15,14 +15,14 @@ TagManager:
   - UI
   - Player
   - Ground
-  - Top_Ground
+  - Render_Ground
   - InvGridCollider
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Render_H1
+  - Render_H0
+  - Render_H-1
+  - Render_H3
+  - Render_H1'5
+  - Render_H-2
   - 
   - 
   - 

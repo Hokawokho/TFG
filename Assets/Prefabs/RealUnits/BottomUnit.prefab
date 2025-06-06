@@ -11,7 +11,9 @@ GameObject:
   - component: {fileID: 262673396343504439}
   - component: {fileID: 4241986657209120015}
   - component: {fileID: 7947204969852789096}
-  m_Layer: 6
+  - component: {fileID: 2649849430464055483}
+  - component: {fileID: 5583630812488808345}
+  m_Layer: 0
   m_Name: Mesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -83,6 +85,41 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &2649849430464055483
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5094023424451917696}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.99999994, y: 0.59937334, z: 0.99999994}
+  m_Center: {x: 0, y: -0.82662296, z: 0}
+--- !u!114 &5583630812488808345
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5094023424451917696}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 039ed865875cdeb4eaf29db03318f0f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  renderChanger: {fileID: 0}
+  LayerRenderGround: Render_Ground
 --- !u!1 &5384580514618696325
 GameObject:
   m_ObjectHideFlags: 0
@@ -95,7 +132,7 @@ GameObject:
   - component: {fileID: 9067656527722172132}
   - component: {fileID: 2433776529486213391}
   - component: {fileID: 1577580425246935999}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: BottomUnit
   m_TagString: Unit
   m_Icon: {fileID: 0}
@@ -112,7 +149,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -1.5, y: 1.02, z: -4.5}
-  m_LocalScale: {x: 0.5517904, y: 0.5517904, z: 0.5517904}
+  m_LocalScale: {x: 0.54, y: 0.54, z: 0.54}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 262673396343504439}
@@ -129,7 +166,7 @@ PositionConstraint:
   serializedVersion: 2
   m_Weight: 1
   m_TranslationAtRest: {x: -1.5, y: 1.02, z: -4.5}
-  m_TranslationOffset: {x: -5.5, y: -5.504, z: -5.5}
+  m_TranslationOffset: {x: 0, y: 0, z: 0}
   m_AffectTranslationX: 1
   m_AffectTranslationY: 1
   m_AffectTranslationZ: 1

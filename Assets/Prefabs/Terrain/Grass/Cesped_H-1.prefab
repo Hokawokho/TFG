@@ -11,7 +11,8 @@ GameObject:
   - component: {fileID: 6067576008745971585}
   - component: {fileID: 6120596170634869959}
   - component: {fileID: 175064178720379994}
-  m_Layer: 7
+  - component: {fileID: 7426637157176129310}
+  m_Layer: 8
   m_Name: Cesped_H-1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -88,6 +89,27 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &7426637157176129310
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 894553040450886017}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.2, y: 0.2, z: 1.2}
+  m_Center: {x: 0, y: 0.4, z: 0}
 --- !u!1 &1254095292572187287
 GameObject:
   m_ObjectHideFlags: 0
@@ -358,7 +380,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2091858550668687211, guid: 7c6e48aea3d9bdc47931cf16e8a076e1, type: 3}
       propertyPath: m_Layer
-      value: 8
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

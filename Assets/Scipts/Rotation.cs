@@ -9,7 +9,7 @@ public class Rotation : MonoBehaviour
 
     public float rotationAngle = 90f; // Ángulo de rotación en grados
     public float rotationSpeed = 200f; // Velocidad de rotación en grados por segundo
-    private bool isRotating = false;
+    public bool isRotating = false;
     private float targetRotation;
 
 
@@ -26,6 +26,10 @@ public class Rotation : MonoBehaviour
     //Açò per al bloqueig de cada tile segons l'angle de rotació
 
     public ConnectionBlocker connectionBlocker;
+
+    private LayerRenderChanger layerRenderChanger;
+
+    private ChangingShaderTopTiles changingShaderTopTiles;
     //Millor ficar-ho des de l'editor així podem tindre replicats del mateix script sense problema
 
 
@@ -39,6 +43,7 @@ public class Rotation : MonoBehaviour
 
         unitController = FindObjectOfType<UnitController>();
 
+        layerRenderChanger = FindObjectOfType<LayerRenderChanger>();
 
         //Si fot el bloqueig a l'inici, llevar esta línea
         ApplyBlockingToAllTiles(currentCase);
@@ -57,18 +62,21 @@ public class Rotation : MonoBehaviour
 
         if(Input.GetKeyDown(keyToPress) &&!isRotating){
 
+            ChangingShaderTopTiles.ClearAllHighlights();
 
             GatherAllFollowers();
 
+            unitController.DeselectCurrentUnit();
+
             foreach (var unit in downFollowers)
-            {   
+            {
 
                 //esconder la UI de las unidades.
-                CanvasGroup previousCanvas = unit.GetComponentInChildren<CanvasGroup>();
-                if (previousCanvas != null)
-                    previousCanvas.alpha = 0f;
+                // CanvasGroup previousCanvas = unit.GetComponentInChildren<CanvasGroup>();
+                // if (previousCanvas != null)
+                //     previousCanvas.alpha = 0f;
 
-                
+
 
 
 
@@ -115,6 +123,9 @@ public class Rotation : MonoBehaviour
     private IEnumerator RotateSmoothly()
     {
         isRotating = true;
+        if (layerRenderChanger != null)
+            layerRenderChanger.SuspendCollisions();
+
 
 
         while (Mathf.Abs(Mathf.Repeat(transform.eulerAngles.y - targetRotation, 360)) > 0.1f)
@@ -125,6 +136,10 @@ public class Rotation : MonoBehaviour
         transform.rotation = Quaternion.Euler(0, targetRotation, 0);
         // Asegurar que la rotación finaliza exactamente en el ángulo deseado
         isRotating = false;
+        // if (layerRenderChanger != null)
+        //     //layerRenderChanger.ResumeCollisions();
+            
+
 
 
         // BlockNodeBasedOnRotation();

@@ -224,7 +224,7 @@ GameObject:
   - component: {fileID: 648379441139383458}
   - component: {fileID: 5553358865369639913}
   - component: {fileID: 7248977363010902236}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Plane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -329,7 +329,8 @@ GameObject:
   - component: {fileID: 7198745112449711934}
   - component: {fileID: 1726153685638245345}
   - component: {fileID: 8622978942281196909}
-  m_Layer: 7
+  - component: {fileID: 3071918341015039631}
+  m_Layer: 8
   m_Name: Piedra_H3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -406,3 +407,24 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &3071918341015039631
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7583743110490913709}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.2, y: 0.2, z: 1.2}
+  m_Center: {x: 0, y: 0.4, z: 0}
