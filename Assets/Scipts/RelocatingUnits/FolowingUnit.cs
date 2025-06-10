@@ -27,12 +27,21 @@ public class FolowingUnit : MonoBehaviour
 
     public  RaycastDebugger raycastDebugger;
 
-    // Start is called before the first frame update
+    private RendererGroundDetector groundDetector;
+
+    public Transform defaultSource;
+
+    public static event System.Action<FolowingUnit> OnFollowerPositionUpdated;
+
+
+    // Start is called before the first frame update 
     void Start()
     {
         positionConstraint = GetComponent<PositionConstraint>();
+        groundDetector = GetComponentInChildren<RendererGroundDetector>();
 
-        if(raycastDebugger == null){
+        if (raycastDebugger == null)
+        {
             raycastDebugger = FindObjectOfType<RaycastDebugger>();
         }
 
@@ -87,10 +96,18 @@ public class FolowingUnit : MonoBehaviour
 
 
     public void UpdateFollowerPosition() {
-    
+
 
         //isFirstActive = !isFirstActive;
-        detectedTarget = raycastDebugger.detectedHit;
+        // detectedTarget = raycastDebugger.detectedHit;
+        if (positionConstraint == null) return;
+
+         // Obtener la colisión actual del collider en lugar del raycast
+        if (groundDetector != null)
+            detectedTarget = groundDetector.currentCollision;
+        else
+            detectedTarget = null;
+
 
         ConstraintSource source1 = positionConstraint.GetSource(0);
         // source1.weight = isFirstActive ? 1 : 0;
@@ -114,27 +131,77 @@ public class FolowingUnit : MonoBehaviour
             Collider targetCollider = detectedTarget.GetComponent<Collider>();
             if (targetCollider != null)
             {
-                float peakCollider = targetCollider.bounds.max.y;
+                float peakCollider = targetCollider.bounds.max.y - detectedTarget.position.y;
                 positionConstraint.translationOffset = new Vector3(0, peakCollider + offsetSource2.y, 0);
             }
 
-        }//Debug.Log($"Following: {(isFirstActive ? "Source 1" : detectedTarget.name)}");
+        }
+        OnFollowerPositionUpdated?.Invoke(this);
+        Debug.Log($"Following: {(isFirstActive ? "Source 1" : detectedTarget.name)}");
     }
 
-     public void FollowerToParent(){
+    //     public void UpdateFollowerPositionCollider() {
+    
 
-        {
+        
+    //     detectedTarget = raycastDebugger.detectedHit;
+
+    //     ConstraintSource source1 = positionConstraint.GetSource(0);
+    //     // source1.weight = isFirstActive ? 1 : 0;
+    //     source1.weight = 0;
+    //     positionConstraint.SetSource(0, source1);
+        
+    //     if (positionConstraint.sourceCount > 1)
+    //         {
+    //             positionConstraint.RemoveSource(1);
+    //         }
+
+    //     if (/*!isFirstActive &&*/ detectedTarget != null && positionConstraint.sourceCount < 2)
+    //     {
+    //         ConstraintSource source2 = new ConstraintSource
+    //         {
+    //             sourceTransform = detectedTarget,
+    //             weight = 1f
+    //         };
+    //         positionConstraint.AddSource(source2);
+
+    //         Collider targetCollider = detectedTarget.GetComponent<Collider>();
+    //         if (targetCollider != null)
+    //         {
+    //             float peakCollider = targetCollider.bounds.max.y - detectedTarget.position.y;
+    //             positionConstraint.translationOffset = new Vector3(0, peakCollider + offsetSource2.y, 0);
+    //         }
+
+    //     }//Debug.Log($"Following: {(isFirstActive ? "Source 1" : detectedTarget.name)}");
+    // }
+    
+    
+
+
+     public void FollowerToParent()
+    {
+        if (positionConstraint == null || defaultSource == null)
+            return; 
+
+         // Guardar posición mundial antes de restaurar
+        Vector3 worldPos = transform.position;
+        
             if (positionConstraint.sourceCount > 1)
             {
                 positionConstraint.RemoveSource(1);
             }
-            positionConstraint.translationOffset = offsetSource1;
+            // 4) Restauro la fuente 0 con el TopUnit original
+        var source1 = new ConstraintSource {
+            sourceTransform = defaultSource,
+            weight = isFirstActive ? 1f : 0f
+        };
+        positionConstraint.SetSource(0, source1);
 
-            ConstraintSource source1 = positionConstraint.GetSource(0);
-            source1.weight = isFirstActive ? 1 : 0;
-            positionConstraint.SetSource(0, source1);
-        }
-        Debug.Log($"Following: {(isFirstActive ? "Source 1" : detectedTarget.name)}");
-     }
+        // 5) Recalculo el offset para que no “salte” de sitio
+        positionConstraint.translationOffset = worldPos - defaultSource.position;
+        
+        
+        Debug.Log($"Following: {(isFirstActive ? "Source 1" : source1.sourceTransform.name ?? "None")} ");
+    }
     
 }

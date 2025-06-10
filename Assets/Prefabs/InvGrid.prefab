@@ -80,7 +80,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99e776611f30c474f9a42affda8ea77a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  blocked: 0
+  blockInCase1: 0
+  blockInCase2: 0
+  blockInCase3: 0
+  blockInCase4: 0
   cords: {x: 0, y: 0}
 --- !u!65 &5098343577427409547
 BoxCollider:

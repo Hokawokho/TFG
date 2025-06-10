@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+
 //using System.Numerics;
 using TMPro;
 using UnityEngine;
@@ -139,6 +141,12 @@ public class UnitController : MonoBehaviour
                 {
                     if (hit.transform.GetComponent<Player>() != null)
                         return;
+                }
+
+                if (unitSelected && hit.transform == selectedUnit)
+                {
+                    DeselectCurrentUnit();
+                    return;
                 }
 
 
@@ -310,12 +318,13 @@ public class UnitController : MonoBehaviour
             if (distance <= unitData.remainingTiles)
             {
                 unitData.remainingTiles -= distance;
-                RecalculatePath(true, true);
+               // RecalculatePath(true, true);
+                RecalculatePath(true);
             }
             else
             {
 
-                Debug.LogWarning("Esta demasiado lejos");
+                Debug.Log("Esta demasiado lejos");
                 CanvasGroup canvas = selectedUnit.GetComponentInChildren<CanvasGroup>();
                 if (canvas != null)
                     canvas.alpha = 0f;
@@ -344,13 +353,19 @@ public class UnitController : MonoBehaviour
         if (canvas != null)
             canvas.alpha = 1f;
         lastSelectedUnit = selectedUnit; // actualizar
-
+    
 
         // Obtener coords y datos de movimiento
         Vector2Int unitCoords = gridManager.GetCoordinatesFromPosition(unit.position);
         var unitData = GetUnitData(unit.gameObject);
         if (unitData != null)
-        {
+        {   
+            //Volver a tener en cuenta colisiones para el mesh del layer corresponent
+            var layerChanger = unit.GetComponentInParent<LayerRenderChanger>();
+            if (layerChanger != null)
+            {
+                layerChanger.ResumeCollisions();
+            }
             // Resaltar todas las tiles al alcance de la unidad
             ChangingShaderTopTiles.HighlightCostTiles(unitCoords, gridManager, unitData.remainingTiles);
         }
@@ -384,7 +399,6 @@ public class UnitController : MonoBehaviour
         pathFinder.SetNewDestination(start, target);
         List<Node> pathCost = pathFinder.GetNewPath();
         int cost = pathCost.Count - 1;
-        Debug.Log($"Costo del camino: {cost}, Nodos en el camino: {pathCost.Count}");
 
         //UnitMovementData unitData = GetUnitData(selectedUnit.gameObject);
         //GetUnitData(selectedUnit.gameObject);
@@ -393,13 +407,15 @@ public class UnitController : MonoBehaviour
 
     }
 
-    public void RecalculatePath(bool resetPath, bool followPath)
+    //public void RecalculatePath(bool resetPath, bool followPath)
+    public void RecalculatePath(bool resetPath)
     {
 
 
 
         //FORMA DE OPTIMIZAR-HO
         Vector2Int coordinates = resetPath ? pathFinder.StartCords : gridManager.GetCoordinatesFromPosition(transform.position);
+
 
         //Vector2Int coordinates = new Vector2Int();
         // if(resetPath){
@@ -424,11 +440,11 @@ public class UnitController : MonoBehaviour
         StopAllCoroutines();
         path.Clear();
         path = pathFinder.GetNewPath(coordinates);
-
+        
         //Debug.Log($"Nodos en el camino: {path.Count}");
 
 
-        if (followPath && path.Count > 0)
+        if (path.Count > 1)
         {
             StartCoroutine(FollowPath());
         }
@@ -444,13 +460,14 @@ public class UnitController : MonoBehaviour
     IEnumerator FollowPath()
     {
         isMoving = true;
-
+       // Debug.Log($"[UC] FollowPath START  count={path.Count}");
         //IEnumerator es para CORRUTINAS+++++++++++++++++++
         //mes info en notes rapides
 
         for (int i = 1; i < path.Count; i++)
         // int i = 0 seria la unidad en su posición actual
         {
+            //Debug.Log($"[UC]  Step {i}/{path.Count - 1}: {path[i - 1].cords} → {path[i].cords}");
 
 
             Vector3 startPosition = selectedUnit.position;
@@ -495,6 +512,7 @@ public class UnitController : MonoBehaviour
         // lastSelectedUnit= null;
         // selectedUnit = null;
         isMoving = false;
+       //Debug.Log("[UC] FollowPath END");
 
     }
     

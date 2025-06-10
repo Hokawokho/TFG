@@ -104,22 +104,29 @@ public class ChangingShaderTopTiles : MonoBehaviour
         var visited = new HashSet<Vector2Int> { center };
         //a diferencia del Map este es sols 1 valor, val pa vore si ja esta guardat o no
         // millor HashSet pa busqueda en amplaria != profunditat (on es millor una pila)
-                    
-        
+
         var queue = new Queue<(Vector2Int pos, int dist)>();
         queue.Enqueue((center, 0));
 
-    // 3) Recorre en anchura hasta 'range'
+
+        // Llista auxiliar pa guardar lo que hi ha que resaltar
+        var tilesToShow = new List<Vector2Int>();
+
+        // Recorre en anchura hasta 'range'
         while (queue.Count > 0)
         {
             var (pos, dist) = queue.Dequeue();
 
             // No queremos resaltar la casilla de origen (dist == 0)
             if (dist > 0 && tilesMap.TryGetValue(pos, out var tile))
-                tile.Show();
+                tilesToShow.Add(pos);
 
             // Si ya llegamos al rango máximo, no expandimos más
             if (dist == range)
+                continue;
+
+            Node currentNode = grid.GetNode(pos);
+            if (currentNode == null)
                 continue;
 
             // Explorar vecinos
@@ -128,13 +135,28 @@ public class ChangingShaderTopTiles : MonoBehaviour
                 var next = pos + dir;
                 if (visited.Contains(next))
                     continue;
-                visited.Add(next);
 
-                var node = grid.GetNode(next);
-                // Solo avanzamos si existe nodo y está caminable
-                if (node != null && node.walkable)
+
+                //visited.Add(next);
+
+                Node neighborNode = grid.GetNode(next);
+
+                if (neighborNode != null
+                    && neighborNode.walkable
+                    && !currentNode.blockedConnections.Contains(dir)
+                    && !neighborNode.blockedConnections.Contains(-dir))
+                {
+                    visited.Add(next);
                     queue.Enqueue((next, dist + 1));
+                }
             }
+        }
+
+        foreach (var pos in tilesToShow)
+        {
+
+            if (tilesMap.TryGetValue(pos, out var tile))
+                tile.Show();
         }
 }
 

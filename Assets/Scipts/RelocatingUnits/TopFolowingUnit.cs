@@ -12,7 +12,7 @@ public class TopFolowingUnit : MonoBehaviour
     void Start()
     {   
         if(raycastDebugger == null){
-        raycastDebugger = FindObjectOfType<RaycastDebugger>();
+        raycastDebugger = GetComponentInChildren<RaycastDebugger>();
         }
 
     }
@@ -40,7 +40,7 @@ public class TopFolowingUnit : MonoBehaviour
             }
 
             transform.position = hitPosition;
-            Debug.Log($"Unidad '{gameObject.name}' movida a posición: {hitPosition}");
+            //Debug.Log($"Unidad '{gameObject.name}' movida a posición: {hitPosition}");
         }
         else
         {

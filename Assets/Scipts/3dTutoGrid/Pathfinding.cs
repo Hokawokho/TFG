@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Pathfinding : MonoBehaviour
@@ -172,7 +173,12 @@ public class Pathfinding : MonoBehaviour
         }
         
         path.Reverse();
+
         //Se hace reverse porque el camino se hace desde el objetivo hasta el inicio usando connectTo
+        Debug.Log($"[PF] BuildPath → start:{startCords}, target:{targetCords}, COUNT={path.Count}");
+        // Creamos un array de strings "x,y" y luego lo unimos
+        var coords = path.Select(n => n.cords.x + "," + n.cords.y).ToArray();
+        Debug.Log("[PF]   NODES: " + string.Join(" | ", coords));
         return path;
     }
 
@@ -207,9 +213,12 @@ public class Pathfinding : MonoBehaviour
         //COSTE - ADD++++++++++++++++++++++ FIN
 
         List<Node> path = GetNewPath();
-        if(path.Count == 0 ){
+        if (path.Count == 0)
+        {
 
             Debug.LogWarning($"No se encontró camino valido");
+            // Notificamos a todos los listeners (UnitController) que recalcule su ruta
+            NotifyRecievers();
         }
         //COSTE - ADD++++++++++++++++++++++ FIN
 

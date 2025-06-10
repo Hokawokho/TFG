@@ -28,12 +28,6 @@ public class GridManager : MonoBehaviour
         CreateGrid();
         trigger = FindObjectOfType<BlockingTrigger>();
 
-        // Bloquear conexiones específicas
-    // BlockConnection(new Vector2Int(2,2), new Vector2Int(2,3));
-    // BlockConnection(new Vector2Int(4,5), new Vector2Int(4,6));
-    BlockConnection(new Vector2Int(8,8), new Vector2Int(7,8));
-    BlockConnection(new Vector2Int(6,8), new Vector2Int(7,8));
-
 
     }
 
@@ -176,9 +170,7 @@ public class GridManager : MonoBehaviour
         Vector2Int direction = to - from;
         grid[from].blockedConnections.Add(direction);
         grid[to].blockedConnections.Add(-direction);
+        }
     }
-}
-
-
 
 }

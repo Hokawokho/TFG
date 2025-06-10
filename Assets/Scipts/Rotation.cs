@@ -1,37 +1,42 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using UnityEditor.MemoryProfiler;
 using UnityEngine;
+using UnityEngine.Animations;
+
 
 public class Rotation : MonoBehaviour
 {
 
     public float rotationAngle = 90f; // Ángulo de rotación en grados
     public float rotationSpeed = 200f; // Velocidad de rotación en grados por segundo
-    private bool isRotating = false;
+    public bool isRotating = false;
     private float targetRotation;
 
-    private List<Vector2Int> previousBlockedNodes = new List<Vector2Int>();
-    //Llista per a guardar els nodes bloquejats pels girs
+
     private GridManager gridManager;
-    //Açò es per a cridar a les funcions de l'escript i bloquejar nodes
 
     private UnitController unitController;
-    private List<Transform> unitsRedirigir = new List<Transform>(); // Lista de todas las unidades seleccionadas
 
     private List<FolowingUnit> downFollowers = new List<FolowingUnit>();
     private List<TopFolowingUnit> topFollowers = new List<TopFolowingUnit>();
 
-    //GIR-ADD+-+-+-+-+-+-+-+-+
-
-    //private FolowingUnit folowingUnit;
-
-    //private TopFolowingUnit topFolowingUnit;
-
-
     public KeyCode keyToPress = KeyCode.Space;
 
+    private int currentCase = 1;
+    //Açò per al bloqueig de cada tile segons l'angle de rotació
 
+    public ConnectionBlocker connectionBlocker;
+
+    //private LayerRenderChanger layerRenderChanger;
+    private List<LayerRenderChanger> layerRenderChangers = new List<LayerRenderChanger>();
+
+    private ChangingShaderTopTiles changingShaderTopTiles;
+    //Millor ficar-ho des de l'editor així podem tindre replicats del mateix script sense problema
+
+    private int updatesDone;
+    private int updatesExpected;
 
 
 
@@ -39,62 +44,178 @@ public class Rotation : MonoBehaviour
     {
         gridManager = FindObjectOfType<GridManager>();
 
-        previousBlockedNodes.Add(new Vector2Int(5,5));
-        gridManager.BlockNode(new Vector2Int(5,5));
-        //Aquí es per a inicialitzar la llista de nodes bloquejats
-
         unitController = FindObjectOfType<UnitController>();
-        //Açó es per a moure de una casilla x a una y en Gir
-        //GIR-ADD+-+-+-+-+-+-+-+-+
 
-        // folowingUnit = FindObjectOfType<FolowingUnit>();
+        layerRenderChangers.Clear();
+        foreach (var data in unitController.unitMovementList)
+        {
+            var unitObj = data.unitData;
+            if (unitObj != null && unitObj.transform.parent != null)
+            {
+                var changer = unitObj.transform.parent.GetComponent<LayerRenderChanger>();
+                if (changer != null)
+                    layerRenderChangers.Add(changer);
+            }
+        }
+        updatesDone = 0;
+        updatesExpected = layerRenderChangers.Count;
+        
 
-        // topFolowingUnit = FindObjectOfType<TopFolowingUnit>();
+        //Si fot el bloqueig a l'inici, llevar esta línea
+        ApplyBlockingToAllTiles(currentCase);
+        
+        if (connectionBlocker != null)
+        {
+            connectionBlocker.ApplyBlocksForCase(currentCase);
+        }
+
+    }
+    void OnEnable()
+    {
+        FolowingUnit.OnFollowerPositionUpdated += HandleFollowerUpdated;
     }
 
+    void OnDisable()
+    {
+        FolowingUnit.OnFollowerPositionUpdated -= HandleFollowerUpdated;
+    }
     
+
+
     void Update()
     {
 
 
-        if(Input.GetKeyDown(keyToPress) &&!isRotating){
-            
-            //TODO: Revisar si es pot llevar---innecesari per ara+-+-+-+-+-+-
-            SelectAllUnits();
+        if (Input.GetKeyDown(keyToPress) && !isRotating)
+        {
+            // **3. ASIGNAR A TODOS LOS TopFolowingUnit**
+            GatherAllFollowers(); // asegúrate de volver a poblar topFollowers
+            ChangingShaderTopTiles.ClearAllHighlights();
+            unitController.DeselectCurrentUnit();
+            // updatesDone = 0;
+            // updatesExpected = layerRenderChangers.Count;
 
-            GatherAllFollowers();
+            foreach (var changer in layerRenderChangers)
+            {
+                //Debug.Log($"[Rotation] Processing LayerRenderChanger on '{changer.gameObject.name}'");
 
-            foreach (var unit in downFollowers)
-            {   
+                //DE ACÍ 
 
-                //esconder la UI de las unidades.
-                CanvasGroup previousCanvas = unit.GetComponentInChildren<CanvasGroup>();
-                if (previousCanvas != null)
-                    previousCanvas.alpha = 0f;
-
-                
+                changer.SetUpScripts_and_RaycastTop();
 
 
+                //FINS ACÍ+-+-+--+-+-
 
-                unit.UpdateFollowerPosition();
 
-                // var downFollower = unit.GetComponent<FolowingUnit>();
-                // if (downFollower != null)
-                //     downFollower.UpdateFollowerPosition();
+                foreach (var unit in downFollowers)
+                {
+
+                }
             }
-            //folowingUnit.UpdateFollowerPosition();
-            //GIR-ADD+-+-+-+-+-+-+-+-+
+            // if (cont >= layerRenderChangers.Count)
+            // {
+            //     targetRotation = transform.eulerAngles.y + rotationAngle;
+            //     gridManager.ResetNodes();
+            //     StartCoroutine(RotateSmoothly());
+            // }
+        }        
+    }
+    private void HandleFollowerUpdated(FolowingUnit fol)
+    {
+        updatesDone++;
+        if (updatesDone >= updatesExpected)
+        {
+            // Reiniciamos el contador para la próxima vez
+            updatesDone = 0;
 
+            // Aquí ponemos el mismo código que antes hacías en el `if (cont >= ...)`
             targetRotation = transform.eulerAngles.y + rotationAngle;
-            //EL 'Mathf.Repeat' ES PER A PROVAR SI EN EL 'case 0' HO LLIG MILLOR
             gridManager.ResetNodes();
-            //folowingUnit.VisualUnit(true);
             StartCoroutine(RotateSmoothly());
-
-            
-        
         }
     }
+
+    // private void RelocatingUnitConstraints( LayerRenderChanger changer, RaycastDebugger selectedDebugger,  FolowingUnit selectedFollower)
+    // {
+    //     Debug.Log($"[Rotation] RelocatingUnitConstraints started with debugger '{selectedDebugger?.gameObject.name ?? "None"}' and follower '{selectedFollower?.gameObject.name ?? "None"}'");
+
+    //     // 2. DESACTIVAR EL VIEJO Y ACTIVAR EL NUEVO
+    //     // ——— Debugger ———
+    //     if (previousDebuggers.TryGetValue(changer, out var prevDbg) && prevDbg != null)
+    //         prevDbg.enabled = false;
+    //     if (selectedDebugger != null)
+    //         selectedDebugger.enabled = true;
+    //     previousDebuggers[changer] = selectedDebugger;
+
+    //     if (previousFollowers.TryGetValue(changer, out var prevFol) && prevFol != null)
+    //         prevFol.enabled = false;
+    //     if (selectedFollower != null)
+    //         selectedFollower.enabled = true;
+    //     previousFollowers[changer] = selectedFollower;
+
+    //     if (selectedFollower != null)
+    //     {
+    //         FolowingUnit[] allFollowers = FindObjectsOfType<FolowingUnit>();
+    //         foreach (var follower in allFollowers)
+    //         {
+    //             if (follower == selectedFollower || follower.transform.root != selectedFollower.transform.root)
+    //                 continue;
+
+    //             PositionConstraint constraint = follower.GetComponentInParent<PositionConstraint>();
+    //             if (constraint != null)
+    //             {
+    //                 //Debug.Log($"[Rotation] Updating PositionConstraint for follower '{follower.gameObject.name}'");
+
+    //                 Vector3 worldPos = follower.transform.position;
+    //                 //int oldCount = constraint.sourceCount;
+    //                 for (int i = constraint.sourceCount - 1; i >= 0; i--)
+    //                     constraint.RemoveSource(i);
+    //                /// Debug.Log($"[Rotation] Cleared {oldCount} sources for follower '{follower.gameObject.name}'");
+
+    //                 ConstraintSource newSource = new ConstraintSource
+    //                 {
+    //                     sourceTransform = selectedFollower.transform,
+    //                     weight = 1f
+    //                 };
+    //                 constraint.AddSource(newSource);
+    //                 constraint.translationOffset = worldPos - selectedFollower.transform.position;
+    //                 constraint.constraintActive = true;
+    //                //Debug.Log($"[Rotation] Added new source '{selectedFollower.gameObject.name}' to constraint on '{follower.gameObject.name}' with offset {constraint.translationOffset}");
+    //             }
+    //             else
+    //             {
+    //                 Debug.LogWarning($"[Rotation] No PositionConstraint found on '{follower.gameObject.name}'");
+    //             }
+    //         }
+    //     }
+    //     else
+    //     {
+    //         Debug.LogWarning("[Rotation] No selectedFollower provided to update constraints.");
+    //     }
+    // }
+
+    IEnumerator ApplyConstraintThenRotate(List<FolowingUnit> downFollowers)
+    {
+        //Debug.Log("[Rotation] Waiting for next FixedUpdate to apply constraints.");
+        // Esperar al siguiente paso de física para asegurar colisión
+        yield return new WaitForFixedUpdate();
+
+        // Esperamos fixed update y actualizamos cada follower
+        foreach (var follower in downFollowers)
+        {
+            yield return new WaitForFixedUpdate();
+            follower.UpdateFollowerPosition();
+            //Debug.Log($"[Rotation] Updated follower position for '{follower.gameObject.name}'");
+
+        }
+
+        // Señalamos que ya se aplicaron las constraints
+        // Arrancar rotación
+        // targetRotation = transform.eulerAngles.y + rotationAngle;
+        // gridManager.ResetNodes();
+        // yield return StartCoroutine(RotateSmoothly());
+    }
+
 
     private void GatherAllFollowers()
     {
@@ -114,68 +235,6 @@ public class Rotation : MonoBehaviour
         }
     }
 
-    void SelectAllUnits (){
-
-        unitsRedirigir.Clear();
-        GameObject[] units = GameObject.FindGameObjectsWithTag("Unit");
-
-        foreach (GameObject unit in units)
-        {
-            unitsRedirigir.Add(unit.transform);
-        }
-
-    }
-
-
-    
-    //GIR-ADD+-+-+-+-+-+-+-+-+INICI
-    // private void MovePositionRotation(Vector2Int from, Vector2Int to)
-    private void MovePositionRotation(Dictionary<Vector2Int, Vector2Int> casillasRedir)
-    {
-        if(unitController == null || unitsRedirigir.Count == 0) return;
-
-        foreach(Transform unit in unitsRedirigir){
-
-            int posX = Mathf.RoundToInt(unit.position.x)/ gridManager.UnityGridSize;
-            int posY = Mathf.RoundToInt(unit.position.z)/ gridManager.UnityGridSize;
-            Vector2Int unitPosition = new Vector2Int(posX, posY);
-
-            //gridManager.UnblockNode(unitPosition);
-
-            if(casillasRedir.ContainsKey(unitPosition))
-            {
-                Vector2Int dest = casillasRedir[unitPosition];
-                Debug.Log($"Unidad detectada en {unitPosition}, moviéndola a {dest}");
-
-                
-
-                unitController.selectedUnit = unit;
-                unitController.unitSelected = true;
-                //Açò es per a marcar la unitat com a selecciona
-
-                // unitController.pathFinder.SetNewDestination(unitPosition, dest);
-                // unitController.RecalculatePath(true);
-                Vector3 pos = gridManager.GetPositionFromCoordinates(dest);;
-                pos.y = unitController.selectedUnit.position.y;
-                unitController.selectedUnit.position = pos;
-                //+-++-+-+
-
-                gridManager.BlockNode(dest);
-                unitController.RecalculatePath(true, false);
-
-                //NO HACE FALTA--pero si ya encontramos la unidad nos podemos salir de este.
-            }
-        }
-        return;
-    }
-    //GIR-ADD+-+-+-+-+-+-+-+-+FIN
-
-   
-    private void unselectAllUnits(){
-
-        unitsRedirigir.Clear();
-
-    }
 
     private void OnGUI()
     {
@@ -187,6 +246,13 @@ public class Rotation : MonoBehaviour
     private IEnumerator RotateSmoothly()
     {
         isRotating = true;
+        // if (layerRenderChanger != null)
+        //     layerRenderChanger.SuspendCollisions();
+        // Suspender colisiones en todos los LayerRenderChanger
+        foreach (var changer in layerRenderChangers)
+            changer.SuspendCollisions();
+        
+
 
 
         while (Mathf.Abs(Mathf.Repeat(transform.eulerAngles.y - targetRotation, 360)) > 0.1f)
@@ -195,13 +261,17 @@ public class Rotation : MonoBehaviour
             yield return null;
         }
         transform.rotation = Quaternion.Euler(0, targetRotation, 0);
+        
+        
         // Asegurar que la rotación finaliza exactamente en el ángulo deseado
-        isRotating = false;
+        //isRotating = false;
 
 
-        BlockNodeBasedOnRotation();
 
-        unselectAllUnits();
+
+        // BlockNodeBasedOnRotation();
+        OnRotationFinished();
+
 
         yield return null; // Esperamos un frame para asegurar que la rotación ha terminado completamente
 
@@ -210,16 +280,8 @@ public class Rotation : MonoBehaviour
         foreach (var unit in topFollowers)
         {
             yield return StartCoroutine(unit.MoveToRaycastHit());
-
-            // var topFollower = unit.GetComponent<TopFolowingUnit>();
-            // if (topFollower != null)
-            //     yield return StartCoroutine(topFollower.MoveToRaycastHit());
         }
 
-        // if (topFolowingUnit != null)
-        // {
-        //     yield return StartCoroutine(topFolowingUnit.MoveToRaycastHit());
-        // }
 
         yield return null; // Esperamos otro frame por seguridad
 
@@ -230,70 +292,31 @@ public class Rotation : MonoBehaviour
         {
             unit.FollowerToParent();
 
-            // if (folowingUnit != null)
-            // {
-            //     folowingUnit.FollowerToParent();
-            // }
         }
-
-
+        isRotating = false;
     }
 
-    private void BlockNodeBasedOnRotation()
+
+    private void OnRotationFinished()
     {
-        if(gridManager == null) return;
+        int rotationState = Mathf.RoundToInt(targetRotation / 90f) % 4;
+        currentCase = rotationState + 1;
 
-        // UnblockPreviousNodes();
-
-       // gridManager.ResetNodes(); // Reset tots els nodes per a bloquejar nous
-
-       
-        Vector2Int newBlockedNode = Vector2Int.zero;
-        int rotationState = Mathf.RoundToInt(targetRotation / 90f) % 4; // 0, 1, 2, 3 para cada rotación
-        Dictionary<Vector2Int, Vector2Int> casillasRedir = new Dictionary<Vector2Int, Vector2Int>();
-        switch(rotationState)
-        {
-            case 0:
-                newBlockedNode = new Vector2Int(5,5);
-                break;
-
-            case 1:
-                newBlockedNode =new Vector2Int(2,2);
-
-                casillasRedir.Add(new Vector2Int(3,0), new Vector2Int(0,6));
-                casillasRedir.Add(new Vector2Int(7,7), new Vector2Int(7,2));
-                gridManager.UnblockNode(new Vector2Int(3,0));
-                gridManager.UnblockNode(new Vector2Int(7,7));
-
-                MovePositionRotation(casillasRedir);
-                break;
-
-            case 2:
-                newBlockedNode =new Vector2Int(3,3);
-                break;
-
-            case 3:
-                newBlockedNode =new Vector2Int(4,4);
-                //MovePositionRotation(new Vector2Int(6,6), new Vector2Int(8,8));
-                break;
-
-
-        }
-
-        if (previousBlockedNodes.Count > 0)
-        {
-            Vector2Int lastBlocked = previousBlockedNodes[previousBlockedNodes.Count - 1];
-            gridManager.UnblockNode(lastBlocked);
-        }
-        gridManager.BlockNode(newBlockedNode);
-        previousBlockedNodes.Add(newBlockedNode);
+        // APLICA bloqueo/desbloqueo a **todas** las Tiles con el nuevo case
+        ApplyBlockingToAllTiles(currentCase);
+        
+        if (connectionBlocker != null)
+            connectionBlocker.ApplyBlocksForCase(currentCase);
     }
-//     private void UnblockPreviousNodes()
-// {
-//     foreach (Vector2Int node in previousBlockedNodes)
-//     {
-//         gridManager.UnblockNode(node);
-//     }
-//     previousBlockedNodes.Clear();
-// }
+
+    private void ApplyBlockingToAllTiles(int caseNumber)
+    {
+        Tile[] allTiles = FindObjectsOfType<Tile>();
+
+        foreach (Tile t in allTiles)
+        {
+            t.ApplyBlockForCase(caseNumber);
+        }
+    }
+
 }
