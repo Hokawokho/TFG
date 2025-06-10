@@ -14,6 +14,8 @@ public class EnemyAIController : MonoBehaviour
     private Pathfinding pathfinding;
     private UnitController unitController;
 
+    public int AttackDistance = 4;
+
     void Awake()
     {
         gridManager = FindObjectOfType<GridManager>();
@@ -45,8 +47,10 @@ public class EnemyAIController : MonoBehaviour
         Vector2Int targetPos = gridManager.GetCoordinatesFromPosition(bestTarget.transform.position);
 
         // 3. Buscar tiles válidas para atacar (línea recta, distancia <= 4)
-        List<Vector2Int> validTiles = FindTilesToAttackFrom(targetPos, 4);
+        List<Vector2Int> validTiles = FindTilesToAttackFrom(targetPos, AttackDistance);
+        validTiles.RemoveAll(tile => tile == selfPos);
         Dictionary<Vector2Int, int> pathCosts = new Dictionary<Vector2Int, int>();
+        
 
         Scenario bestScenario = new Scenario(); // por defecto, -100000
 
@@ -55,7 +59,7 @@ public class EnemyAIController : MonoBehaviour
             if (!gridManager.GetNode(pos).walkable) continue;
 
             int pathCost = unitController.CalculatePathCost(selfPos, pos);
-            if (pathCost == -1 || pathCost > 99) continue;
+            if (pathCost == 0 || pathCost > 99) continue;
 
             pathCosts[pos] = pathCost;
 
@@ -129,8 +133,17 @@ public class EnemyAIController : MonoBehaviour
         //UnitController controller = FindObjectOfType<UnitController>();
         unitController.selectedUnit = transform;
         unitController.unitSelected = true;
+        // 1) Recalcular la ruta teniendo en cuenta los nodos bloqueados
+        Vector2Int currentPos = gridManager.GetCoordinatesFromPosition(transform.position);
+
+        // Debug.Log($"[AI] MoveTo from {currentPos} to {position}");
+        pathfinding.SetNewDestination(currentPos, position);
+
+        pathfinding.NotifyRecievers();   // dispara RecalculatePath en UnitController
+        // 2) Ahora sí, mueve el UnitController con la ruta recién calculada
         unitController.MoveUnitTo(position);
         yield return new WaitUntil(() => !unitController.isMoving);
+        // Debug.Log("[AI] MoveTo FIN – now at " + gridManager.GetCoordinatesFromPosition(transform.position));
 
         //TODO: Espera extra tras acabar de moverse
         //yield return new WaitForSeconds(0.5f);
