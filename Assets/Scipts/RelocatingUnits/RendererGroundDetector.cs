@@ -10,6 +10,8 @@ public class RendererGroundDetector : MonoBehaviour
 
     public string LayerRenderGround;
 
+    public Transform currentCollision { get; private set; }
+
     string myLayer;
     void Start()
     {
@@ -31,12 +33,16 @@ public class RendererGroundDetector : MonoBehaviour
     void OnTriggerStay(Collider other)
     {
         if (other.gameObject.layer == LayerMask.NameToLayer(LayerRenderGround))
+            currentCollision = other.transform;
             renderChanger.SetTouching(myLayer, true);
     }
 
     void OnTriggerExit(Collider other)
     {
         if (other.gameObject.layer == LayerMask.NameToLayer(LayerRenderGround))
+
+             if (currentCollision == other.transform)
+                currentCollision = null;
             renderChanger.SetTouching(myLayer, false);
     }
 }

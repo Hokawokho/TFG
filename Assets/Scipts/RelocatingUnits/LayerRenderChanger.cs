@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Animations;
 
 
 
@@ -26,6 +27,10 @@ public class LayerRenderChanger : MonoBehaviour
     Coroutine delayedDisableCoroutine = null;
 
     bool ignoreCollisions = false;
+
+    private RaycastDebugger previousDebugger = null;
+    private FolowingUnit previousFollower = null;
+    private MeshRenderer prevMesh;
 
     //Esto es para mantener el renderer de la unidad inferior tras rotar
     //MeshRenderer stickyRenderer = null;
@@ -82,13 +87,13 @@ public class LayerRenderChanger : MonoBehaviour
             return;
 
         for (int i = 0; i < renderers.Length; i++)
+        {
+            if (renderers[i].layerName == layerName)
             {
-                if (renderers[i].layerName == layerName)
-                {
-                    renderers[i].isTouching = isEntering;
-                    break;
-                }
+                renderers[i].isTouching = isEntering;
+                break;
             }
+        }
 
         // Recalculamos qué renderer debería estar activo
         // 
@@ -147,25 +152,6 @@ public class LayerRenderChanger : MonoBehaviour
         if (toActivate == currentActive)
             return;
 
-        // 5.2) Si ninguno toca, forzamos activar “H0”
-        // if (toActivate == null)
-        // {
-        //     // Buscamos en el array la clave “H0”, o por convención el último elemento
-        //     for (int i = 0; i < renderers.Length; i++)
-        //     {
-        //         if (renderers[i].layerName == "H0")
-        //         {
-        //             toActivate = renderers[i].meshRenderer;
-        //             break;
-        //         }
-        //     }
-        //     // Si no tuvieras clave "H0", podrías asumir que está en renderers[renderers.Length-1]
-        //     // toActivate = renderers[renderers.Length - 1].meshRenderer;
-        // }
-
-        // 5.3) Si el que debería estar activo ya está activo, no hacemos nada
-
-
         // 5.4) Activamos inmediatamente el nuevo
         if (toActivate != null)
             toActivate.enabled = true;
@@ -185,21 +171,115 @@ public class LayerRenderChanger : MonoBehaviour
             // delayedDisableCoroutine = StartCoroutine(DisableAfterDelay(currentActive, 0.1f));
         }
 
-        
+
         currentActive = toActivate;
     }
-    // IEnumerator DisableAfterDelay(MeshRenderer oldRenderer, float delay)
-    // {
-    //     yield return new WaitForSeconds(delay);
 
-    //     // Sólo lo apagamos si ya no es el active (por si en ese 0.1s se cambió nuevamente)
-    //     if (oldRenderer != currentActive)
-    //     {
-    //         oldRenderer.enabled = false;
-    //     }
+    public MeshRenderer GetCurrentActiveRenderer()
+    {
+        return currentActive;
+    }
 
-    //     delayedDisableCoroutine = null;
-    // }
 
+    public void SetUpScripts_and_RaycastTop()
+    {
+
+        var mesh = GetCurrentActiveRenderer();
+        if (mesh == null) return;
+
+        // Only update if mesh changed since last time
+        // if (prevMesh != mesh)
+        // {
+            prevMesh = mesh;
+            var dbg = mesh.GetComponentInParent<RaycastDebugger>();
+            var fol = mesh.GetComponentInParent<FolowingUnit>();
+            Debug.Log($"[Rotation] Enabling debugger '{dbg?.gameObject.name ?? "None"}' and follower '{fol?.gameObject.name ?? "None"}'");
+            RelocatingUnitConstraints(dbg, fol);
+
+            var top = GetComponentInChildren<TopFolowingUnit>();
+            if (top != null)
+            {
+                top.raycastDebugger = dbg;
+            }
+            
+       // }
+    }
+    private IEnumerator ApplyConstraint(FolowingUnit fol)
+    {
+        //Debug.Log("[Rotation] Waiting for next FixedUpdate to apply constraints.");
+        // Esperar al siguiente paso de física para asegurar colisión
+        yield return new WaitForFixedUpdate();
+
+        if (fol.enabled)
+        {
+            fol.UpdateFollowerPosition();
+
+        }
+    }
+
+    private void RelocatingUnitConstraints( RaycastDebugger selectedDebugger,  FolowingUnit selectedFollower)
+    {
+        Debug.Log($"[Rotation] RelocatingUnitConstraints started with debugger '{selectedDebugger?.gameObject.name ?? "None"}' and follower '{selectedFollower?.gameObject.name ?? "None"}'");
+
+        // 2. DESACTIVAR EL VIEJO Y ACTIVAR EL NUEVO
+        // ——— Debugger ———
+        if (previousDebugger != null)
+            previousDebugger.enabled = false;
+        if (selectedDebugger != null)
+            selectedDebugger.enabled = true;
+        previousDebugger = selectedDebugger;
+        // desactivar todos los debuggers de esta unidad y activar sólo el suyo
+        // ——— Follower ———
+        if (previousFollower != null)
+            previousFollower.enabled = false;
+        if (selectedFollower != null)
+            selectedFollower.enabled = true;
+        previousFollower = selectedFollower;
+
+        //Es fa ací que es quan es deselecciona el script
+        StartCoroutine(ApplyConstraint(selectedFollower));
+
+        if (selectedFollower != null)
+        {
+
+            FolowingUnit[] allFollowers = GetComponentsInChildren<FolowingUnit>();
+            foreach (var follower in allFollowers)
+            {
+                if (follower == selectedFollower)
+                    continue;
+
+                var constraint = follower.GetComponentInParent<PositionConstraint>();
+                if (constraint == null)
+                {
+                    Debug.LogWarning($"[Rotation] No PositionConstraint found on '{follower.gameObject.name}'");
+                    continue;
+                }
+
+                //Debug.Log($"[Rotation] Updating PositionConstraint for follower '{follower.gameObject.name}'");
+
+                Vector3 worldPos = follower.transform.position;
+                //int oldCount = constraint.sourceCount;
+                for (int i = constraint.sourceCount - 1; i >= 0; i--)
+                    constraint.RemoveSource(i);
+                /// Debug.Log($"[Rotation] Cleared {oldCount} sources for follower '{follower.gameObject.name}'");
+
+                var newSource = new ConstraintSource
+                {
+                    sourceTransform = selectedFollower.transform,
+                    weight = 1f
+                };
+                constraint.AddSource(newSource);
+                constraint.translationOffset = worldPos - selectedFollower.transform.position;
+                constraint.constraintActive = true;
+                Debug.Log($"[Rotation] Constraint on '{follower.gameObject.name}' now follows '{selectedFollower.gameObject.name}'");
+                //Debug.Log($"[Rotation] Added new source '{selectedFollower.gameObject.name}' to constraint on '{follower.gameObject.name}' with offset {constraint.translationOffset}");
+
+            }
+        }
+        else
+        {
+            Debug.LogWarning("[Rotation] No selectedFollower provided to update constraints.");
+        }
+    }
 }
 
