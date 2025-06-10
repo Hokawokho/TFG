@@ -178,7 +178,7 @@ public class Pathfinding : MonoBehaviour
         Debug.Log($"[PF] BuildPath → start:{startCords}, target:{targetCords}, COUNT={path.Count}");
         // Creamos un array de strings "x,y" y luego lo unimos
         var coords = path.Select(n => n.cords.x + "," + n.cords.y).ToArray();
-        Debug.Log("[PF]   NODES: " + string.Join(" | ", coords));
+        //Debug.Log("[PF]   NODES: " + string.Join(" | ", coords));
         return path;
     }
 
