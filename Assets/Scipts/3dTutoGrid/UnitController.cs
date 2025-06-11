@@ -83,9 +83,11 @@ public class UnitController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        HandleMouseKeys();
-        HandleHotKeys();
-
+        if (!PauseMenu.GameIsPaused)
+        {
+            HandleMouseKeys();
+            HandleHotKeys();
+        }
 
         //RESETEAR MOVEMENT -> F
         // if (Input.GetKeyDown(keyToResetMovement))
@@ -99,6 +101,7 @@ public class UnitController : MonoBehaviour
 
     private void HandleMouseKeys()
     {
+        
         if (!Input.GetMouseButtonDown(0)) return;
 
 

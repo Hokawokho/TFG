@@ -20,13 +20,16 @@ public class HooverShader : MonoBehaviour
 
     void OnMouseEnter()
     {
-        Vector2Int coords = gridManager.GetCoordinatesFromPosition(transform.position);
-
-        Node node = gridManager.GetNode(coords);
-
-        if (node != null && node.walkable)
+        if (!PauseMenu.GameIsPaused)
         {
-            meshRenderer.enabled = true;
+            Vector2Int coords = gridManager.GetCoordinatesFromPosition(transform.position);
+
+            Node node = gridManager.GetNode(coords);
+
+            if (node != null && node.walkable)
+            {
+                meshRenderer.enabled = true;
+            }
         }
     }
 
