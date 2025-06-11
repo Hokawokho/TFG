@@ -13,7 +13,29 @@ public class HealthBar : MonoBehaviour
 
     void Update()
     {
-        meterImage.fillAmount = (float)hitPoints.hitPoints / hitPoints.maxHitPoints;
-        hpText.text = hitPoints.hitPoints.ToString();
+        if (hitPoints == null)
+        {
+            meterImage.fillAmount = 0f;
+            hpText.text = "0";
+        }
+        else
+        {
+            meterImage.fillAmount = (float)hitPoints.hitPoints / hitPoints.maxHitPoints;
+            hpText.text = hitPoints.hitPoints.ToString();
+        }
+
+
+    }
+    public void SetUnit(UnitEntity unit)
+    {
+        if (unit == null)
+        {
+            hitPoints = null;
+        }
+        else
+        {
+            hitPoints = unit.hitpoints;
+        }
+
     }
 }

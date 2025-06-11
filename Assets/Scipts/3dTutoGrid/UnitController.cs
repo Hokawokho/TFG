@@ -38,6 +38,8 @@ public class UnitController : MonoBehaviour
 
     private TurnManager turnManager;
 
+    private HealthBar healthBar;
+
     public bool isMoving = false;
 
     // public KeyCode keyToResetMovement;
@@ -51,6 +53,8 @@ public class UnitController : MonoBehaviour
         pathFinder = FindObjectOfType<Pathfinding>();
 
         turnManager = FindObjectOfType<TurnManager>();
+
+        healthBar = FindObjectOfType<HealthBar>();
 
         // foreach (var data in unitMovementList)
         // {
@@ -355,6 +359,12 @@ public class UnitController : MonoBehaviour
         if (canvas != null)
             canvas.alpha = 1f;
         lastSelectedUnit = selectedUnit; // actualizar
+
+        // Esto para actualizar HealthBar-+-+-++
+        var entity   = selectedUnit.GetComponent<UnitEntity>();
+        if (healthBar != null)
+            healthBar.SetUnit(entity);
+
     
 
         // Obtener coords y datos de movimiento
@@ -391,7 +401,15 @@ public class UnitController : MonoBehaviour
 
         // Limpiar tiles 
         ChangingShaderTopTiles.ClearAllHighlights();
-        Debug.Log("[UC]LIMPIAOOOOO");
+
+        // reseteo de HealthBar
+        // (la dejaremos a 0)
+        if (lastSelectedUnit != null)
+        {
+            if (healthBar != null)
+                healthBar.SetUnit(null);
+        }
+        // ——————————————————————————
     }
 
 
