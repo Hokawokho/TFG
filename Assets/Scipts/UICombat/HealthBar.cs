@@ -34,7 +34,7 @@ public class HealthBar : MonoBehaviour
         }
         else
         {
-            hitPoints = unit.hitpoints;
+            hitPoints = unit.hitpoints;   
         }
 
     }
