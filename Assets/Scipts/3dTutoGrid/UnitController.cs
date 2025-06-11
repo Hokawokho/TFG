@@ -140,7 +140,7 @@ public class UnitController : MonoBehaviour
                 //TODO: Quan acabe amb el debugging aplicar açò també en el turno del jugador pals enemics (Després ja implementar selecció estil FE)    
 
                 //Si turno del enemigo no se pueden seleccionar los Player+++
-                if (turnManager.State == TurnManager.GameState.ENEMYTURN)
+                if (turnManager.State == TurnManager.GameState.ENEMYTURN || turnManager.State == TurnManager.GameState.START)
                 {
                     if (hit.transform.GetComponent<Player>() != null)
                         return;
@@ -277,9 +277,8 @@ public class UnitController : MonoBehaviour
 
     public void MoveUnitTo(Vector2Int tileCords)
     {
-
-        //Esto es para quitar los tiles de ataque
-        ChangingShaderTopTiles.ClearAllHighlights();
+        if(turnManager.State != TurnManager.GameState.START)
+            ChangingShaderTopTiles.ClearAllHighlights();
 
         if (unitSelected)
         {
@@ -321,7 +320,7 @@ public class UnitController : MonoBehaviour
             if (distance <= unitData.remainingTiles)
             {
                 unitData.remainingTiles -= distance;
-               // RecalculatePath(true, true);
+                // RecalculatePath(true, true);
                 RecalculatePath(true);
             }
             else
@@ -392,6 +391,7 @@ public class UnitController : MonoBehaviour
 
         // Limpiar tiles 
         ChangingShaderTopTiles.ClearAllHighlights();
+        Debug.Log("[UC]LIMPIAOOOOO");
     }
 
 

@@ -10386,12 +10386,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
+  m_ReferenceResolution: {x: 1920, y: 1080}
   m_ScreenMatchMode: 0
-  m_MatchWidthOrHeight: 0
+  m_MatchWidthOrHeight: 0.5
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
@@ -12609,19 +12609,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6646968315156292648, guid: cd64177416da96a4685d3f2f027f76f8, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.8868265
+      value: 0.89027226
       objectReference: {fileID: 0}
     - target: {fileID: 6646968315156292648, guid: cd64177416da96a4685d3f2f027f76f8, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.26158246
+      value: -0.25939777
       objectReference: {fileID: 0}
     - target: {fileID: 6646968315156292648, guid: cd64177416da96a4685d3f2f027f76f8, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.36537442
+      value: 0.35939226
       objectReference: {fileID: 0}
     - target: {fileID: 6646968315156292648, guid: cd64177416da96a4685d3f2f027f76f8, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.10777253
+      value: 0.10471577
       objectReference: {fileID: 0}
     - target: {fileID: 6768360400320091460, guid: cd64177416da96a4685d3f2f027f76f8, type: 3}
       propertyPath: m_Enabled
@@ -18925,6 +18925,10 @@ PrefabInstance:
       propertyPath: blockInCase3
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3359167656863406151, guid: 44762fd7c150cb542839de1cee6241a3, type: 3}
+      propertyPath: startingPoint
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3610532394567904285, guid: 44762fd7c150cb542839de1cee6241a3, type: 3}
       propertyPath: m_LocalPosition.x
       value: -2
@@ -22728,7 +22732,7 @@ Transform:
   m_GameObject: {fileID: 1577222809}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -6.7749214, y: -4.912598, z: -17.341835}
+  m_LocalPosition: {x: -6.7749214, y: -4.912598, z: -19.34184}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class TurnManager : MonoBehaviour
@@ -19,6 +20,13 @@ public class TurnManager : MonoBehaviour
     public KeyCode keyToEndTurn = KeyCode.F;
 
     private List<UnitMovementData> unitMovemenList;
+
+    // Contadores para fase de despliegue
+
+    //private bool isPlacingUnits = false;
+    private int placedCount = 0;
+
+    
 
 
     // Start is called before the first frame update
@@ -84,7 +92,7 @@ public class TurnManager : MonoBehaviour
         }
     }
 
-    // Hook para registro dinámico (si spawneas unidades después)
+    // Hook para registro dinámico (por si a futuro spawneo nuevas)
     public void RegisterUnit(UnitEntity unit)
     {
         if (unit.GetComponent<Player>() != null)
@@ -152,14 +160,79 @@ public class TurnManager : MonoBehaviour
     {
         State = GameState.START;
 
+        
+
         // TODO: Spawn or position player and enemy units
         // Example: UnitSpawner.Instance.SpawnAllUnits();
 
         yield return new WaitForSeconds(1f);
+        // 2) Iniciar la fase de despliegue
+        ShowStartingTiles();
+        //isPlacingUnits = true;
+        placedCount = 0;
+        yield return StartCoroutine(HandlePlacement());
+        //isPlacingUnits = false;
+
+        // 3) Limpiar resaltados y pasar a turno de jugador
+        //ChangingShaderTopTiles.ClearAllHighlights();
 
         // After setup, go to player turn
-        State = GameState.PLAYERTURN;
-        OnPlayerTurnStart();
+        if (placedCount >= playerUnits.Count)
+        {
+            State = GameState.PLAYERTURN;
+            OnPlayerTurnStart();
+        }
+    }
+
+     private void ShowStartingTiles()
+    {
+        var allTiles = FindObjectsOfType<Tile>();
+        foreach (var tile in allTiles)
+        {
+            if (tile.startingPoint)
+            {
+                var shader = tile.GetComponentInChildren<ChangingShaderTopTiles>();
+                if (shader != null)
+                {
+                    var mr = shader.GetComponent<MeshRenderer>();
+                    if (mr != null) mr.enabled = true;
+                }
+            }
+        }
+    }
+
+    private IEnumerator HandlePlacement()
+    {
+        // Mientras queden unidades por colocar...
+        while (placedCount < playerUnits.Count)
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                if (Physics.Raycast(ray, out var hit) && hit.transform.CompareTag("Tile"))
+                {
+                    var tile = hit.transform.GetComponent<Tile>();
+                    if (tile != null && tile.startingPoint)
+                    {
+                        // Desactivar resaltado de este tile
+                        var shader = hit.transform.GetComponentInChildren<ChangingShaderTopTiles>();
+                        if (shader != null)
+                        {
+                            var mr = shader.GetComponent<MeshRenderer>();
+                            if (mr != null) mr.enabled = false;
+                        }
+
+                        // Posicionar la unidad siguiente
+                        var unit = playerUnits[placedCount];
+                        Vector3 tilePos = hit.transform.position;
+                        float currentY = unit.transform.position.y;
+                        unit.transform.position = new Vector3(tilePos.x, currentY, tilePos.z);
+                        placedCount++;
+                    }
+                }
+            }
+            yield return null;
+        }
     }
 
 
@@ -171,6 +244,8 @@ public class TurnManager : MonoBehaviour
     private void OnPlayerTurnStart()
     {
         Debug.Log("Player Turn Start");
+        ChangingShaderTopTiles.ClearAllHighlights();
+        
 
         // Reset actions for all player units
         //foreach (var unit in playerUnits)

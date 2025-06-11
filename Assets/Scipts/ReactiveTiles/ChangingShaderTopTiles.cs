@@ -31,6 +31,7 @@ public class ChangingShaderTopTiles : MonoBehaviour
     {
         foreach (var t in tilesMap.Values)
             t.Hide();
+            
     }
 
     // Activa sólo las 4 adyacentes a `center`

@@ -10,6 +10,7 @@ public class Tile : MonoBehaviour
     [SerializeField] bool blockInCase2;
     [SerializeField] bool blockInCase3;
     [SerializeField] bool blockInCase4;
+    [SerializeField] public bool startingPoint;
 
     //Açò es pa ficar si 'BLOCKED' des del editor. Si no es necesari per a després simplement llevar-ho!!!!!!!!!!!!!!!!
     public Vector2Int cords;

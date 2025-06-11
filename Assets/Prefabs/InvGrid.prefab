@@ -84,6 +84,7 @@ MonoBehaviour:
   blockInCase2: 0
   blockInCase3: 0
   blockInCase4: 0
+  startingPoint: 0
   cords: {x: 0, y: 0}
 --- !u!65 &5098343577427409547
 BoxCollider:
