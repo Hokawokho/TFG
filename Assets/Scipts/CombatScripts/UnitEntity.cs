@@ -15,6 +15,8 @@ public class UnitEntity : MonoBehaviour
     public int maxActions = 2;
     public int currentActions;
 
+    public bool invulnerable= false;
+
     protected virtual void Start()
     {
         hitpoints = Instantiate(hitpoints);

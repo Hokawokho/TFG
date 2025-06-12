@@ -32,6 +32,9 @@ public class LayerRenderChanger : MonoBehaviour
     private FolowingUnit previousFollower = null;
     private MeshRenderer prevMesh;
 
+    public MeshRenderer invMesh;
+    
+
     //Esto es para mantener el renderer de la unidad inferior tras rotar
     //MeshRenderer stickyRenderer = null;
 

@@ -4616,7 +4616,7 @@ MonoBehaviour:
   customDirection: {x: 5.5, y: 5, z: 5.5}
   targetLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 256
 --- !u!1001 &339390792
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5201,7 +5201,7 @@ MonoBehaviour:
   customDirection: {x: 5.5, y: 5, z: 5.5}
   targetLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 256
 --- !u!1001 &407703152
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11541,7 +11541,7 @@ PrefabInstance:
       objectReference: {fileID: 1279292989}
     - target: {fileID: 7577703633395143999, guid: cd64177416da96a4685d3f2f027f76f8, type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7577703633395143999, guid: cd64177416da96a4685d3f2f027f76f8, type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -13259,7 +13259,7 @@ PrefabInstance:
       objectReference: {fileID: 976243427}
     - target: {fileID: 7577703633395143999, guid: cd64177416da96a4685d3f2f027f76f8, type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7577703633395143999, guid: cd64177416da96a4685d3f2f027f76f8, type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -14988,6 +14988,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3610532394567904285, guid: 44762fd7c150cb542839de1cee6241a3, type: 3}
   m_PrefabInstance: {fileID: 1934631286}
   m_PrefabAsset: {fileID: 0}
+--- !u!23 &1041914740 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 7577703633395143999, guid: cd64177416da96a4685d3f2f027f76f8, type: 3}
+  m_PrefabInstance: {fileID: 958771736}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1047016452
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -16304,7 +16309,7 @@ MonoBehaviour:
   customDirection: {x: 5.5, y: 5, z: 5.5}
   targetLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 256
 --- !u!1001 &1150698667
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -17768,7 +17773,7 @@ MonoBehaviour:
   customDirection: {x: 5.5, y: 5, z: 5.5}
   targetLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 256
 --- !u!1 &1285634696
 GameObject:
   m_ObjectHideFlags: 0
@@ -17845,6 +17850,7 @@ MonoBehaviour:
   - layerName: Render_H-2
     meshRenderer: {fileID: 1571395217}
     isTouching: 0
+  invMesh: {fileID: 1598818928}
 --- !u!4 &1285634699
 Transform:
   m_ObjectHideFlags: 0
@@ -18137,7 +18143,7 @@ MonoBehaviour:
   customDirection: {x: 5.5, y: 5, z: 5.5}
   targetLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 256
 --- !u!1001 &1296661612
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -22765,7 +22771,7 @@ MonoBehaviour:
   customDirection: {x: 5.5, y: 5, z: 5.5}
   targetLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 256
 --- !u!23 &1515704378 stripped
 MeshRenderer:
   m_CorrespondingSourceObject: {fileID: 7947204969852789096, guid: 2580f48f2d8159747824486a1d38019e, type: 3}
@@ -23047,7 +23053,7 @@ MonoBehaviour:
   customDirection: {x: 5.5, y: 5, z: 5.5}
   targetLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 256
 --- !u!1001 &1539709390
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -23436,7 +23442,7 @@ MonoBehaviour:
   customDirection: {x: 5.5, y: 5, z: 5.5}
   targetLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 256
 --- !u!23 &1559026040 stripped
 MeshRenderer:
   m_CorrespondingSourceObject: {fileID: 7947204969852789096, guid: 2580f48f2d8159747824486a1d38019e, type: 3}
@@ -23826,6 +23832,7 @@ MonoBehaviour:
   - layerName: Render_H-2
     meshRenderer: {fileID: 822466413}
     isTouching: 0
+  invMesh: {fileID: 1041914740}
 --- !u!4 &1577222811
 Transform:
   m_ObjectHideFlags: 0
@@ -24338,6 +24345,11 @@ Transform:
 Transform:
   m_CorrespondingSourceObject: {fileID: 5159295246647411923, guid: ebad77338afe18a41a8591cbd1e189de, type: 3}
   m_PrefabInstance: {fileID: 1884835924}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &1598818928 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 7577703633395143999, guid: cd64177416da96a4685d3f2f027f76f8, type: 3}
+  m_PrefabInstance: {fileID: 818489604}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1604755301
 PrefabInstance:
@@ -29621,7 +29633,7 @@ MonoBehaviour:
   customDirection: {x: 5.5, y: 5, z: 5.5}
   targetLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 256
 --- !u!1001 &1901018475
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -29873,7 +29885,7 @@ MonoBehaviour:
   customDirection: {x: 5.5, y: 5, z: 5.5}
   targetLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 256
 --- !u!1001 &1909765650
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -29984,7 +29996,7 @@ MonoBehaviour:
   customDirection: {x: 5.5, y: 5, z: 5.5}
   targetLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 256
 --- !u!1001 &1916596984
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -32097,7 +32109,7 @@ MonoBehaviour:
   customDirection: {x: 5.5, y: 5, z: 5.5}
   targetLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 256
 --- !u!1001 &2006818831
 PrefabInstance:
   m_ObjectHideFlags: 0

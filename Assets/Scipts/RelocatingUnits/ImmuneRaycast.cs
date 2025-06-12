@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,7 +7,7 @@ using UnityEngine.EventSystems;
 public class ImmuneRaycast : MonoBehaviour
 {
 
-    
+
     public float rayDistance = 10f; // Distancia del Raycast
     public Vector3 customDirection = new Vector3(5.5f, 5f, 5.5f);
 
@@ -14,36 +15,60 @@ public class ImmuneRaycast : MonoBehaviour
     public LayerMask targetLayer;
 
     public Transform detectedHit { get; private set; } = null;
-    
+
+    public event Action<bool> OnHitStateChanged;
+    private bool lastHitState = false;
+    public bool IsCurrentlyHit => lastHitState;
+
     // Start is called before the first frame update
-    void Start()
+    private bool autoFire = false;
+
+    // Extraemos el raycast en un método
+    public void TriggerRay()
     {
-        
+        // Lanza el raycast una vez y lo dibuja con duración larga
+        PerformRaycast(duration: 5f);
+        autoFire = true;
     }
 
-    // Update is called once per frame
+    public void StopRay()
+    {
+        autoFire = false;
+        UpdateHit(false);
+    }
+
     void Update()
+    {
+        if (autoFire)
+        {
+            // Mantener el dibujo del rayo cada frame (duración = Time.deltaTime)
+            PerformRaycast(duration: Time.deltaTime);
+        }
+    }
+
+    private void PerformRaycast(float duration)
     {
         Vector3 direction = customDirection.normalized;
         Vector3 startPosition = transform.position;
-
-        if (Physics.Raycast(startPosition, direction, out RaycastHit hit, rayDistance, targetLayer /*~ignoreLayer*/))
+        bool hit = Physics.Raycast(startPosition, direction, out RaycastHit info, rayDistance, targetLayer);
+        if (hit)
         {
-
-            detectedHit = hit.transform;
-
-            //Debug.LogWarning($"RAYO IMPACTÓ a {hit.collider.name} en {hit.point}");
-            Debug.DrawRay(startPosition, direction * hit.distance, Color.red, 3f);
-
+            detectedHit = info.transform;
+            Debug.DrawRay(startPosition, direction * info.distance, Color.green, duration);
         }
-
         else
         {
-
             detectedHit = null;
-
-            //Debug.Log($" RAYO NO IMPACTÓ a nada. Dirección: {direction}");
-            Debug.DrawRay(startPosition, direction * rayDistance, Color.blue, 3f);
+            Debug.DrawRay(startPosition, direction * rayDistance, Color.blue, duration);
+        }
+        UpdateHit(hit);
+    }
+     private void UpdateHit(bool hit)
+    {
+        if (hit != lastHitState)
+        {
+            lastHitState = hit;
+            OnHitStateChanged?.Invoke(hit);
         }
     }
 }
