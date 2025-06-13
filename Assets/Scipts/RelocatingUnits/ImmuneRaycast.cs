@@ -21,7 +21,7 @@ public class ImmuneRaycast : MonoBehaviour
     public bool IsCurrentlyHit => lastHitState;
 
     // Start is called before the first frame update
-    private bool autoFire = false;
+    private bool autoFire = true;
 
     // Extraemos el raycast en un método
     public void TriggerRay()

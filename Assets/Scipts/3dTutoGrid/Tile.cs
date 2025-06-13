@@ -58,16 +58,18 @@ public class Tile : MonoBehaviour
             default: isBlocked = false; break;
         }
 
-        if (isBlocked && !isCurrentlyBlocked)
+        //if (isBlocked && !isCurrentlyBlocked)
+         if (isBlocked )
         {
             // Bloquear
             gridManager.BlockNode(cords);
-            isCurrentlyBlocked = true;
+            // isCurrentlyBlocked = true;
         }
-        else if (!isBlocked && isCurrentlyBlocked)
+        // else if (!isBlocked && isCurrentlyBlocked)
+        else if (!isBlocked)
         {
             gridManager.UnblockNode(cords);
-            isCurrentlyBlocked = false;
+            // isCurrentlyBlocked = false;
         }
     }
 }

@@ -32,7 +32,10 @@ public class LayerRenderChanger : MonoBehaviour
     private FolowingUnit previousFollower = null;
     private MeshRenderer prevMesh;
 
+    private ImmuneRaycast currentImmune = null;
     public MeshRenderer invMesh;
+
+    public UnitEntity unitEntity;
     
 
     //Esto es para mantener el renderer de la unidad inferior tras rotar
@@ -157,7 +160,19 @@ public class LayerRenderChanger : MonoBehaviour
 
         // 5.4) Activamos inmediatamente el nuevo
         if (toActivate != null)
+        {
             toActivate.enabled = true;
+            var immune = toActivate.transform.parent.GetComponent<ImmuneRaycast>();
+            if (immune != null){
+                 if (currentImmune != null)
+                    currentImmune.OnHitStateChanged -= HandleImmuneHitStateChanged;
+
+                immune.enabled = true;
+                immune.OnHitStateChanged += HandleImmuneHitStateChanged;
+                currentImmune = immune;
+            }
+                
+        }
 
         // 5.5) Desactivamos el anterior, pero con un retardo de 0.1s
         if (currentActive != null)
@@ -169,13 +184,35 @@ public class LayerRenderChanger : MonoBehaviour
             //     delayedDisableCoroutine = null;
             // }
             currentActive.enabled = false;
+                var oldImmune = currentActive.transform.parent.GetComponent<ImmuneRaycast>();
+            if (oldImmune != null)
+            {
+                
+                oldImmune.OnHitStateChanged -= HandleImmuneHitStateChanged;
+                oldImmune.enabled = false;
+            }
+                
 
-            // Lanzamos la corrutina para desactivar el anterior tras 0.1s
+                // Lanzamos la corrutina para desactivar el anterior tras 0.1s
             // delayedDisableCoroutine = StartCoroutine(DisableAfterDelay(currentActive, 0.1f));
         }
 
 
         currentActive = toActivate;
+    }
+
+    private void HandleImmuneHitStateChanged(bool hit)
+    {
+        if (hit)
+        {
+            if (invMesh != null) invMesh.enabled = true;
+            if (unitEntity != null) unitEntity.invulnerable = true;
+        }
+        else
+        {
+            if (invMesh != null) invMesh.enabled = false;
+            if (unitEntity != null) unitEntity.invulnerable = false;
+        }
     }
 
     public MeshRenderer GetCurrentActiveRenderer()
@@ -274,7 +311,7 @@ public class LayerRenderChanger : MonoBehaviour
                 constraint.AddSource(newSource);
                 constraint.translationOffset = worldPos - selectedFollower.transform.position;
                 constraint.constraintActive = true;
-                Debug.Log($"[Rotation] Constraint on '{follower.gameObject.name}' now follows '{selectedFollower.gameObject.name}'");
+                //Debug.Log($"[Rotation] Constraint on '{follower.gameObject.name}' now follows '{selectedFollower.gameObject.name}'");
                 //Debug.Log($"[Rotation] Added new source '{selectedFollower.gameObject.name}' to constraint on '{follower.gameObject.name}' with offset {constraint.translationOffset}");
 
             }

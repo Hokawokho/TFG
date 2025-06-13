@@ -10,7 +10,7 @@ public class RendererGroundDetector : MonoBehaviour
 
     public string LayerRenderGround;
 
-    public ImmuneRaycast immuneRaycast;
+    // public ImmuneRaycast immuneRaycast;
 
     public Transform currentCollision { get; private set; }
 
@@ -18,21 +18,21 @@ public class RendererGroundDetector : MonoBehaviour
     void Start()
     {
         renderChanger = GetComponentInParent<LayerRenderChanger>();
-        immuneRaycast = GetComponentInParent<ImmuneRaycast>();
+        // immuneRaycast = GetComponentInParent<ImmuneRaycast>();
         if (renderChanger == null)
         {
             Debug.LogError($"[{name}] No tiene LayerRendererChanger en el padre");
             return;
         }
 
-        if (immuneRaycast == null)
-        {
-            Debug.LogError($"[{name}] No tiene ImmuneRaycast en el padre immediato del mesh");
-            return;
-        }
+        // if (immuneRaycast == null)
+        // {
+        //     Debug.LogError($"[{name}] No tiene ImmuneRaycast en el padre immediato del mesh");
+        //     return;
+        // }
 
-        // Suscribirse al evento de cambio de estado de hit del raycast
-        immuneRaycast.OnHitStateChanged += OnImmuneRaycastHitStateChanged;
+        // // Suscribirse al evento de cambio de estado de hit del raycast
+        // immuneRaycast.OnHitStateChanged += OnImmuneRaycastHitStateChanged;
 
 
         if (transform.parent == null)
@@ -49,7 +49,7 @@ public class RendererGroundDetector : MonoBehaviour
         {
             currentCollision = other.transform;
             renderChanger.SetTouching(myLayer, true);
-            immuneRaycast.TriggerRay();
+            // immuneRaycast.TriggerRay();
         }
     }
 
@@ -62,12 +62,12 @@ public class RendererGroundDetector : MonoBehaviour
         renderChanger.SetTouching(myLayer, false);
     }
     
-     // Callback para activar o desactivar invMesh según el estado del raycast
-    private void OnImmuneRaycastHitStateChanged(bool hit)
-    {
-        if (renderChanger.invMesh != null)
-        {
-            renderChanger.invMesh.enabled = hit;
-        }
-    }
+    //  // Callback para activar o desactivar invMesh según el estado del raycast
+    // private void OnImmuneRaycastHitStateChanged(bool hit)
+    // {
+    //     if (renderChanger.invMesh != null)
+    //     {
+    //         renderChanger.invMesh.enabled = hit;
+    //     }
+    // }
 }
