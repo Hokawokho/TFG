@@ -37,6 +37,7 @@ public class Rotation : MonoBehaviour
 
     private int updatesDone;
     private int updatesExpected;
+    public static event System.Action<int> OnCaseChanged;
 
 
 
@@ -59,11 +60,11 @@ public class Rotation : MonoBehaviour
         }
         updatesDone = 0;
         updatesExpected = layerRenderChangers.Count;
-        
+
 
         //Si fot el bloqueig a l'inici, llevar esta línea
         ApplyBlockingToAllTiles(currentCase);
-        
+
         if (connectionBlocker != null)
         {
             connectionBlocker.ApplyBlocksForCase(currentCase);
@@ -79,7 +80,7 @@ public class Rotation : MonoBehaviour
     {
         FolowingUnit.OnFollowerPositionUpdated -= HandleFollowerUpdated;
     }
-    
+
 
 
     void Update()
@@ -118,7 +119,7 @@ public class Rotation : MonoBehaviour
             //     gridManager.ResetNodes();
             //     StartCoroutine(RotateSmoothly());
             // }
-        }        
+        }
     }
     private void HandleFollowerUpdated(FolowingUnit fol)
     {
@@ -251,7 +252,7 @@ public class Rotation : MonoBehaviour
         // Suspender colisiones en todos los LayerRenderChanger
         foreach (var changer in layerRenderChangers)
             changer.SuspendCollisions();
-        
+
 
 
 
@@ -261,12 +262,6 @@ public class Rotation : MonoBehaviour
             yield return null;
         }
         transform.rotation = Quaternion.Euler(0, targetRotation, 0);
-        
-        
-        // Asegurar que la rotación finaliza exactamente en el ángulo deseado
-        //isRotating = false;
-
-
 
 
         // BlockNodeBasedOnRotation();
@@ -302,9 +297,12 @@ public class Rotation : MonoBehaviour
         int rotationState = Mathf.RoundToInt(targetRotation / 90f) % 4;
         currentCase = rotationState + 1;
 
+        OnCaseChanged?.Invoke(currentCase);
+
+
         // APLICA bloqueo/desbloqueo a **todas** las Tiles con el nuevo case
         ApplyBlockingToAllTiles(currentCase);
-        
+
         if (connectionBlocker != null)
             connectionBlocker.ApplyBlocksForCase(currentCase);
     }
@@ -319,4 +317,5 @@ public class Rotation : MonoBehaviour
         }
     }
 
+    public int CurrentCase => currentCase;
 }

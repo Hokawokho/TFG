@@ -45,7 +45,7 @@ public class Tile : MonoBehaviour
 
         cords = new Vector2Int(x / gridManager.UnityGridSize, z / gridManager.UnityGridSize);
     }
-    
+
     public void ApplyBlockForCase(int caseNumber)
     {
         bool isBlocked = false;
@@ -59,7 +59,7 @@ public class Tile : MonoBehaviour
         }
 
         //if (isBlocked && !isCurrentlyBlocked)
-         if (isBlocked )
+        if (isBlocked)
         {
             // Bloquear
             gridManager.BlockNode(cords);
@@ -70,6 +70,19 @@ public class Tile : MonoBehaviour
         {
             gridManager.UnblockNode(cords);
             // isCurrentlyBlocked = false;
+        }
+    }
+    
+    // Devuelve si esta tile debe estar bloqueada en el caso dado
+    public bool IsBlockedInCase(int caseNumber)
+    {
+        switch (caseNumber)
+        {
+            case 1: return blockInCase1;
+            case 2: return blockInCase2;
+            case 3: return blockInCase3;
+            case 4: return blockInCase4;
+            default: return false;
         }
     }
 }
