@@ -25,7 +25,7 @@ public class FolowingUnit : MonoBehaviour
     //private Vector3 offsetSource2 = new Vector3 (0,2.045f,0);
 
 
-    public  RaycastDebugger raycastDebugger;
+    // public  RaycastDebugger raycastDebugger;
 
     private RendererGroundDetector groundDetector;
 
@@ -40,10 +40,10 @@ public class FolowingUnit : MonoBehaviour
         positionConstraint = GetComponent<PositionConstraint>();
         groundDetector = GetComponentInChildren<RendererGroundDetector>();
 
-        if (raycastDebugger == null)
-        {
-            raycastDebugger = FindObjectOfType<RaycastDebugger>();
-        }
+        // if (raycastDebugger == null)
+        // {
+        //     Debug.Log("FALTA RAYCAST DEBUGGER");
+        // }
 
         //REVISAR+++++++++++
         //Este if no es necesari pq ho estic tocant des de l'editor, pero per si de cas esta.

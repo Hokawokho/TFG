@@ -14,6 +14,8 @@ public class EnemyAIController : MonoBehaviour
     private Pathfinding pathfinding;
     private UnitController unitController;
 
+    private LayerRenderChanger layerRenderChanger;
+
     public int AttackDistance = 4;
 
     void Awake()
@@ -22,6 +24,7 @@ public class EnemyAIController : MonoBehaviour
         turnManager = FindObjectOfType<TurnManager>();
         pathfinding = FindObjectOfType<Pathfinding>();
         unitController = FindObjectOfType<UnitController>();
+        layerRenderChanger = GetComponentInParent<LayerRenderChanger>();
 
         //TODO: Retocar pa pillar totes les unitats enemigues
         //selfEntity = FindObjectOfType<UnitEntity>();
@@ -129,6 +132,7 @@ public class EnemyAIController : MonoBehaviour
 
     public IEnumerator MoveTo(Vector2Int position)
     {
+        layerRenderChanger.ResumeCollisions();
         //TODO: No es podria passar directament el controller desde el awake com tot lo demés???
         //UnitController controller = FindObjectOfType<UnitController>();
         unitController.selectedUnit = transform;
