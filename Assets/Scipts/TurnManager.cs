@@ -26,12 +26,17 @@ public class TurnManager : MonoBehaviour
     //private bool isPlacingUnits = false;
     private int placedCount = 0;
 
+    public Animator turnAnims;
+    
     
 
 
     // Start is called before the first frame update
     void Start()
     {
+
+        if (turnAnims == null)
+            Debug.LogError("No se encuentra el turnAnims");
 
         unitController = FindObjectOfType<UnitController>();
 
@@ -160,6 +165,8 @@ public class TurnManager : MonoBehaviour
     {
         State = GameState.START;
 
+        //Ejecuta la animación
+        turnAnims.Play("StartState");
         
 
         // TODO: Spawn or position player and enemy units
@@ -179,8 +186,10 @@ public class TurnManager : MonoBehaviour
         // After setup, go to player turn
         if (placedCount >= playerUnits.Count)
         {
-            State = GameState.PLAYERTURN;
-            OnPlayerTurnStart();
+            // State = GameState.PLAYERTURN;
+            // OnPlayerTurnStart();
+
+            StartCoroutine(ChangeState(GameState.PLAYERTURN));
         }
     }
 
@@ -293,10 +302,14 @@ public class TurnManager : MonoBehaviour
         {
             var ai = unit.GetComponent<EnemyAIController>();
             if (unit.IsAlive && ai != null)
+            {
                 yield return ai.PerformAI();
-            // Wait until AI action done
-            //yield return StartCoroutine(unit.PerformAI());
+                if (State == GameState.LOST)
+                    yield break;
+                // Wait until AI action done
+                //yield return StartCoroutine(unit.PerformAI());
 
+            }
         }
 
 
@@ -304,8 +317,8 @@ public class TurnManager : MonoBehaviour
         // TODO: AÑADIR LOS METODO DE LLAMADA A IA AQUI
 
 
-        yield return new WaitForSeconds(0.5f);
-        StartCoroutine(ChangeState(GameState.PLAYERTURN));
+        if (State == GameState.ENEMYTURN)
+            StartCoroutine(ChangeState(GameState.PLAYERTURN));
     }
 
     private IEnumerator ChangeState(GameState newState)
@@ -325,19 +338,27 @@ public class TurnManager : MonoBehaviour
         {
             case GameState.PLAYERTURN:
                 OnPlayerTurnStart();
+                // Reproducir animación
+                turnAnims.Play("StateChange_in");
                 break;
 
             case GameState.ENEMYTURN:
                 OnEnemyTurnStart();
+                // Reproducir animación
+                turnAnims.Play("StateChangeEnemy_in");
                 break;
 
             case GameState.WIN:
                 Debug.Log("You Win!");
+                // Reproducir animación
+                turnAnims.Play("Victory");
                 // TODO: Show win screen
                 break;
 
             case GameState.LOST:
                 Debug.Log("You Lose!");
+                // Reproducir animación
+                turnAnims.Play("Defeat");
                 // TODO: Show lose screen
                 break;
         }

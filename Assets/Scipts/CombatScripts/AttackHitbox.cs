@@ -9,6 +9,16 @@ public class AttackHitbox : MonoBehaviour
 
     public GameObject owner;
 
+    public float lifetime;
+    float _spawnTime;
+
+
+    void OnEnable()
+    {
+        _spawnTime = Time.time;
+    }
+
+
     void OnTriggerEnter(Collider other)
     {
 
@@ -22,6 +32,7 @@ public class AttackHitbox : MonoBehaviour
             if (hit != null)
             {
                 hit.TakeDamage(damage);
+                 Debug.Log($"Has golpeado a {hit.name}. Vida restante: {hit.CurrentHealth}");
             }
             Die();
         }
@@ -31,6 +42,10 @@ public class AttackHitbox : MonoBehaviour
         // Vector pos = Camera.main.WorldToViewportPoint(transform.position);
         // if (pos.x < -0.1 || pos.x > 1.1)
         //     Die();
+
+        if (Time.time > _spawnTime + lifetime)
+            Die();
+
     }
     private void Die()
     {

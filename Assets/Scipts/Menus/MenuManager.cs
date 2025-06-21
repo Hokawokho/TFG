@@ -22,7 +22,8 @@ public class MenuManager : MonoBehaviour
         Debug.Log("Selecting Level");
 
         //Meter nivel actual
-        //SceneManager.LoadScene();
+        SceneManager.LoadScene(1, LoadSceneMode.Single);
+
 
     }
 

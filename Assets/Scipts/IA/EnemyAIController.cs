@@ -39,12 +39,19 @@ public class EnemyAIController : MonoBehaviour
 
     public IEnumerator PerformAI()
     {
+        if (selfEntity.invulnerable)
+        {
+            Debug.Log($"[EnemyAI] {selfEntity.name} está invulnerable: salto de turno");
+            yield break;  // termina esta corrutina → TurnManager pasará a la siguiente unidad
+        }
+
+
         // 1. Obtener todas las unidades jugador vivas
-        List<UnitEntity> targets = turnManager.playerUnits.FindAll(u => u.IsAlive);
+        List<UnitEntity> targets = turnManager.playerUnits.FindAll(u => u.IsAlive && !u.invulnerable);
         if (targets.Count == 0) yield break;
 
         // 2. Escoger la mejor según criterio (ej: menos vida)
-        UnitEntity bestTarget = targets.OrderBy(t => Vector3.Distance(transform.position, t.transform.position)).ThenBy(t => t.hitpoints).First();
+        UnitEntity bestTarget = targets.OrderBy(t => Vector3.Distance(transform.position, t.transform.position)).ThenBy(t => t.CurrentHealth).First();
 
         Vector2Int selfPos = gridManager.GetCoordinatesFromPosition(transform.position);
         Vector2Int targetPos = gridManager.GetCoordinatesFromPosition(bestTarget.transform.position);
@@ -62,8 +69,12 @@ public class EnemyAIController : MonoBehaviour
             if (!gridManager.GetNode(pos).walkable) continue;
 
             int pathCost = unitController.CalculatePathCost(selfPos, pos);
-            if (pathCost == 0 || pathCost > 99) continue;
-
+            if (pathCost == 0 || pathCost > 99)
+            // if (pathCost == 1 || pathCost > 99)
+            {
+                Debug.Log($"Coste del path de la IA no rentable, pathcost = {pathCost}");
+                continue;
+            }
             pathCosts[pos] = pathCost;
 
             float value = EvaluateScenario(bestTarget, pathCost);
@@ -137,6 +148,7 @@ public class EnemyAIController : MonoBehaviour
         //UnitController controller = FindObjectOfType<UnitController>();
         unitController.selectedUnit = transform;
         unitController.unitSelected = true;
+        unitController.SelectUnit(transform);
         // 1) Recalcular la ruta teniendo en cuenta los nodos bloqueados
         Vector2Int currentPos = gridManager.GetCoordinatesFromPosition(transform.position);
 
@@ -186,6 +198,10 @@ public class EnemyAIController : MonoBehaviour
             bool fired = shooter.TryShoot();
             if (fired)
             {
+                Transform unitRoot = transform.parent != null ? transform.parent : transform;
+                Animator[] animators = unitRoot.GetComponentsInChildren<Animator>(true);
+                foreach (var anim in animators)
+                    anim.SetTrigger("Attack");
                 Debug.Log($"{gameObject.name} ataca a {target.gameObject.name} desde la posición {transform.position}");
             }
             else

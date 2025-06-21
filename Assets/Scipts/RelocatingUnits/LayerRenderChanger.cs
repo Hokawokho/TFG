@@ -14,7 +14,8 @@ public class LayerRenderChanger : MonoBehaviour
 
         public string layerName;
 
-        public MeshRenderer meshRenderer;
+        // public MeshRenderer meshRenderer;
+        public SpriteRenderer spriteRenderer;
 
         public bool isTouching;
 
@@ -22,7 +23,8 @@ public class LayerRenderChanger : MonoBehaviour
 
     public RenderInfo[] renderers;
 
-    MeshRenderer currentActive = null;
+    // MeshRenderer currentActive = null;
+    SpriteRenderer currentActive = null;
 
     Coroutine delayedDisableCoroutine = null;
 
@@ -30,10 +32,12 @@ public class LayerRenderChanger : MonoBehaviour
 
     private RaycastDebugger previousDebugger = null;
     private FolowingUnit previousFollower = null;
-    private MeshRenderer prevMesh;
+    // private MeshRenderer prevMesh;
+    private SpriteRenderer prevMesh;
 
     private ImmuneRaycast currentImmune = null;
-    public MeshRenderer invMesh;
+    // public MeshRenderer invMesh;
+    public SpriteRenderer invMesh;
 
     public UnitEntity unitEntity;
     
@@ -65,8 +69,8 @@ public class LayerRenderChanger : MonoBehaviour
         //rotationScript = FindObjectOfType<Rotation>();
         foreach (var unit in renderers)
         {
-            if (unit.meshRenderer != null)
-                unit.meshRenderer.enabled = false;
+            if (unit.spriteRenderer != null)
+                unit.spriteRenderer.enabled = false;
 
             unit.isTouching = false;
         }
@@ -140,19 +144,20 @@ public class LayerRenderChanger : MonoBehaviour
         //     return;
 
         // 5.1) Buscamos, en orden de prioridad, el primer isTouching=true
-        MeshRenderer toActivate = null;
+        // MeshRenderer toActivate = null;
+        SpriteRenderer toActivate = null;
 
         foreach (var unit in renderers)
         {
             if (unit.isTouching)
             {
-                toActivate = unit.meshRenderer;
+                toActivate = unit.spriteRenderer;
                 break;
             }
         }
         if (toActivate == null && renderers.Length > 0)
         {
-            toActivate = renderers[renderers.Length - 1].meshRenderer;
+            toActivate = renderers[renderers.Length - 1].spriteRenderer;
         }
 
         if (toActivate == currentActive)
@@ -215,7 +220,8 @@ public class LayerRenderChanger : MonoBehaviour
         }
     }
 
-    public MeshRenderer GetCurrentActiveRenderer()
+    // public MeshRenderer GetCurrentActiveRenderer()
+    public SpriteRenderer GetCurrentActiveRenderer()
     {
         return currentActive;
     }

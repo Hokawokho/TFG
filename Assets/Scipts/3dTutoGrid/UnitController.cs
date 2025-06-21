@@ -41,6 +41,8 @@ public class UnitController : MonoBehaviour
     private HealthBar healthBar;
 
     public bool isMoving = false;
+    
+    private Animator[] selectedAnimators;
 
     // public KeyCode keyToResetMovement;
 
@@ -87,11 +89,23 @@ public class UnitController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!PauseMenu.GameIsPaused)
+        
+        if (unitSelected)
         {
+            var selEntity = selectedUnit.GetComponent<UnitEntity>();
+            if (selEntity != null && !selEntity.IsAlive)
+            {
+                DeselectCurrentUnit();
+                return;
+            }
+        }
+
+        if (PauseMenu.GameIsPaused || isMoving)
+            return;
+        
             HandleMouseKeys();
             HandleHotKeys();
-        }
+        
 
         //RESETEAR MOVEMENT -> F
         // if (Input.GetKeyDown(keyToResetMovement))
@@ -146,6 +160,9 @@ public class UnitController : MonoBehaviour
                 //Si turno del enemigo no se pueden seleccionar los Player+++
                 if (turnManager.State == TurnManager.GameState.ENEMYTURN || turnManager.State == TurnManager.GameState.START)
                 {
+                    var clickedEntity = hit.transform.GetComponent<UnitEntity>();
+                    if (clickedEntity != null && !clickedEntity.IsAlive)
+                        return;
                     if (hit.transform.GetComponent<Player>() != null)
                         return;
                 }
@@ -222,6 +239,15 @@ public class UnitController : MonoBehaviour
             ConfirmAttack();
         }
 
+        if (currentAttackMode == AttackMode.Melee && Input.GetKeyDown(keyToConfirmAttack))
+        {
+            
+
+            ConfirmAttack();
+        }
+
+        
+
 
     }
 
@@ -241,6 +267,13 @@ public class UnitController : MonoBehaviour
             ChangingShaderTopTiles.HighlightLineTiles(unitCoords, gridManager);
 
         shooter = selectedUnit.GetComponentInChildren<ObjectShooter>();
+        if (shooter != null)
+        {
+            if (mode == AttackMode.Melee)
+                shooter.poolTag = "meleeHitbox";
+            else if (mode == AttackMode.Range)
+                shooter.poolTag = "laser-prov";
+        }
     }
 
 
@@ -253,12 +286,32 @@ public class UnitController : MonoBehaviour
             Debug.LogWarning("La unidad no tiene Weapon");
             return;
         }
+
+        if (selectedAnimators == null || selectedAnimators.Length == 0)
+    {
+        Debug.LogWarning($"No se encontraron animators para la unidad «{selectedUnit?.name}»");
+        // Si prefieres, puedes salir aquí:
+         return;
+    }
+        
         bool fired = shooter.TryShoot();
         if (!fired)
             Debug.Log("No puede disparar (cooldown o sin acciones)");
         else
+        {
+            bool isEnemy = selectedUnit.GetComponent<Player>() == null;
+             foreach (var anim in selectedAnimators)
+            {
+                if (currentAttackMode == AttackMode.Melee || isEnemy)
+                {
+                    anim.SetTrigger("Attack");
+                    Debug.LogWarning("Ataca cuerpo a cuerpo");
+                }
+                else if (currentAttackMode == AttackMode.Range)
+                    anim.SetTrigger("Shoot");
+            }
             ExitAttackMode();
-
+        }
     }
 
 
@@ -340,13 +393,13 @@ public class UnitController : MonoBehaviour
         }
     }
 
-    private void SelectUnit(Transform unit)
+    public void SelectUnit(Transform unit)
     {
 
         // Si había una unidad seleccionada antes, ocultar su interfaz
         if (lastSelectedUnit != null)
         {
-            CanvasGroup previousCanvas = selectedUnit.GetComponentInChildren<CanvasGroup>();
+            CanvasGroup previousCanvas = selectedUnit.GetComponentInChildren<CanvasGroup>(true);
             if (previousCanvas != null)
                 previousCanvas.alpha = 0f;
         }
@@ -354,6 +407,8 @@ public class UnitController : MonoBehaviour
 
         selectedUnit = unit;
         unitSelected = true;
+        var root = selectedUnit.parent;
+        selectedAnimators = root.GetComponentsInChildren<Animator>();
 
         CanvasGroup canvas = selectedUnit.GetComponentInChildren<CanvasGroup>();
         if (canvas != null)
@@ -481,7 +536,13 @@ public class UnitController : MonoBehaviour
     IEnumerator FollowPath()
     {
         isMoving = true;
-       // Debug.Log($"[UC] FollowPath START  count={path.Count}");
+        CanvasGroup canvas = selectedUnit.GetComponentInChildren<CanvasGroup>();
+            if (canvas != null)
+                canvas.alpha = 1f;
+
+        foreach (var anim in selectedAnimators)
+            anim.SetBool("isMoving", true);
+        // Debug.Log($"[UC] FollowPath START  count={path.Count}");
         //IEnumerator es para CORRUTINAS+++++++++++++++++++
         //mes info en notes rapides
 
@@ -500,7 +561,7 @@ public class UnitController : MonoBehaviour
             //Esto es para mantener la altura de la unidad cuando se mueva
             endPosition.y = selectedUnit.position.y + travelPercent;
 
-            selectedUnit.LookAt(endPosition);
+            //selectedUnit.LookAt(endPosition);
             //Esta linea es per si foren figures complexes, que miren a la endPosition (es a dir que es giren)
 
             while (travelPercent < 1f)
@@ -517,10 +578,8 @@ public class UnitController : MonoBehaviour
         //Aço es per a desseleccionar la unitat++++++++++++++
 
 
-        if (selectedUnit != null)
+        if (canvas!= null)
         {
-            CanvasGroup canvas = selectedUnit.GetComponentInChildren<CanvasGroup>();
-            if (canvas != null)
                 canvas.alpha = 1f;
 
             Vector2Int unitCoords = gridManager.GetCoordinatesFromPosition(selectedUnit.position);
@@ -533,6 +592,8 @@ public class UnitController : MonoBehaviour
         // lastSelectedUnit= null;
         // selectedUnit = null;
         isMoving = false;
+        foreach (var anim in selectedAnimators)
+            anim.SetBool("isMoving", false);
        //Debug.Log("[UC] FollowPath END");
 
     }

@@ -35,12 +35,12 @@ public class RendererGroundDetector : MonoBehaviour
         // immuneRaycast.OnHitStateChanged += OnImmuneRaycastHitStateChanged;
 
 
-        if (transform.parent == null)
-        {
-            Debug.LogError($"[RendererGroundDetector:{name}] No tiene padre, no puede leer la capa.");
-        }
-        int parentLayer = transform.parent.gameObject.layer;
-        myLayer = LayerMask.LayerToName(parentLayer);
+        // if (transform.parent == null)
+        // {
+        //     Debug.LogError($"[RendererGroundDetector:{name}] No tiene padre, no puede leer la capa.");
+        // }
+        int myLayerIndex = gameObject.layer;
+        myLayer = LayerMask.LayerToName(myLayerIndex);
     }
 
     void OnTriggerStay(Collider other)

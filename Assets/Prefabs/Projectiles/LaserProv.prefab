@@ -128,6 +128,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   direction: {x: -1, y: 0, z: 0}
   speed: 5
+  maxDistance: 5
 --- !u!135 &2244680744561237612
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -164,3 +165,4 @@ MonoBehaviour:
   damage: 1
   damageOnlyToTag: Unit
   owner: {fileID: 0}
+  lifetime: 4

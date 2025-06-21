@@ -15,13 +15,19 @@ public class UnitEntity : MonoBehaviour
     public int maxActions = 2;
     public int currentActions;
 
-    public bool invulnerable= false;
+    public bool invulnerable = false;
+
+    private Animator[] animators;
 
     protected virtual void Start()
     {
         hitpoints = Instantiate(hitpoints);
         hitpoints.hitPoints = hitpoints.initialHitPoints;
         //ResetActions();
+
+        //var root = selectedUnit.parent;
+        Transform unitRoot = transform.parent;
+        animators = unitRoot.GetComponentsInChildren<Animator>(true);
     }
 
     public void Wake()
@@ -47,11 +53,15 @@ public class UnitEntity : MonoBehaviour
         }
         else
         {
+            foreach (var anim in animators)
+               anim.SetTrigger("Hit");
             OnHitEvent?.Invoke(damage);
         }
     }
     public void Die()
     {
+        foreach (var anim in animators)
+            anim.SetTrigger("Die");
         OnDieEvent?.Invoke();
         enabled = false;
     }
@@ -66,9 +76,11 @@ public class UnitEntity : MonoBehaviour
 
     public void UseAction()
     {
-        if (currentActions <= 0) return ;
+        if (currentActions <= 0) return;
         currentActions--;
-        
+
 
     }
+    
+    public int CurrentHealth => hitpoints.hitPoints;
 }

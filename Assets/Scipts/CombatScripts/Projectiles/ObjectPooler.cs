@@ -41,11 +41,19 @@ public class ObjectPooler : Singleton<ObjectPooler>
     }
     public GameObject SpawnFromPool(string tag, Vector3 position, Quaternion orientation, GameObject owner)
     {
+        if (!poolDictionary.ContainsKey(tag))
+    {
+        Debug.LogError($"[ObjectPooler] No existe pool con tag '{tag}'");
+        return null;
+    }
+
         GameObject objectToSpawn = poolDictionary[tag].Dequeue();
         objectToSpawn.SetActive(true);
+
         objectToSpawn.transform.position = position;
         objectToSpawn.transform.rotation = orientation;
         AttackHitbox hitbox = objectToSpawn.GetComponent<AttackHitbox>();
+        
         hitbox.owner = owner;
 
         if(hitbox == null)

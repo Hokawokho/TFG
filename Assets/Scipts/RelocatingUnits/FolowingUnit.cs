@@ -38,7 +38,9 @@ public class FolowingUnit : MonoBehaviour
     void Start()
     {
         positionConstraint = GetComponent<PositionConstraint>();
-        groundDetector = GetComponentInChildren<RendererGroundDetector>();
+        // groundDetector = GetComponentInChildren<RendererGroundDetector>();
+        groundDetector = GetComponent<RendererGroundDetector>();
+
 
         // if (raycastDebugger == null)
         // {
@@ -48,13 +50,14 @@ public class FolowingUnit : MonoBehaviour
         //REVISAR+++++++++++
         //Este if no es necesari pq ho estic tocant des de l'editor, pero per si de cas esta.
         //Si no fique mes elements a futur ELIMINAR if-+-+-+-+-+-+-+
-        if(positionConstraint.sourceCount >=2){
+        if (positionConstraint.sourceCount >= 2)
+        {
 
             ConstraintSource source1 = positionConstraint.GetSource(0);
             source1.weight = 1;
             positionConstraint.SetSource(0, source1);
 
-            
+
 
             positionConstraint.translationOffset = offsetSource1;
 

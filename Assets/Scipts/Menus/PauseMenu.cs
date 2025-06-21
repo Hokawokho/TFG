@@ -46,8 +46,14 @@ public class PauseMenu : MonoBehaviour
         Debug.Log("Restarting Level");
         
         //Meter nivel actual
-        //SceneManager.LoadScene();
-        Resume();
+        string mapa = SceneManager.GetActiveScene().name;
+
+    // Opción B: si tienes una escena persistente “bootstrap” y NO es la que quieres recargar,
+    // guarda en una variable el nombre o índice del mapa cuando lo cargas por primera vez.
+    // Por ejemplo: GameManager.CurrentMapName = "Mapa Real1";
+
+    SceneManager.LoadScene(mapa, LoadSceneMode.Single);
+        //Resume();
 
     }
 
@@ -55,7 +61,7 @@ public class PauseMenu : MonoBehaviour
     {
         Debug.Log("Exit Level");
         //Meter nivel inicial
-        //SceneManager.LoadScene();
+        SceneManager.LoadScene(0, LoadSceneMode.Single);
 
     }
 }
