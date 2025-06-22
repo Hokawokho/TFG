@@ -19,6 +19,8 @@ public class UnitEntity : MonoBehaviour
 
     private Animator[] animators;
 
+    private AudioManager audioManager;
+
     protected virtual void Start()
     {
         hitpoints = Instantiate(hitpoints);
@@ -28,6 +30,10 @@ public class UnitEntity : MonoBehaviour
         //var root = selectedUnit.parent;
         Transform unitRoot = transform.parent;
         animators = unitRoot.GetComponentsInChildren<Animator>(true);
+
+        audioManager = FindObjectOfType<AudioManager>();
+        OnDieEvent += PlayDeathAudio;
+
     }
 
     public void Wake()
@@ -85,6 +91,21 @@ public class UnitEntity : MonoBehaviour
 
 
     }
+
+    private void PlayDeathAudio()
+    {
+
+        if (audioManager != null && audioManager.unitDeathAudio != null)
+        {
+            Debug.LogWarning("AUDIO MUERTE UNIDAD");
+            audioManager.PlayOneShot(audioManager.unitDeathAudio);
+        }
+        else
+        {
+            Debug.LogWarning("AudioManager o unitDeathAudio no asignado.");
+        }
+    }
+
     
     public int CurrentHealth => hitpoints.hitPoints;
 }

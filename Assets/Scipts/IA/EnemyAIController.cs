@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class EnemyAIController : MonoBehaviour
@@ -16,7 +17,9 @@ public class EnemyAIController : MonoBehaviour
 
     private LayerRenderChanger layerRenderChanger;
 
-    public int AttackDistance = 4;
+    public int AttackDistance = 1;
+
+    private AudioManager audioManager;
 
     void Awake()
     {
@@ -25,6 +28,7 @@ public class EnemyAIController : MonoBehaviour
         pathfinding = FindObjectOfType<Pathfinding>();
         unitController = FindObjectOfType<UnitController>();
         layerRenderChanger = GetComponentInParent<LayerRenderChanger>();
+        audioManager = FindObjectOfType<AudioManager>();
 
         //TODO: Retocar pa pillar totes les unitats enemigues
         //selfEntity = FindObjectOfType<UnitEntity>();
@@ -202,6 +206,15 @@ public class EnemyAIController : MonoBehaviour
                 Animator[] animators = unitRoot.GetComponentsInChildren<Animator>(true);
                 foreach (var anim in animators)
                     anim.SetTrigger("Attack");
+
+
+                //GESTIÓN DE AUDIO CLIPS
+                //TODO: Quitar las declaraciones inferiores y poner toda la gestión de ataques en UnitEntity con serializedObjects
+                if (audioManager != null)
+                    audioManager.PlayOneShot(audioManager.meleeAudio);
+                else Debug.Log("NO SE REPRODUCE meeleAudio");
+
+                
                 Debug.Log($"{gameObject.name} ataca a {target.gameObject.name} desde la posición {transform.position}");
             }
             else

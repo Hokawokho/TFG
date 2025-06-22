@@ -43,8 +43,10 @@ public class UnitController : MonoBehaviour
     private InfoUnit infoUnit;
 
     public bool isMoving = false;
-    
+
     private Animator[] selectedAnimators;
+
+    private AudioManager audioManager;
 
     // public KeyCode keyToResetMovement;
 
@@ -61,6 +63,8 @@ public class UnitController : MonoBehaviour
         healthBar = FindObjectOfType<HealthBar>();
 
         infoUnit = FindObjectOfType<InfoUnit>();
+
+        audioManager = FindObjectOfType<AudioManager>();
 
         // foreach (var data in unitMovementList)
         // {
@@ -93,7 +97,7 @@ public class UnitController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
         if (unitSelected)
         {
             var selEntity = selectedUnit.GetComponent<UnitEntity>();
@@ -106,10 +110,10 @@ public class UnitController : MonoBehaviour
 
         if (PauseMenu.GameIsPaused || isMoving)
             return;
-        
-            HandleMouseKeys();
-            HandleHotKeys();
-        
+
+        HandleMouseKeys();
+        HandleHotKeys();
+
 
         //RESETEAR MOVEMENT -> F
         // if (Input.GetKeyDown(keyToResetMovement))
@@ -123,7 +127,7 @@ public class UnitController : MonoBehaviour
 
     private void HandleMouseKeys()
     {
-        
+
         if (!Input.GetMouseButtonDown(0)) return;
 
 
@@ -245,12 +249,12 @@ public class UnitController : MonoBehaviour
 
         if (currentAttackMode == AttackMode.Melee && Input.GetKeyDown(keyToConfirmAttack))
         {
-            
+
 
             ConfirmAttack();
         }
 
-        
+
 
 
     }
@@ -291,20 +295,23 @@ public class UnitController : MonoBehaviour
             return;
         }
 
+        if (audioManager != null)
+            PlayMeleeAudioEvent();
+
         if (selectedAnimators == null || selectedAnimators.Length == 0)
-    {
-        Debug.LogWarning($"No se encontraron animators para la unidad «{selectedUnit?.name}»");
-        // Si prefieres, puedes salir aquí:
-         return;
-    }
-        
+            {
+                Debug.LogWarning($"No se encontraron animators para la unidad «{selectedUnit?.name}»");
+                // Si prefieres, puedes salir aquí:
+                return;
+            }
+
         bool fired = shooter.TryShoot();
         if (!fired)
             Debug.Log("No puede disparar (cooldown o sin acciones)");
         else
         {
             bool isEnemy = selectedUnit.GetComponent<Player>() == null;
-             foreach (var anim in selectedAnimators)
+            foreach (var anim in selectedAnimators)
             {
                 if (currentAttackMode == AttackMode.Melee || isEnemy)
                 {
@@ -338,7 +345,7 @@ public class UnitController : MonoBehaviour
 
     public void MoveUnitTo(Vector2Int tileCords)
     {
-        if(turnManager.State != TurnManager.GameState.START)
+        if (turnManager.State != TurnManager.GameState.START)
             ChangingShaderTopTiles.ClearAllHighlights();
 
         if (unitSelected)
@@ -419,18 +426,25 @@ public class UnitController : MonoBehaviour
             canvas.alpha = 1f;
         lastSelectedUnit = selectedUnit; // actualizar
 
+        //AUDIO DE SELECCIÓN DE UNIDAD
+        if (unit.GetComponent<Player>() != null)
+        {
+            if (audioManager != null && audioManager.selectAudio != null)
+                audioManager.PlayOneShot(audioManager.selectAudio);
+        }
+
         // Esto para actualizar HealthBar-+-+-++
-        var entity   = selectedUnit.GetComponent<UnitEntity>();
+        var entity = selectedUnit.GetComponent<UnitEntity>();
         if (healthBar != null)
             healthBar.SetUnit(entity);
-        
-    
+
+
 
         // Obtener coords y datos de movimiento
         Vector2Int unitCoords = gridManager.GetCoordinatesFromPosition(unit.position);
         var unitData = GetUnitData(unit.gameObject);
         if (unitData != null)
-        {   
+        {
             if (infoUnit != null)
                 infoUnit.SetUnit(entity, unitData);
 
@@ -454,14 +468,21 @@ public class UnitController : MonoBehaviour
         {
             if (infoUnit != null)
                 infoUnit.SetUnit(null, null);
-            
+
             if (healthBar != null)
                 healthBar.SetUnit(null);
 
-    
+
             var canvas = selectedUnit.GetComponentInChildren<CanvasGroup>();
             if (canvas != null)
                 canvas.alpha = 0f;
+        }
+
+        //AUDIO DE DESELECCIONAR UNIDAD
+        if (selectedUnit != null && selectedUnit.GetComponent<Player>() != null)
+        {
+            if (audioManager != null && audioManager.unselectAudio != null)
+                audioManager.PlayOneShot(audioManager.unselectAudio);
         }
 
         selectedUnit = null;
@@ -530,7 +551,7 @@ public class UnitController : MonoBehaviour
         StopAllCoroutines();
         path.Clear();
         path = pathFinder.GetNewPath(coordinates);
-        
+
         //Debug.Log($"Nodos en el camino: {path.Count}");
 
 
@@ -551,8 +572,8 @@ public class UnitController : MonoBehaviour
     {
         isMoving = true;
         CanvasGroup canvas = selectedUnit.GetComponentInChildren<CanvasGroup>();
-            if (canvas != null)
-                canvas.alpha = 1f;
+        if (canvas != null)
+            canvas.alpha = 1f;
 
         foreach (var anim in selectedAnimators)
             anim.SetBool("isMoving", true);
@@ -592,9 +613,9 @@ public class UnitController : MonoBehaviour
         //Aço es per a desseleccionar la unitat++++++++++++++
 
 
-        if (canvas!= null)
+        if (canvas != null)
         {
-                canvas.alpha = 1f;
+            canvas.alpha = 1f;
 
             Vector2Int unitCoords = gridManager.GetCoordinatesFromPosition(selectedUnit.position);
             var unitData = GetUnitData(selectedUnit.gameObject);
@@ -608,8 +629,21 @@ public class UnitController : MonoBehaviour
         isMoving = false;
         foreach (var anim in selectedAnimators)
             anim.SetBool("isMoving", false);
-       //Debug.Log("[UC] FollowPath END");
+        //Debug.Log("[UC] FollowPath END");
 
     }
     
+    
+    //GESTIÓN DE AUDIO CLIPS
+    //TODO: Quitar las declaraciones inferiores y poner toda la gestión de ataques en UnitEntity con serializedObjects
+    public void PlayMeleeAudioEvent()
+    {
+        audioManager.PlayOneShot(audioManager.meleeAudio);
+    }
+
+    public void PlayRangeAudioEvent()
+    {
+        audioManager.PlayOneShot(audioManager.rangeAudio);
+    }
+
 }
