@@ -40,6 +40,8 @@ public class UnitController : MonoBehaviour
 
     private HealthBar healthBar;
 
+    private InfoUnit infoUnit;
+
     public bool isMoving = false;
     
     private Animator[] selectedAnimators;
@@ -57,6 +59,8 @@ public class UnitController : MonoBehaviour
         turnManager = FindObjectOfType<TurnManager>();
 
         healthBar = FindObjectOfType<HealthBar>();
+
+        infoUnit = FindObjectOfType<InfoUnit>();
 
         // foreach (var data in unitMovementList)
         // {
@@ -419,7 +423,7 @@ public class UnitController : MonoBehaviour
         var entity   = selectedUnit.GetComponent<UnitEntity>();
         if (healthBar != null)
             healthBar.SetUnit(entity);
-
+        
     
 
         // Obtener coords y datos de movimiento
@@ -427,6 +431,9 @@ public class UnitController : MonoBehaviour
         var unitData = GetUnitData(unit.gameObject);
         if (unitData != null)
         {   
+            if (infoUnit != null)
+                infoUnit.SetUnit(entity, unitData);
+
             //Volver a tener en cuenta colisiones para el mesh del layer corresponent
             var layerChanger = unit.GetComponentInParent<LayerRenderChanger>();
             if (layerChanger != null)
@@ -445,6 +452,13 @@ public class UnitController : MonoBehaviour
         // Si había una unidad seleccionada, ocultamos su UI
         if (selectedUnit != null)
         {
+            if (infoUnit != null)
+                infoUnit.SetUnit(null, null);
+            
+            if (healthBar != null)
+                healthBar.SetUnit(null);
+
+    
             var canvas = selectedUnit.GetComponentInChildren<CanvasGroup>();
             if (canvas != null)
                 canvas.alpha = 0f;

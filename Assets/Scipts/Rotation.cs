@@ -39,6 +39,8 @@ public class Rotation : MonoBehaviour
     private int updatesExpected;
     public static event System.Action<int> OnCaseChanged;
 
+    private TurnManager turnManager;
+
 
 
     void Start()
@@ -46,6 +48,9 @@ public class Rotation : MonoBehaviour
         gridManager = FindObjectOfType<GridManager>();
 
         unitController = FindObjectOfType<UnitController>();
+
+        turnManager = FindObjectOfType<TurnManager>();
+
 
         layerRenderChangers.Clear();
         foreach (var data in unitController.unitMovementList)
@@ -89,6 +94,17 @@ public class Rotation : MonoBehaviour
 
         if (Input.GetKeyDown(keyToPress) && !isRotating)
         {
+            if (turnManager.State != TurnManager.GameState.PLAYERTURN)
+                return;
+            if (turnManager.remainingRotations <= 0)
+            {
+                Debug.Log("No quedan rotaciones este turno");
+                return;
+            }
+            // Consumimos una rotación
+            turnManager.remainingRotations--;
+
+
             // **3. ASIGNAR A TODOS LOS TopFolowingUnit**
             GatherAllFollowers(); // asegúrate de volver a poblar topFollowers
             ChangingShaderTopTiles.ClearAllHighlights();
@@ -237,12 +253,12 @@ public class Rotation : MonoBehaviour
     }
 
 
-    private void OnGUI()
-    {
-        GUI.Label(new Rect(10, 10, 150, 30), transform.eulerAngles.ToString());
-        GUI.Label(new Rect(10, 40, 150, 30), isRotating.ToString());
+    // private void OnGUI()
+    // {
+    //     GUI.Label(new Rect(10, 10, 150, 30), transform.eulerAngles.ToString());
+    //     GUI.Label(new Rect(10, 40, 150, 30), isRotating.ToString());
 
-    }
+    // }
 
     private IEnumerator RotateSmoothly()
     {

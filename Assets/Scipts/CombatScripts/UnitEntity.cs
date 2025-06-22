@@ -44,7 +44,11 @@ public class UnitEntity : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
-        if (!enabled) return;
+        if (!enabled)
+            return;
+        if (invulnerable)
+            return;
+
         hitpoints.hitPoints -= damage;
         if (hitpoints.hitPoints <= 0)
         {

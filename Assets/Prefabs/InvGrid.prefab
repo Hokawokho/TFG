@@ -161,9 +161,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 487aba561e4116b48b10219242f31e68, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hoverLayer:
-    serializedVersion: 2
-    m_Bits: 512
 --- !u!1 &417454905087165804
 GameObject:
   m_ObjectHideFlags: 0

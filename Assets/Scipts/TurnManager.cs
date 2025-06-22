@@ -27,6 +27,13 @@ public class TurnManager : MonoBehaviour
     private int placedCount = 0;
 
     public Animator turnAnims;
+
+    public int maxRotationsPerTurn = 1;
+
+    public int remainingRotations;
+
+    public int totalPlayerTurns = 10;
+    public int remainingPlayerTurns;
     
     
 
@@ -34,6 +41,9 @@ public class TurnManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+
+        remainingPlayerTurns = totalPlayerTurns;
+
 
         if (turnAnims == null)
             Debug.LogError("No se encuentra el turnAnims");
@@ -252,6 +262,10 @@ public class TurnManager : MonoBehaviour
 
     private void OnPlayerTurnStart()
     {
+
+
+        
+
         Debug.Log("Player Turn Start");
         ChangingShaderTopTiles.ClearAllHighlights();
         
@@ -338,14 +352,22 @@ public class TurnManager : MonoBehaviour
         {
             case GameState.PLAYERTURN:
                 OnPlayerTurnStart();
+                remainingRotations = maxRotationsPerTurn;
                 // Reproducir animación
                 turnAnims.Play("StateChange_in");
                 break;
 
             case GameState.ENEMYTURN:
-                OnEnemyTurnStart();
-                // Reproducir animación
-                turnAnims.Play("StateChangeEnemy_in");
+
+                remainingPlayerTurns--;
+                // 2) Comprobación global de fin de partida
+                CheckEndConditions();
+                if (State == GameState.ENEMYTURN)
+                {
+                    OnEnemyTurnStart();
+                    // Reproducir animación
+                    turnAnims.Play("StateChangeEnemy_in");
+                }
                 break;
 
             case GameState.WIN:
@@ -377,9 +399,9 @@ public class TurnManager : MonoBehaviour
             if (unit.IsAlive)
                 allPlayersDead = false;
 
-        if (allEnemiesDead)
+        if (allEnemiesDead )
             StartCoroutine(ChangeState(GameState.WIN));
-        else if (allPlayersDead)
+        else if (allPlayersDead || remainingPlayerTurns <= 0)
             StartCoroutine(ChangeState(GameState.LOST));
     }
 }
