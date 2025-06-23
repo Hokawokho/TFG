@@ -6891,6 +6891,10 @@ MonoBehaviour:
   keyToResetMovement: 114
   keyToEndTurn: 102
   turnAnims: {fileID: 0}
+  maxRotationsPerTurn: 1
+  remainingRotations: 0
+  totalPlayerTurns: 10
+  remainingPlayerTurns: 0
 --- !u!114 &498269262
 MonoBehaviour:
   m_ObjectHideFlags: 0

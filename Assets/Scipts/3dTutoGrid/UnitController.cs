@@ -139,40 +139,85 @@ public class UnitController : MonoBehaviour
         // if (hasHit)
 
         //D'esta forma es més ràpid que dalt
-        if (Physics.Raycast(ray, out var hit))
-
-
+        // if (Physics.Raycast(ray, out var hit))
+        // {
+             // ─── MODO ATAQUE ─────────────────────────────────────────────
+            if (currentAttackMode != AttackMode.None)
         {
-            if (hit.transform.tag == "Tile")
+            // Raycast ignorando layer 'Player'
+            int playerLayer = LayerMask.NameToLayer("Player");
+            int mask = ~(1 << playerLayer);
+            if (!Physics.Raycast(ray, out var hit, Mathf.Infinity, mask))
             {
-
-                Vector2Int tileCords = hit.transform.GetComponent<Tile>().cords;
-                Debug.Log($"Casilla seleccionada: {tileCords.x}, {tileCords.y}");
-
-                if (gridManager.GetNode(tileCords) != null && !gridManager.GetNode(tileCords).walkable)
-                {
-                    Debug.Log("No se puede mover en esta casilla");
-                    return;
-                }
-
-                MoveUnitTo(tileCords);
-
+                // Nada seleccionado: deseleccionar unidad
+                ExitAttackMode();
+                DeselectCurrentUnit();
+                return;
             }
 
-
-            if (hit.transform.tag == "Unit")
+            // Solo clicks en casillas (Tile)
+            if (hit.transform.CompareTag("Tile"))
             {
+                //Del Tile, filtramos para pillar solo el hijo que tiene el script de Shader Top Tiles
+                var shaders = hit.transform.GetComponentsInChildren<ChangingShaderTopTiles>();
+                MeshRenderer highlight = shaders
+                .Select(s => s.GetComponent<MeshRenderer>())
+                .FirstOrDefault(m => m != null);
+                
+                if (highlight != null && highlight.enabled)
+                {
+                    // Calcular dirección y disparar
+                    var tileComp = hit.transform.GetComponent<Tile>();
+                    var target = tileComp.cords;
+                    var origin = gridManager.GetCoordinatesFromPosition(selectedUnit.position);
+                    var delta = target - origin;
+                    Vector3 dir = Vector3.zero;
+                    if (delta.x != 0 && delta.y == 0)
+                        dir = delta.x > 0 ? Vector3.right : Vector3.left;
+                    else if (delta.y != 0 && delta.x == 0)
+                        dir = delta.y > 0 ? Vector3.forward : Vector3.back;
+                    shooter.currentDirection = dir;
+                    ConfirmAttack();
+                }
+                else
+                {
+                    // Tile no está highlight: cancelar modo y deseleccionar
+                    ExitAttackMode();
+                    DeselectCurrentUnit();
+                }
+            }
+            else
+            {
+                // No es Tile: cancelar modo y deseleccionar
+                ExitAttackMode();
+                DeselectCurrentUnit();
+            }
+            return;
+        }
+        //──────────── GESTIÓN DE MOVIMIENTO ─────────────────────────
+           // Normal: raycast sin máscara
+        if (Physics.Raycast(ray, out var rawHit))
+        {
+            var hit = rawHit;
 
-                //TODO: Quan acabe amb el debugging aplicar açò també en el turno del jugador pals enemics (Després ja implementar selecció estil FE)    
+            // Movimiento en Tile
+            if (hit.transform.CompareTag("Tile"))
+            {
+                Vector2Int tileCords = hit.transform.GetComponent<Tile>().cords;
+                if (gridManager.GetNode(tileCords) != null && !gridManager.GetNode(tileCords).walkable)
+                    return;
+                MoveUnitTo(tileCords);
+                return;
+            }
 
-                //Si turno del enemigo no se pueden seleccionar los Player+++
+            // Selección de Unidades
+            if (hit.transform.CompareTag("Unit"))
+            {
                 if (turnManager.State == TurnManager.GameState.ENEMYTURN || turnManager.State == TurnManager.GameState.START)
                 {
                     var clickedEntity = hit.transform.GetComponent<UnitEntity>();
-                    if (clickedEntity != null && !clickedEntity.IsAlive)
-                        return;
-                    if (hit.transform.GetComponent<Player>() != null)
-                        return;
+                    if (clickedEntity != null && !clickedEntity.IsAlive) return;
+                    if (hit.transform.GetComponent<Player>() != null) return;
                 }
 
                 if (unitSelected && hit.transform == selectedUnit)
@@ -181,45 +226,18 @@ public class UnitController : MonoBehaviour
                     return;
                 }
 
-
-
-
                 SelectUnit(hit.transform);
             }
         }
 
     }
 
-
-    // private void HandleHotKeys()
-    // {
-    //     if (!unitSelected) return;
-
-    //     Vector2Int unitCoords = gridManager.GetCoordinatesFromPosition(selectedUnit.position);
-    //     //ChangingShaderTopTiles.ClearAllHighlights();
-
-    //     // Resalta las 4 adyacentes
-    //     if (Input.GetKeyDown(keyToCloseAttack))
-    //     {
-    //         ChangingShaderTopTiles.ClearAllHighlights();
-    //         ChangingShaderTopTiles.HighlightTilesAround(unitCoords, gridManager);
-    //     }
-
-    //     if (Input.GetKeyDown(keyToRangeAttack))
-    //     {
-    //         ChangingShaderTopTiles.ClearAllHighlights();
-    //         ChangingShaderTopTiles.HighlightLineTiles(unitCoords, gridManager);
-    //     }
-
-
-
-
-
-    // }
-
     private void HandleHotKeys()
     {
         if (!unitSelected) return;
+
+        CanvasGroup canvas = selectedUnit.GetComponentInChildren<CanvasGroup>();
+
 
         //Vector2Int unitCoords = gridManager.GetCoordinatesFromPosition(selectedUnit.position);
         //ChangingShaderTopTiles.ClearAllHighlights();
@@ -231,6 +249,8 @@ public class UnitController : MonoBehaviour
                 ExitAttackMode();
             else
                 EnterAttackMode(AttackMode.Melee);
+                if (canvas != null)
+                    canvas.alpha = 0f;
         }
 
         if (Input.GetKeyDown(keyToRangeAttack))
@@ -254,9 +274,6 @@ public class UnitController : MonoBehaviour
             ConfirmAttack();
         }
 
-
-
-
     }
 
 
@@ -265,14 +282,17 @@ public class UnitController : MonoBehaviour
         //ExitAttackMode();
         ChangingShaderTopTiles.ClearAllHighlights();
         currentAttackMode = mode;
+        
 
         Vector2Int unitCoords = gridManager.GetCoordinatesFromPosition(selectedUnit.position);
 
         if (mode == AttackMode.Melee)
             ChangingShaderTopTiles.HighlightTilesAround(unitCoords, gridManager);
-
+            
+                
         else if (mode == AttackMode.Range)
             ChangingShaderTopTiles.HighlightLineTiles(unitCoords, gridManager);
+            
 
         shooter = selectedUnit.GetComponentInChildren<ObjectShooter>();
         if (shooter != null)
@@ -280,7 +300,7 @@ public class UnitController : MonoBehaviour
             if (mode == AttackMode.Melee)
                 shooter.poolTag = "meleeHitbox";
             else if (mode == AttackMode.Range)
-                shooter.poolTag = "laser-prov";
+                shooter.poolTag = "arrow-proj";
         }
     }
 
@@ -355,36 +375,11 @@ public class UnitController : MonoBehaviour
             Vector2Int targetCords = tileCords;
             Vector2Int startCords = gridManager.GetCoordinatesFromPosition(selectedUnit.position);
 
-            // int distance = CalculatePathCost(startCords, targetCords);
-
-            //COSTE - ADD+++++++++++++ INICIO
-
-            // pathFinder.SetNewDestination(startCords, targetCords);
-            // List<Node> pathPosible = pathFinder.GetNewPath();
-
-            //UnitMovementData unitData = GetUnitData(selectedUnit.gameObject);
-            // if (unitData != null && distance <= unitData.maxTiles) 
-            // {
-
-            //     RecalculatePath(true, true);
-            // }
-            //COSTE - ADD+++++++++++++ FIN
 
 
             int distance = CalculatePathCost(startCords, targetCords);
             var unitData = GetUnitData(selectedUnit.gameObject);
 
-            //pathFinder.SetNewDestination(startCords, targetCords);
-            //List<Node> pathPosible = pathFinder.GetNewPath();
-            //CalculatePathCost(startCords, targetCords);
-            // if(pathPosible.Count > 0){
-
-            //     RecalculatePath(true,true);
-            // } 
-            // else{
-
-            //     Debug.LogWarning("Camino no encontrad por coste");
-            // }
             if (distance <= unitData.remainingTiles)
             {
                 unitData.remainingTiles -= distance;
@@ -526,27 +521,6 @@ public class UnitController : MonoBehaviour
 
         //FORMA DE OPTIMIZAR-HO
         Vector2Int coordinates = resetPath ? pathFinder.StartCords : gridManager.GetCoordinatesFromPosition(transform.position);
-
-
-        //Vector2Int coordinates = new Vector2Int();
-        // if(resetPath){
-        //     coordinates = pathFinder.StartCords;
-        // }
-        // else{
-        //     coordinates =gridManager.GetCoordinatesFromPosition(transform.position);
-        // }
-
-
-
-
-        //19/3------------Desbloquear tile de la posició anterior,
-        //Al rotar per alguna raó no funciona, per això esta acó.
-        // Vector2Int previousCoords = gridManager.GetCoordinatesFromPosition(transform.position);
-        // gridManager.UnblockNode(previousCoords);
-
-        //19/3------------------FIN
-        //---+-+-+ PER ARA NO FUNCIONA, NO HI HA CAP CAMBI
-
 
         StopAllCoroutines();
         path.Clear();

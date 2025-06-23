@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Animations;
 
 
 
@@ -23,6 +24,8 @@ public class ObjectPooler : Singleton<ObjectPooler>
 
     public List<Pool> pools;
     public Dictionary<string, Queue<GameObject>> poolDictionary;
+
+    public GameObject lookAtTarget;
 
     void Start()
     {
@@ -59,6 +62,38 @@ public class ObjectPooler : Singleton<ObjectPooler>
         if(hitbox == null)
             Debug.Log("No encuentra el collider del padre");
         
+        var look = objectToSpawn.GetComponent<LookAtConstraint>();
+        if (look != null && lookAtTarget != null)
+        {
+            for (int i = look.sourceCount - 1; i >= 0; i--)
+                look.RemoveSource(i);
+            // Creamos el ConstraintSource apuntando a lookAtTarget
+            ConstraintSource src = new ConstraintSource
+            {
+                sourceTransform = lookAtTarget.transform,
+                
+                weight = 1f
+
+            };
+            look.AddSource(src);
+            look.constraintActive = true;
+            look.enabled = true;
+            Debug.Log("Constraint FLECHA activado ");
+
+
+            var shooterComp = owner.GetComponentInChildren<ObjectShooter>();        
+            if (shooterComp != null)                                               
+            {                                                                      
+                Vector3 d = shooterComp.currentDirection;                           
+                float zOffset = 0f;                                                 
+                if      (d == Vector3.left)    zOffset = 145.23f;                   
+                else if (d == Vector3.forward) zOffset =  -145.23f;                   
+                else if (d == Vector3.right)   zOffset = -32.13f;                   
+                else if (d == Vector3.back)    zOffset = 32.13f;                  
+
+                look.rotationOffset = new Vector3(0f, 0f, zOffset);                 
+            }
+        }
 
         poolDictionary[tag].Enqueue(objectToSpawn);
         return objectToSpawn;
