@@ -10,6 +10,10 @@ public class AudioManager : MonoBehaviour
     public AudioSource pauseMusic;
     public float fadeDuration = 0.5f;
 
+    public float masterVolume = 1f; 
+    private float musicVolume => Mathf.Clamp(masterVolume - 0.4f, 0f, 1f);
+    
+
     public AudioClip selectAudio;
 
     public AudioClip unselectAudio;
@@ -20,7 +24,7 @@ public class AudioManager : MonoBehaviour
 
     private void Start()
     {
-        gameMusic.volume = 1f;
+        gameMusic.volume = musicVolume;
         pauseMusic.volume = 0f;
         gameMusic.Play();
         pauseMusic.Play();
@@ -52,19 +56,19 @@ public class AudioManager : MonoBehaviour
             timer += Time.unscaledDeltaTime; // usar unscaled para que funcione en pausa
             float t = timer / fadeDuration;
             from.volume = Mathf.Lerp(startVolFrom, 0f, t);
-            to.volume = Mathf.Lerp(startVolTo, 1f, t);
+            to.volume = Mathf.Lerp(startVolTo, musicVolume, t);
             yield return null;
         }
 
         // Asegurar valores finales
         from.volume = 0f;
-        to.volume = 1f;
+        to.volume   = musicVolume;  
     }
 
     public void PlayOneShot(AudioClip clip)
     {
         if (clip == null) return;
-        gameMusic.PlayOneShot(clip); // Usa el canal de gameMusic sin cortar la música
+        gameMusic.PlayOneShot(clip, masterVolume); // Usa el canal de gameMusic sin cortar la música
     }
 
 }

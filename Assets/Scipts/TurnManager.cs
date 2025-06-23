@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class TurnManager : MonoBehaviour
 {
@@ -374,6 +375,7 @@ public class TurnManager : MonoBehaviour
                 Debug.Log("You Win!");
                 // Reproducir animación
                 turnAnims.Play("Victory");
+                SceneManager.LoadScene(0, LoadSceneMode.Single);
                 // TODO: Show win screen
                 break;
 
@@ -381,6 +383,8 @@ public class TurnManager : MonoBehaviour
                 Debug.Log("You Lose!");
                 // Reproducir animación
                 turnAnims.Play("Defeat");
+                yield return new WaitForSeconds(turnAnims.GetCurrentAnimatorStateInfo(0).length);
+                SceneManager.LoadScene(0, LoadSceneMode.Single);
                 // TODO: Show lose screen
                 break;
         }
