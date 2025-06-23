@@ -25,7 +25,7 @@ public class UnitEntity : MonoBehaviour
     {
         hitpoints = Instantiate(hitpoints);
         hitpoints.hitPoints = hitpoints.initialHitPoints;
-        //ResetActions();
+        ResetActions();
 
         //var root = selectedUnit.parent;
         Transform unitRoot = transform.parent;

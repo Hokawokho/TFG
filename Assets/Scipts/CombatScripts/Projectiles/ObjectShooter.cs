@@ -42,7 +42,7 @@ public class ObjectShooter : MonoBehaviour
                     return false;
 
                 }
-                unitEntity.UseAction();
+                unitEntity?.UseAction();
             }
             GameObject projectile = ObjectPooler.Instance.SpawnFromPool(poolTag, transform.position, Quaternion.identity, transform.root.gameObject);
 
@@ -65,9 +65,10 @@ public class ObjectShooter : MonoBehaviour
 
 
             timeOfLastSpawn = Time.time;
+            return true;
         }
-
-        return true;
+        return false;
+        
     }
 
     void ShotDirection(){

@@ -275,6 +275,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5058048665707856737}
     m_Modifications:
+    - target: {fileID: 804397663336690612, guid: 924a21972883fd14db2c63e24daf9117, type: 3}
+      propertyPath: m_CastShadows
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1164522561379881569, guid: 924a21972883fd14db2c63e24daf9117, type: 3}
       propertyPath: m_Name
       value: PEDRA_CUBO

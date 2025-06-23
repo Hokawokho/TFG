@@ -248,9 +248,17 @@ public class UnitController : MonoBehaviour
             if (currentAttackMode == AttackMode.Melee)
                 ExitAttackMode();
             else
+            {
+                var selEntity = selectedUnit.GetComponent<UnitEntity>();
+                if (selEntity != null && !selEntity.HasActionsRemaining)
+                {
+                    Debug.Log("No tienes acciones para cuerpo a cuerpo");
+                    return;
+                }
                 EnterAttackMode(AttackMode.Melee);
                 if (canvas != null)
                     canvas.alpha = 0f;
+            }
         }
 
         if (Input.GetKeyDown(keyToRangeAttack))
@@ -258,7 +266,17 @@ public class UnitController : MonoBehaviour
             if (currentAttackMode == AttackMode.Range)
                 ExitAttackMode();
             else
+            {
+                var selEntity = selectedUnit.GetComponent<UnitEntity>();
+                if (selEntity != null && !selEntity.HasActionsRemaining)
+                {
+                    Debug.Log("No tienes acciones para cuerpo a cuerpo");
+                    return;
+                }
                 EnterAttackMode(AttackMode.Range);
+                if (canvas != null)
+                    canvas.alpha = 0f;
+            }
         }
 
         if (currentAttackMode == AttackMode.Range && Input.GetKeyDown(keyToConfirmAttack))
@@ -331,6 +349,8 @@ public class UnitController : MonoBehaviour
         else
         {
             bool isEnemy = selectedUnit.GetComponent<Player>() == null;
+             var entity = selectedUnit.GetComponent<UnitEntity>();
+            entity.UseAction();
             foreach (var anim in selectedAnimators)
             {
                 if (currentAttackMode == AttackMode.Melee || isEnemy)
