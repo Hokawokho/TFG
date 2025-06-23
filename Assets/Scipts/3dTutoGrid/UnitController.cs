@@ -203,6 +203,12 @@ public class UnitController : MonoBehaviour
             // Movimiento en Tile
             if (hit.transform.CompareTag("Tile"))
             {
+
+                if (turnManager.State == TurnManager.GameState.PLAYERTURN
+                && selectedUnit != null
+                && selectedUnit.GetComponent<Player>() == null)
+                    return;
+                    
                 Vector2Int tileCords = hit.transform.GetComponent<Tile>().cords;
                 if (gridManager.GetNode(tileCords) != null && !gridManager.GetNode(tileCords).walkable)
                     return;
@@ -212,7 +218,8 @@ public class UnitController : MonoBehaviour
 
             // Selección de Unidades
             if (hit.transform.CompareTag("Unit"))
-            {
+            {       
+        
                 if (turnManager.State == TurnManager.GameState.ENEMYTURN || turnManager.State == TurnManager.GameState.START)
                 {
                     var clickedEntity = hit.transform.GetComponent<UnitEntity>();
