@@ -27,17 +27,27 @@ jobs:
 
       - name: Generate PlantUML files (all-in-one)
         run: |
-          export PATH="$PATH:~/.dotnet/tools"
-          puml-gen Assets/Scipts UML \
+          export PATH="$PATH:$HOME/.dotnet/tools"
+          puml-gen Assets/Scripts UML \
             -dir \
             -public \
             -createAssociation \
             -allInOne
 
-      - name: Render UML images
-        uses: holowinski/plantuml-github-action@1.2024.8
+      # ← Aquí empiezan los pasos nuevos
+      - name: Install Python & dependencies
+        run: |
+          python3 -m pip install --upgrade pip
+          pip install networkx
+
+      - name: Split UML into components
+        run: python3 scripts/split_uml.py
+
+      - name: Render UML component images
+        uses: holowinski/plantuml-github-action@main
         with:
-          args: '-tpng UML/include.puml'
+          args: '-tpng UML/components/*.puml'
+      # ← Aquí terminan los pasos nuevos
 
       - name: Commit UML diagrams
         uses: EndBug/add-and-commit@v9
