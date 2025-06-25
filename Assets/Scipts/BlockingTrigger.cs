@@ -6,7 +6,7 @@ public class BlockingTrigger : MonoBehaviour
 {
 
     GridManager gridManager;
-    private int _rotationCase = 1;
+    public int _rotationCase = 1;
     // Start is called before the first frame update
 
 
@@ -33,7 +33,7 @@ public class BlockingTrigger : MonoBehaviour
         Rotation.OnCaseChanged -= HandleCaseChanged;
     }
 
-    private void HandleCaseChanged(int newCase)
+    public void HandleCaseChanged(int newCase)
     {
         _rotationCase = newCase;
     }
@@ -64,7 +64,7 @@ public class BlockingTrigger : MonoBehaviour
             {
                 Debug.Log($"current case es: {_rotationCase}");
                 gridManager.UnblockNode(cords);
-                Debug.Log($"Casilla desbloqueada: ({cords.x}, {cords.y})");
+//                Debug.Log($"Casilla desbloqueada: ({cords.x}, {cords.y})");
             }
         }
     }

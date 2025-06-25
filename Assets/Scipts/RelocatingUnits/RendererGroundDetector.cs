@@ -8,7 +8,9 @@ public class RendererGroundDetector : MonoBehaviour
     public LayerRenderChanger renderChanger;
     // Start is called before the first frame update
 
-    public string LayerRenderGround;
+    public string layerRenderGround;
+
+    public string visualLayerMask = "Ground";
 
     // public ImmuneRaycast immuneRaycast;
 
@@ -45,21 +47,35 @@ public class RendererGroundDetector : MonoBehaviour
 
     void OnTriggerStay(Collider other)
     {
-        if (other.gameObject.layer == LayerMask.NameToLayer(LayerRenderGround))
+        int otherLayer = other.gameObject.layer;
+        if (otherLayer == LayerMask.NameToLayer(layerRenderGround))
         {
             currentCollision = other.transform;
             renderChanger.SetTouching(myLayer, true);
+//            Debug.Log($"[RendererGroundDetector] Principal enter '{myLayer}' con '{LayerMask.LayerToName(otherLayer)}'");
             // immuneRaycast.TriggerRay();
         }
+        if (otherLayer == LayerMask.NameToLayer(visualLayerMask))
+         {
+            renderChanger.SetSecondaryTouching(myLayer, true);
+//            Debug.Log($"[RendererGroundDetector] Secundaria enter '{myLayer}' con '{visualLayerMask}'");
+         }
     }
 
     void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.layer == LayerMask.NameToLayer(LayerRenderGround))
+        int otherLayer = other.gameObject.layer;
+        if (otherLayer == LayerMask.NameToLayer(layerRenderGround))
 
             if (currentCollision == other.transform)
                 currentCollision = null;
         renderChanger.SetTouching(myLayer, false);
+
+        if (otherLayer == LayerMask.NameToLayer(visualLayerMask))
+         {
+            renderChanger.SetSecondaryTouching(myLayer, false);
+            Debug.Log($"[RendererGroundDetector] Secundaria exit '{myLayer}'");
+         }
     }
     
     //  // Callback para activar o desactivar invMesh según el estado del raycast

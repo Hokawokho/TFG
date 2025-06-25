@@ -13,11 +13,11 @@ public class LayerRenderChanger : MonoBehaviour
     {
 
         public string layerName;
-
-        // public MeshRenderer meshRenderer;
         public SpriteRenderer spriteRenderer;
 
         public bool isTouching;
+
+        public bool visualTouching;
 
     }
 
@@ -40,12 +40,9 @@ public class LayerRenderChanger : MonoBehaviour
     public SpriteRenderer invMesh;
 
     public UnitEntity unitEntity;
-    
 
-    //Esto es para mantener el renderer de la unidad inferior tras rotar
-    //MeshRenderer stickyRenderer = null;
+    private UnitController unitController;
 
-    //private Rotation rotationScript;
 
     public void SuspendCollisions()
     {
@@ -57,10 +54,8 @@ public class LayerRenderChanger : MonoBehaviour
         //La crida al métode estaba en Rotation, ara en UnitController
 
         ignoreCollisions = false;
-        // forzamos un recálculo inmediato al reanudar, 
-        // porque puede que durante la rotación hubiera un "exit" pendiente o simplemente 
-        // para asegurarnos de que el estado quede correcto
-        // UpdateActiveRenderer();
+
+        UpdateActiveRenderer();
     }
 
 
@@ -75,19 +70,71 @@ public class LayerRenderChanger : MonoBehaviour
             unit.isTouching = false;
         }
 
-        // ActivateDefaultRenderer();
-
-        // if (renderers.Length > 0)
-        // {
-        //     RenderInfo fallback = renderers[renderers.Length - 1];
-        //     if (fallback.meshRenderer != null)
-        //     {
-        //         fallback.meshRenderer.enabled = true;
-        //         currentActive = fallback.meshRenderer;
-        //     }
-        // }
+        unitController = FindObjectOfType<UnitController>();
 
     }
+
+    void Update()
+    {
+        // Solo para la unidad seleccionada: asegurar que al menos el sprite principal esté activo
+        if (unitController != null && unitController.unitSelected)
+        {
+            var selEntity = unitController.selectedUnit?.GetComponent<UnitEntity>();
+            if (selEntity == unitEntity)
+            {
+                bool anyActive = false;
+                foreach (var info in renderers)
+                {
+                    if (info.spriteRenderer != null && info.spriteRenderer.enabled)
+                    {
+                        anyActive = true;
+                        break;
+                    }
+                }
+                if (!anyActive)
+                {
+                    // Reactivar el primero con isTouching según prioridad
+                    foreach (var info in renderers)
+                    {
+                        if (info.isTouching)
+                        {
+                            info.spriteRenderer.enabled = true;
+                            Debug.Log($"[LayerRenderChanger] Update: reactived '{info.layerName}' por isTouching");
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        //  // Mientras la unidad se mueve, garantizar al menos un sprite activo (original)
+        // if (unitController != null && unitController.isMoving)
+        // {
+        //     bool anyActive = false;
+        //     foreach (var info in renderers)
+        //     {
+        //         if (info.spriteRenderer != null && info.spriteRenderer.enabled)
+        //         {
+        //             anyActive = true;
+        //             break;
+        //         }
+        //     }
+        //     if (!anyActive)
+        //     {
+        //         Debug.Log("[LayerRenderChanger] Update: no hay sprites activos, buscando colisión actual");
+        //         foreach (var det in GetComponentsInChildren<RendererGroundDetector>())
+        //         {
+        //             if (det.currentCollision != null)
+        //             {
+        //                 SetTouching(det.layerRenderGround, true);
+        //                 Debug.Log($"[LayerRenderChanger] Update: activado layer '{det.layerRenderGround}' por movimiento");
+        //                 break;
+        //             }
+        //         }
+        //     }
+        // }
+    }
+    
+
 
     public void SetTouching(string layerName, bool isEntering)
     {
@@ -110,6 +157,19 @@ public class LayerRenderChanger : MonoBehaviour
         // 2) Si alguien entra, cancelamos cualquier retraso y recalculamos YA
         if (isEntering)
         {
+
+            // ── PATCH: asegurar que el sprite se activa aunque ya fuera currentActive ──
+            //ESTO ES PARA CUANDO PASA DE VisualTouching a isTouching en el mismo renderer
+            // for (int j = 0; j < renderers.Length; j++)
+            // {
+            //     if (renderers[j].layerName == layerName)
+            //     {
+            //         renderers[j].spriteRenderer.enabled = true;
+            //         Debug.Log($"[LayerRenderChanger] Patch SetTouching: forcé enable de '{layerName}'");
+            //         break;
+            //     }
+            // }
+
             if (delayedDisableCoroutine != null)
             {
                 StopCoroutine(delayedDisableCoroutine);
@@ -182,12 +242,7 @@ public class LayerRenderChanger : MonoBehaviour
         // 5.5) Desactivamos el anterior, pero con un retardo de 0.1s
         if (currentActive != null)
         {
-            // Si había una corrutina anterior pendiente, la detenemos
-            // if (delayedDisableCoroutine != null)
-            // {
-            //     StopCoroutine(delayedDisableCoroutine);
-            //     delayedDisableCoroutine = null;
-            // }
+
             currentActive.enabled = false;
                 var oldImmune = currentActive.transform.parent.GetComponent<ImmuneRaycast>();
             if (oldImmune != null)
@@ -205,6 +260,22 @@ public class LayerRenderChanger : MonoBehaviour
 
         currentActive = toActivate;
     }
+
+        public void SetSecondaryTouching(string layerName, bool isEntering)
+        {
+            for (int i = 0; i < renderers.Length; i++)
+            {
+                if (renderers[i].layerName == layerName)
+                {
+                    renderers[i].visualTouching = isEntering;
+                    // Habilita si primaria o visual está activa
+                    bool shouldEnable = renderers[i].isTouching || renderers[i].visualTouching;
+                    renderers[i].spriteRenderer.enabled = shouldEnable;
+//                    Debug.Log($"[LayerRenderChanger] Secondary '{layerName}' = {isEntering}, sprite.enabled = {shouldEnable}");
+                    break;
+                }
+            }
+        }
 
     private void HandleImmuneHitStateChanged(bool hit)
     {
@@ -252,8 +323,7 @@ public class LayerRenderChanger : MonoBehaviour
     }
     private IEnumerator ApplyConstraint(FolowingUnit fol)
     {
-        //Debug.Log("[Rotation] Waiting for next FixedUpdate to apply constraints.");
-        // Esperar al siguiente paso de física para asegurar colisión
+
         yield return new WaitForFixedUpdate();
 
         if (fol.enabled)
@@ -317,8 +387,6 @@ public class LayerRenderChanger : MonoBehaviour
                 constraint.AddSource(newSource);
                 constraint.translationOffset = worldPos - selectedFollower.transform.position;
                 constraint.constraintActive = true;
-                //Debug.Log($"[Rotation] Constraint on '{follower.gameObject.name}' now follows '{selectedFollower.gameObject.name}'");
-                //Debug.Log($"[Rotation] Added new source '{selectedFollower.gameObject.name}' to constraint on '{follower.gameObject.name}' with offset {constraint.translationOffset}");
 
             }
         }

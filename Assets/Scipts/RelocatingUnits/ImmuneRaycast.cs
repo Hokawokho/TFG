@@ -63,12 +63,10 @@ public class ImmuneRaycast : MonoBehaviour
         }
         UpdateHit(hit);
     }
-     private void UpdateHit(bool hit)
+    private void UpdateHit(bool hit)
     {
-        if (hit != lastHitState)
-        {
-            lastHitState = hit;
-            OnHitStateChanged?.Invoke(hit);
-        }
+        lastHitState = hit;
+//        Debug.Log($"[ImmuneRaycast] UpdateHit → hit = {hit}");
+        OnHitStateChanged?.Invoke(hit);
     }
 }

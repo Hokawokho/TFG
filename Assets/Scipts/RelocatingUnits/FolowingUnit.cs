@@ -141,45 +141,7 @@ public class FolowingUnit : MonoBehaviour
         }
         OnFollowerPositionUpdated?.Invoke(this);
         Debug.Log($"Following: {(isFirstActive ? "Source 1" : detectedTarget.name)}");
-    }
-
-    //     public void UpdateFollowerPositionCollider() {
-    
-
-        
-    //     detectedTarget = raycastDebugger.detectedHit;
-
-    //     ConstraintSource source1 = positionConstraint.GetSource(0);
-    //     // source1.weight = isFirstActive ? 1 : 0;
-    //     source1.weight = 0;
-    //     positionConstraint.SetSource(0, source1);
-        
-    //     if (positionConstraint.sourceCount > 1)
-    //         {
-    //             positionConstraint.RemoveSource(1);
-    //         }
-
-    //     if (/*!isFirstActive &&*/ detectedTarget != null && positionConstraint.sourceCount < 2)
-    //     {
-    //         ConstraintSource source2 = new ConstraintSource
-    //         {
-    //             sourceTransform = detectedTarget,
-    //             weight = 1f
-    //         };
-    //         positionConstraint.AddSource(source2);
-
-    //         Collider targetCollider = detectedTarget.GetComponent<Collider>();
-    //         if (targetCollider != null)
-    //         {
-    //             float peakCollider = targetCollider.bounds.max.y - detectedTarget.position.y;
-    //             positionConstraint.translationOffset = new Vector3(0, peakCollider + offsetSource2.y, 0);
-    //         }
-
-    //     }//Debug.Log($"Following: {(isFirstActive ? "Source 1" : detectedTarget.name)}");
-    // }
-    
-    
-
+    } 
 
      public void FollowerToParent()
     {

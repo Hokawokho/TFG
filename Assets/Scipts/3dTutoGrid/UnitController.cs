@@ -48,6 +48,10 @@ public class UnitController : MonoBehaviour
 
     private AudioManager audioManager;
 
+    private bool tileBlockedOnSelect;
+
+    private Rotation rotation;
+
     // public KeyCode keyToResetMovement;
 
     // Start is called before the first frame update
@@ -65,6 +69,8 @@ public class UnitController : MonoBehaviour
         infoUnit = FindObjectOfType<InfoUnit>();
 
         audioManager = FindObjectOfType<AudioManager>();
+
+        rotation = FindObjectOfType<Rotation>();
 
         // foreach (var data in unitMovementList)
         // {
@@ -130,6 +136,8 @@ public class UnitController : MonoBehaviour
 
         if (!Input.GetMouseButtonDown(0)) return;
 
+
+        if (rotation.isRotating) return;
 
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         //Marca amb un ray on estiga el nostre ratolí
@@ -203,13 +211,20 @@ public class UnitController : MonoBehaviour
             // Movimiento en Tile
             if (hit.transform.CompareTag("Tile"))
             {
+                
 
+                //COMENTAR PODER MOVER A LAS UNIDADES ENEMIGAS
                 if (turnManager.State == TurnManager.GameState.PLAYERTURN
                 && selectedUnit != null
                 && selectedUnit.GetComponent<Player>() == null)
                     return;
                     
+                if (tileBlockedOnSelect)
+                    return;
+
                 Vector2Int tileCords = hit.transform.GetComponent<Tile>().cords;
+                Debug.Log($"Tile clicada en: {tileCords.x}, {tileCords.y}");
+
                 if (gridManager.GetNode(tileCords) != null && !gridManager.GetNode(tileCords).walkable)
                     return;
                 MoveUnitTo(tileCords);
@@ -242,6 +257,9 @@ public class UnitController : MonoBehaviour
     private void HandleHotKeys()
     {
         if (!unitSelected) return;
+        if (tileBlockedOnSelect)
+            return;
+
 
         CanvasGroup canvas = selectedUnit.GetComponentInChildren<CanvasGroup>();
 
@@ -465,6 +483,12 @@ public class UnitController : MonoBehaviour
         // Obtener coords y datos de movimiento
         Vector2Int unitCoords = gridManager.GetCoordinatesFromPosition(unit.position);
         var unitData = GetUnitData(unit.gameObject);
+
+        var trigger = unit.GetComponent<BlockingTrigger>();
+        int currentCase = trigger._rotationCase;
+        Tile tileComponent = FindObjectsOfType<Tile>().FirstOrDefault(t => t.cords == unitCoords);
+        tileBlockedOnSelect = tileComponent.IsBlockedInCase(currentCase);
+
         if (unitData != null)
         {
             if (infoUnit != null)
@@ -477,7 +501,8 @@ public class UnitController : MonoBehaviour
                 layerChanger.ResumeCollisions();
             }
             // Resaltar todas las tiles al alcance de la unidad
-            ChangingShaderTopTiles.HighlightCostTiles(unitCoords, gridManager, unitData.remainingTiles);
+            if (!tileBlockedOnSelect)
+                ChangingShaderTopTiles.HighlightCostTiles(unitCoords, gridManager, unitData.remainingTiles);
         }
 
 
