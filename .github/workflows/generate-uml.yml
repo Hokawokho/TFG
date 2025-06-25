@@ -35,7 +35,7 @@ jobs:
             -allInOne
 
       - name: Render UML images
-        uses: holowinski/plantuml-github-action@main
+        uses: holowinski/plantuml-github-action@1.2024.8
         with:
           args: '-tpng UML/include.puml'
 
