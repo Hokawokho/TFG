@@ -1,0 +1,6 @@
+@startuml
+class InputManager {
+    + GetSelectedMapPosition() : Vector3
+}
+MonoBehaviour <|-- InputManager
+@enduml

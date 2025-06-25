@@ -1,0 +1,9 @@
+@startuml
+class HealthBar {
+    + SetUnit(unit:UnitEntity) : void
+}
+MonoBehaviour <|-- HealthBar
+HealthBar --> "hitPoints" HitPoints
+HealthBar --> "meterImage" Image
+HealthBar --> "hpText" TextMeshProUGUI
+@enduml

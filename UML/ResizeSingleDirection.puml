@@ -1,0 +1,8 @@
+@startuml
+class ResizeSingleDirection {
+    + inverse : bool
+    + resizeAmount : float = 1
+    + resizeDirection : string = "y"
+}
+MonoBehaviour <|-- ResizeSingleDirection
+@enduml

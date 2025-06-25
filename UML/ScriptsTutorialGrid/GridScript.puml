@@ -1,0 +1,5 @@
+@startuml
+class GridScript {
+    + GridScript(width:int, height:int)
+}
+@enduml

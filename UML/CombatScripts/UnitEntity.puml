@@ -1,0 +1,20 @@
+@startuml
+class UnitEntity {
+    +  <<event>> OnWakeEvent : Notify 
+    +  <<event>> OnDieEvent : Notify 
+    +  <<event>> OnHitEvent : NotifyDamage 
+    + maxActions : int = 2
+    + currentActions : int
+    + invulnerable : bool = false
+    + Wake() : void
+    + IsAlive : bool <<get>>
+    + HasActionsRemaining : bool <<get>>
+    + TakeDamage(damage:int) : void
+    + Die() : void
+    + ResetActions() : void
+    + UseAction() : void
+    + CurrentHealth : int <<get>>
+}
+MonoBehaviour <|-- UnitEntity
+UnitEntity --> "hitpoints" HitPoints
+@enduml

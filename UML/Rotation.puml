@@ -1,0 +1,12 @@
+@startuml
+class Rotation {
+    + rotationAngle : float = 90f
+    + rotationSpeed : float = 200f
+    + isRotating : bool = false
+    + {static}  <<event>> OnCaseChanged : System.Action<int> 
+    + CurrentCase : int <<get>>
+}
+MonoBehaviour <|-- Rotation
+Rotation o-> "keyToPress" KeyCode
+Rotation --> "connectionBlocker" ConnectionBlocker
+@enduml

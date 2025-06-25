@@ -1,0 +1,10 @@
+@startuml
+class PauseMenu {
+    + {static} GameIsPaused : bool = false
+    + Resume() : void
+    + RestartLevel() : void
+    + QuitLevel() : void
+}
+MonoBehaviour <|-- PauseMenu
+PauseMenu --> "pauseMenuUI" GameObject
+@enduml

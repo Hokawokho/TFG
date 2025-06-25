@@ -1,0 +1,9 @@
+@startuml
+class ObjectShooter {
+    + poolTag : string
+    + creationRate : float = .5f
+    + TryShoot() : bool
+}
+MonoBehaviour <|-- ObjectShooter
+ObjectShooter o-> "currentDirection" Vector3
+@enduml

@@ -1,0 +1,7 @@
+@startuml
+class BlockingTrigger {
+    + _rotationCase : int = 1
+    + HandleCaseChanged(newCase:int) : void
+}
+MonoBehaviour <|-- BlockingTrigger
+@enduml

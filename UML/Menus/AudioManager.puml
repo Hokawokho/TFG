@@ -1,0 +1,18 @@
+@startuml
+class AudioManager {
+    + fadeDuration : float = 0.5f
+    + masterVolume : float = 1f
+    + FadeToPauseMusic() : void
+    + FadeToGameMusic() : void
+    + PlayOneShot(clip:AudioClip) : void
+}
+MonoBehaviour <|-- AudioManager
+AudioManager --> "gameMusic" AudioSource
+AudioManager --> "pauseMusic" AudioSource
+AudioManager --> "selectAudio" AudioClip
+AudioManager --> "unselectAudio" AudioClip
+AudioManager --> "meleeAudio" AudioClip
+AudioManager --> "rangeAudio" AudioClip
+AudioManager --> "unitDeathAudio" AudioClip
+AudioManager --> "rotationAudio" AudioClip
+@enduml

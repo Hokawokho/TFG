@@ -1,0 +1,29 @@
+@startuml
+class UnitController {
+    + unitSelected : bool = false
+    + isMoving : bool = false
+    + GetUnitData(unit:GameObject) : UnitMovementData
+    + MoveUnitTo(tileCords:Vector2Int) : void
+    + SelectUnit(unit:Transform) : void
+    + DeselectCurrentUnit() : void
+    + CalculatePathCost(start:Vector2Int, target:Vector2Int) : int
+    + RecalculatePath(resetPath:bool) : void
+    + PlayMeleeAudioEvent() : void
+    + PlayRangeAudioEvent() : void
+}
+class "List`1"<T> {
+}
+enum AttackMode {
+    None,
+    Melee,
+    Range,
+}
+MonoBehaviour <|-- UnitController
+UnitController --> "selectedUnit" Transform
+UnitController --> "pathFinder" Pathfinding
+UnitController o-> "unitMovementList<UnitMovementData>" "List`1"
+UnitController o-> "keyToCloseAttack" KeyCode
+UnitController o-> "keyToRangeAttack" KeyCode
+UnitController o-> "keyToConfirmAttack" KeyCode
+UnitController +-- AttackMode
+@enduml

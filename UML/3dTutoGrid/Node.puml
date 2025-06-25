@@ -1,0 +1,13 @@
+@startuml
+class Node {
+    + walkable : bool
+    + explored : bool
+    + path : bool
+    + Node(cords:Vector2Int, walkable:bool)
+}
+class "HashSet`1"<T> {
+}
+Node --> "cords" Vector2Int
+Node --> "connectTo" Node
+Node o-> "blockedConnections<Vector2Int>" "HashSet`1"
+@enduml

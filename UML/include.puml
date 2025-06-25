@@ -1,0 +1,378 @@
+@startuml
+class TurnManager {
+    + maxRotationsPerTurn : int = 1
+    + remainingRotations : int
+    + totalPlayerTurns : int = 10
+    + remainingPlayerTurns : int
+    + RegisterUnit(unit:UnitEntity) : void
+    + CheckEndConditions() : void
+}
+enum GameState {
+    START,
+    PLAYERTURN,
+    ENEMYTURN,
+    WIN,
+    LOST,
+}
+class "List`1"<T> {
+}
+MonoBehaviour <|-- TurnManager
+TurnManager --> "State" GameState
+TurnManager o-> "playerUnits<UnitEntity>" "List`1"
+TurnManager o-> "enemyUnits<UnitEntity>" "List`1"
+TurnManager o-> "keyToResetMovement" KeyCode
+TurnManager o-> "keyToEndTurn" KeyCode
+TurnManager --> "turnAnims" Animator
+TurnManager +-- GameState
+struct ConnectionPair {
+    + ConnectionPair(from:Vector2Int, to:Vector2Int)
+}
+class ConnectionBlocker {
+    + ApplyBlocksForCase(caseNumber:int) : void
+}
+class "List`1"<T> {
+}
+ConnectionPair --> "from" Vector2Int
+ConnectionPair --> "to" Vector2Int
+MonoBehaviour <|-- ConnectionBlocker
+ConnectionBlocker --> "gridManager" GridManager
+ConnectionBlocker o-> "case1Blocks<ConnectionPair>" "List`1"
+ConnectionBlocker o-> "case2Blocks<ConnectionPair>" "List`1"
+ConnectionBlocker o-> "case3Blocks<ConnectionPair>" "List`1"
+ConnectionBlocker o-> "case4Blocks<ConnectionPair>" "List`1"
+class PlacementSystem {
+}
+MonoBehaviour <|-- PlacementSystem
+class Rotation {
+    + rotationAngle : float = 90f
+    + rotationSpeed : float = 200f
+    + isRotating : bool = false
+    + {static}  <<event>> OnCaseChanged : System.Action<int> 
+    + CurrentCase : int <<get>>
+}
+MonoBehaviour <|-- Rotation
+Rotation o-> "keyToPress" KeyCode
+Rotation --> "connectionBlocker" ConnectionBlocker
+class Grid {
+}
+class InputManager {
+    + GetSelectedMapPosition() : Vector3
+}
+MonoBehaviour <|-- InputManager
+class BlockingTrigger {
+    + _rotationCase : int = 1
+    + HandleCaseChanged(newCase:int) : void
+}
+MonoBehaviour <|-- BlockingTrigger
+class ResizeSingleDirection {
+    + inverse : bool
+    + resizeAmount : float = 1
+    + resizeDirection : string = "y"
+}
+MonoBehaviour <|-- ResizeSingleDirection
+class ChangingShaderTopTiles {
+    + {static} ClearAllHighlights() : void
+    + {static} HighlightTilesAround(center:Vector2Int, grid:GridManager) : void
+    + {static} HighlightLineTiles(center:Vector2Int, grid:GridManager) : void
+    + {static} HighlightCostTiles(center:Vector2Int, grid:GridManager, range:int) : void
+    + Show() : void
+    + Hide() : void
+}
+MonoBehaviour <|-- ChangingShaderTopTiles
+class HooverShader {
+}
+MonoBehaviour <|-- HooverShader
+class EnemyAIController {
+    + AttackDistance : int = 1
+    + PerformAI() : IEnumerator
+    + MoveTo(position:Vector2Int) : IEnumerator
+}
+MonoBehaviour <|-- EnemyAIController
+EnemyAIController --> "selfEntity" UnitEntity
+class Scenario {
+    + scenarioValue : float
+    + hasAttacked : bool
+    + Scenario(scenarioValue:float, startTile:Vector2Int, targetTile:Vector2Int, hasAttacked:bool)
+    + Scenario()
+}
+Scenario --> "startTile" Vector2Int
+Scenario --> "targetTile" Vector2Int
+class Tile {
+    + startingPoint : bool
+    + ApplyBlockForCase(caseNumber:int) : void
+    + IsBlockedInCase(caseNumber:int) : bool
+}
+MonoBehaviour <|-- Tile
+Tile --> "cords" Vector2Int
+class UnitMovementData {
+    + maxTiles : int
+    + remainingTiles : int
+    + movementSpeed : float
+    + ResetMovement() : void
+}
+UnitMovementData --> "unitData" GameObject
+class Labeler {
+}
+MonoBehaviour <|-- Labeler
+Labeler o-> "cords" Vector2Int
+class GridManager {
+    + UnityGridSize : int <<get>>
+    + GetNode(coordinates:Vector2Int) : Node
+    + BlockNode(coordinates:Vector2Int) : void
+    + UnblockNode(coordinates:Vector2Int) : void
+    + ResetNodes() : void
+    + GetCoordinatesFromPosition(position:Vector3) : Vector2Int
+    + GetPositionFromCoordinates(coordinates:Vector2Int) : Vector3
+    + BlockedNodeList() : List<Vector2Int>
+    + BlockConnection(from:Vector2Int, to:Vector2Int) : void
+}
+class "Dictionary`2"<T1,T2> {
+}
+MonoBehaviour <|-- GridManager
+GridManager --> "Grid<Vector2Int,Node>" "Dictionary`2"
+class UnitController {
+    + unitSelected : bool = false
+    + isMoving : bool = false
+    + GetUnitData(unit:GameObject) : UnitMovementData
+    + MoveUnitTo(tileCords:Vector2Int) : void
+    + SelectUnit(unit:Transform) : void
+    + DeselectCurrentUnit() : void
+    + CalculatePathCost(start:Vector2Int, target:Vector2Int) : int
+    + RecalculatePath(resetPath:bool) : void
+    + PlayMeleeAudioEvent() : void
+    + PlayRangeAudioEvent() : void
+}
+class "List`1"<T> {
+}
+enum AttackMode {
+    None,
+    Melee,
+    Range,
+}
+MonoBehaviour <|-- UnitController
+UnitController --> "selectedUnit" Transform
+UnitController --> "pathFinder" Pathfinding
+UnitController o-> "unitMovementList<UnitMovementData>" "List`1"
+UnitController o-> "keyToCloseAttack" KeyCode
+UnitController o-> "keyToRangeAttack" KeyCode
+UnitController o-> "keyToConfirmAttack" KeyCode
+UnitController +-- AttackMode
+class Pathfinding {
+    + GetNewPath() : List<Node>
+    + GetNewPath(coordinates:Vector2Int) : List<Node>
+    + NotifyRecievers() : void
+    + SetNewDestination(startCoordinates:Vector2Int, targetCoordinates:Vector2Int) : void
+}
+MonoBehaviour <|-- Pathfinding
+Pathfinding --> "StartCords" Vector2Int
+Pathfinding --> "TargetCords" Vector2Int
+class Node {
+    + walkable : bool
+    + explored : bool
+    + path : bool
+    + Node(cords:Vector2Int, walkable:bool)
+}
+class "HashSet`1"<T> {
+}
+Node --> "cords" Vector2Int
+Node --> "connectTo" Node
+Node o-> "blockedConnections<Vector2Int>" "HashSet`1"
+class InfoUnit {
+    + SetUnit(entity:UnitEntity, movementData:UnitMovementData) : void
+}
+MonoBehaviour <|-- InfoUnit
+InfoUnit --> "meleeAttackGO" GameObject
+InfoUnit --> "meleeAttackText" TextMeshProUGUI
+InfoUnit --> "movementGO" GameObject
+InfoUnit --> "movementText" TextMeshProUGUI
+InfoUnit --> "unitProfileGO" GameObject
+InfoUnit --> "enemyProfileGO" GameObject
+class Turn_RotationInfo {
+}
+MonoBehaviour <|-- Turn_RotationInfo
+Turn_RotationInfo --> "rotationText" TextMeshProUGUI
+Turn_RotationInfo --> "rotationUp" GameObject
+Turn_RotationInfo --> "rotationDown" GameObject
+class HealthBar {
+    + SetUnit(unit:UnitEntity) : void
+}
+MonoBehaviour <|-- HealthBar
+HealthBar --> "hitPoints" HitPoints
+HealthBar --> "meterImage" Image
+HealthBar --> "hpText" TextMeshProUGUI
+class RendererGroundDetector {
+    + layerRenderGround : string
+    + visualLayerMask : string = "Ground"
+}
+MonoBehaviour <|-- RendererGroundDetector
+RendererGroundDetector --> "renderChanger" LayerRenderChanger
+RendererGroundDetector --> "currentCollision" Transform
+class ImmuneRaycast {
+    + rayDistance : float = 10f
+    +  <<event>> OnHitStateChanged : Action<bool> 
+    + IsCurrentlyHit : bool <<get>>
+    + TriggerRay() : void
+    + StopRay() : void
+}
+MonoBehaviour <|-- ImmuneRaycast
+ImmuneRaycast o-> "customDirection" Vector3
+ImmuneRaycast --> "targetLayer" LayerMask
+ImmuneRaycast o-> "detectedHit" Transform
+class RaycastDebugger {
+    + rayDistance : float = 10f
+}
+MonoBehaviour <|-- RaycastDebugger
+RaycastDebugger o-> "customDirection" Vector3
+RaycastDebugger --> "targetLayer" LayerMask
+RaycastDebugger o-> "detectedHit" Transform
+class LayerRenderChanger {
+    + SuspendCollisions() : void
+    + ResumeCollisions() : void
+    + SetTouching(layerName:string, isEntering:bool) : void
+    + SetSecondaryTouching(layerName:string, isEntering:bool) : void
+    + GetCurrentActiveRenderer() : SpriteRenderer
+    + SetUpScripts_and_RaycastTop() : void
+}
+class RenderInfo {
+    + layerName : string
+    + isTouching : bool
+    + visualTouching : bool
+}
+MonoBehaviour <|-- LayerRenderChanger
+LayerRenderChanger --> "invMesh" SpriteRenderer
+LayerRenderChanger --> "unitEntity" UnitEntity
+LayerRenderChanger +-- RenderInfo
+RenderInfo --> "spriteRenderer" SpriteRenderer
+class TopFolowingUnit {
+    + heightOffset : float = 0.5f
+    + MoveToRaycastHit() : IEnumerator
+}
+MonoBehaviour <|-- TopFolowingUnit
+TopFolowingUnit --> "raycastDebugger" RaycastDebugger
+class FolowingUnit {
+    + isFirstActive : bool = true
+    + {static}  <<event>> OnFollowerPositionUpdated : System.Action<FolowingUnit> 
+    + UpdateFollowerPosition() : void
+    + FollowerToParent() : void
+}
+MonoBehaviour <|-- FolowingUnit
+FolowingUnit o-> "offsetSource2" Vector3
+FolowingUnit --> "defaultSource" Transform
+class Player {
+}
+MonoBehaviour <|-- Player
+class MeleeAttacker {
+    + poolTag : string = "meeleHitbox"
+    + TryMeleeAttack(ray:Ray) : bool
+}
+MonoBehaviour <|-- MeleeAttacker
+class UnitEntity {
+    +  <<event>> OnWakeEvent : Notify 
+    +  <<event>> OnDieEvent : Notify 
+    +  <<event>> OnHitEvent : NotifyDamage 
+    + maxActions : int = 2
+    + currentActions : int
+    + invulnerable : bool = false
+    + Wake() : void
+    + IsAlive : bool <<get>>
+    + HasActionsRemaining : bool <<get>>
+    + TakeDamage(damage:int) : void
+    + Die() : void
+    + ResetActions() : void
+    + UseAction() : void
+    + CurrentHealth : int <<get>>
+}
+MonoBehaviour <|-- UnitEntity
+UnitEntity --> "hitpoints" HitPoints
+class AttackHitbox {
+    + damage : int
+    + damageOnlyToTag : string
+    + lifetime : float
+}
+MonoBehaviour <|-- AttackHitbox
+AttackHitbox --> "owner" GameObject
+class "Singleton`1"<T> {
+    + {static} Instance : T <<get>>
+    + <<virtual>> Awake() : void
+}
+MonoBehaviour <|-- "Singleton`1"
+class MenuManager {
+    + SelectLevel() : void
+    + LoadLevelHard() : void
+    + LoadLevelEasy() : void
+    + LoadLevelMedium() : void
+    + QuitGame() : void
+    + OptionsMenu() : void
+    + GoBack() : void
+}
+MonoBehaviour <|-- MenuManager
+MenuManager --> "mainMenuUI" GameObject
+class AudioManager {
+    + fadeDuration : float = 0.5f
+    + masterVolume : float = 1f
+    + FadeToPauseMusic() : void
+    + FadeToGameMusic() : void
+    + PlayOneShot(clip:AudioClip) : void
+}
+MonoBehaviour <|-- AudioManager
+AudioManager --> "gameMusic" AudioSource
+AudioManager --> "pauseMusic" AudioSource
+AudioManager --> "selectAudio" AudioClip
+AudioManager --> "unselectAudio" AudioClip
+AudioManager --> "meleeAudio" AudioClip
+AudioManager --> "rangeAudio" AudioClip
+AudioManager --> "unitDeathAudio" AudioClip
+AudioManager --> "rotationAudio" AudioClip
+class PauseMenu {
+    + {static} GameIsPaused : bool = false
+    + Resume() : void
+    + RestartLevel() : void
+    + QuitLevel() : void
+}
+MonoBehaviour <|-- PauseMenu
+PauseMenu --> "pauseMenuUI" GameObject
+class Testing {
+}
+MonoBehaviour <|-- Testing
+class GridScript {
+    + GridScript(width:int, height:int)
+}
+class ObjectShooter {
+    + poolTag : string
+    + creationRate : float = .5f
+    + TryShoot() : bool
+}
+MonoBehaviour <|-- ObjectShooter
+ObjectShooter o-> "currentDirection" Vector3
+class Projectile {
+    + speed : float
+    + maxDistance : float = 1f
+}
+MonoBehaviour <|-- Projectile
+Projectile --> "direction" Vector3
+class ObjectPooler {
+    + SpawnFromPool(tag:string, position:Vector3, orientation:Quaternion, owner:GameObject) : GameObject
+}
+class "Singleton`1"<T> {
+}
+class Pool {
+    + tag : string
+    + size : int
+}
+class "List`1"<T> {
+}
+class "Dictionary`2"<T1,T2> {
+}
+"Singleton`1" "<ObjectPooler>" <|-- ObjectPooler
+ObjectPooler --> "pools<Pool>" "List`1"
+ObjectPooler --> "poolDictionary<string,Queue<GameObject>>" "Dictionary`2"
+ObjectPooler --> "lookAtTarget" GameObject
+ObjectPooler +-- Pool
+Pool --> "prefab" GameObject
+class HitPoints {
+    + hitPoints : int
+    + maxHitPoints : int
+    + initialHitPoints : int
+}
+ScriptableObject <|-- HitPoints
+@enduml

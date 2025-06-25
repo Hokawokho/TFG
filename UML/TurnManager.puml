@@ -1,0 +1,27 @@
+@startuml
+class TurnManager {
+    + maxRotationsPerTurn : int = 1
+    + remainingRotations : int
+    + totalPlayerTurns : int = 10
+    + remainingPlayerTurns : int
+    + RegisterUnit(unit:UnitEntity) : void
+    + CheckEndConditions() : void
+}
+enum GameState {
+    START,
+    PLAYERTURN,
+    ENEMYTURN,
+    WIN,
+    LOST,
+}
+class "List`1"<T> {
+}
+MonoBehaviour <|-- TurnManager
+TurnManager --> "State" GameState
+TurnManager o-> "playerUnits<UnitEntity>" "List`1"
+TurnManager o-> "enemyUnits<UnitEntity>" "List`1"
+TurnManager o-> "keyToResetMovement" KeyCode
+TurnManager o-> "keyToEndTurn" KeyCode
+TurnManager --> "turnAnims" Animator
+TurnManager +-- GameState
+@enduml

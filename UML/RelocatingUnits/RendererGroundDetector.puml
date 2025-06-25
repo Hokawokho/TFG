@@ -1,0 +1,9 @@
+@startuml
+class RendererGroundDetector {
+    + layerRenderGround : string
+    + visualLayerMask : string = "Ground"
+}
+MonoBehaviour <|-- RendererGroundDetector
+RendererGroundDetector --> "renderChanger" LayerRenderChanger
+RendererGroundDetector --> "currentCollision" Transform
+@enduml

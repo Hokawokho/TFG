@@ -1,0 +1,8 @@
+@startuml
+class TopFolowingUnit {
+    + heightOffset : float = 0.5f
+    + MoveToRaycastHit() : IEnumerator
+}
+MonoBehaviour <|-- TopFolowingUnit
+TopFolowingUnit --> "raycastDebugger" RaycastDebugger
+@enduml

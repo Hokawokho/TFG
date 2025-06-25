@@ -1,0 +1,5 @@
+@startuml
+class HooverShader {
+}
+MonoBehaviour <|-- HooverShader
+@enduml

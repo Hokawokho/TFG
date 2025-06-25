@@ -1,0 +1,7 @@
+@startuml
+class MeleeAttacker {
+    + poolTag : string = "meeleHitbox"
+    + TryMeleeAttack(ray:Ray) : bool
+}
+MonoBehaviour <|-- MeleeAttacker
+@enduml

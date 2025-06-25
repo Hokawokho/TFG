@@ -1,0 +1,11 @@
+@startuml
+class FolowingUnit {
+    + isFirstActive : bool = true
+    + {static}  <<event>> OnFollowerPositionUpdated : System.Action<FolowingUnit> 
+    + UpdateFollowerPosition() : void
+    + FollowerToParent() : void
+}
+MonoBehaviour <|-- FolowingUnit
+FolowingUnit o-> "offsetSource2" Vector3
+FolowingUnit --> "defaultSource" Transform
+@enduml

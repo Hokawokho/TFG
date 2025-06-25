@@ -1,0 +1,9 @@
+@startuml
+class RaycastDebugger {
+    + rayDistance : float = 10f
+}
+MonoBehaviour <|-- RaycastDebugger
+RaycastDebugger o-> "customDirection" Vector3
+RaycastDebugger --> "targetLayer" LayerMask
+RaycastDebugger o-> "detectedHit" Transform
+@enduml

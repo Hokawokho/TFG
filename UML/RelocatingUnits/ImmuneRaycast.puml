@@ -1,0 +1,13 @@
+@startuml
+class ImmuneRaycast {
+    + rayDistance : float = 10f
+    +  <<event>> OnHitStateChanged : Action<bool> 
+    + IsCurrentlyHit : bool <<get>>
+    + TriggerRay() : void
+    + StopRay() : void
+}
+MonoBehaviour <|-- ImmuneRaycast
+ImmuneRaycast o-> "customDirection" Vector3
+ImmuneRaycast --> "targetLayer" LayerMask
+ImmuneRaycast o-> "detectedHit" Transform
+@enduml

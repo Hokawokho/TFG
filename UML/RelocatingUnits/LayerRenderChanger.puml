@@ -1,0 +1,20 @@
+@startuml
+class LayerRenderChanger {
+    + SuspendCollisions() : void
+    + ResumeCollisions() : void
+    + SetTouching(layerName:string, isEntering:bool) : void
+    + SetSecondaryTouching(layerName:string, isEntering:bool) : void
+    + GetCurrentActiveRenderer() : SpriteRenderer
+    + SetUpScripts_and_RaycastTop() : void
+}
+class RenderInfo {
+    + layerName : string
+    + isTouching : bool
+    + visualTouching : bool
+}
+MonoBehaviour <|-- LayerRenderChanger
+LayerRenderChanger --> "invMesh" SpriteRenderer
+LayerRenderChanger --> "unitEntity" UnitEntity
+LayerRenderChanger +-- RenderInfo
+RenderInfo --> "spriteRenderer" SpriteRenderer
+@enduml

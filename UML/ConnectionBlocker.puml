@@ -1,0 +1,18 @@
+@startuml
+struct ConnectionPair {
+    + ConnectionPair(from:Vector2Int, to:Vector2Int)
+}
+class ConnectionBlocker {
+    + ApplyBlocksForCase(caseNumber:int) : void
+}
+class "List`1"<T> {
+}
+ConnectionPair --> "from" Vector2Int
+ConnectionPair --> "to" Vector2Int
+MonoBehaviour <|-- ConnectionBlocker
+ConnectionBlocker --> "gridManager" GridManager
+ConnectionBlocker o-> "case1Blocks<ConnectionPair>" "List`1"
+ConnectionBlocker o-> "case2Blocks<ConnectionPair>" "List`1"
+ConnectionBlocker o-> "case3Blocks<ConnectionPair>" "List`1"
+ConnectionBlocker o-> "case4Blocks<ConnectionPair>" "List`1"
+@enduml

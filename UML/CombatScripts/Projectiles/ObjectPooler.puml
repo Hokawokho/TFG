@@ -1,0 +1,21 @@
+@startuml
+class ObjectPooler {
+    + SpawnFromPool(tag:string, position:Vector3, orientation:Quaternion, owner:GameObject) : GameObject
+}
+class "Singleton`1"<T> {
+}
+class Pool {
+    + tag : string
+    + size : int
+}
+class "List`1"<T> {
+}
+class "Dictionary`2"<T1,T2> {
+}
+"Singleton`1" "<ObjectPooler>" <|-- ObjectPooler
+ObjectPooler --> "pools<Pool>" "List`1"
+ObjectPooler --> "poolDictionary<string,Queue<GameObject>>" "Dictionary`2"
+ObjectPooler --> "lookAtTarget" GameObject
+ObjectPooler +-- Pool
+Pool --> "prefab" GameObject
+@enduml

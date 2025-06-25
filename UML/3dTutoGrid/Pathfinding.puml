@@ -1,0 +1,11 @@
+@startuml
+class Pathfinding {
+    + GetNewPath() : List<Node>
+    + GetNewPath(coordinates:Vector2Int) : List<Node>
+    + NotifyRecievers() : void
+    + SetNewDestination(startCoordinates:Vector2Int, targetCoordinates:Vector2Int) : void
+}
+MonoBehaviour <|-- Pathfinding
+Pathfinding --> "StartCords" Vector2Int
+Pathfinding --> "TargetCords" Vector2Int
+@enduml

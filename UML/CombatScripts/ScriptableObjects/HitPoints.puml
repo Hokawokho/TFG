@@ -1,0 +1,8 @@
+@startuml
+class HitPoints {
+    + hitPoints : int
+    + maxHitPoints : int
+    + initialHitPoints : int
+}
+ScriptableObject <|-- HitPoints
+@enduml

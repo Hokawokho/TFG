@@ -1,0 +1,11 @@
+@startuml
+class ChangingShaderTopTiles {
+    + {static} ClearAllHighlights() : void
+    + {static} HighlightTilesAround(center:Vector2Int, grid:GridManager) : void
+    + {static} HighlightLineTiles(center:Vector2Int, grid:GridManager) : void
+    + {static} HighlightCostTiles(center:Vector2Int, grid:GridManager, range:int) : void
+    + Show() : void
+    + Hide() : void
+}
+MonoBehaviour <|-- ChangingShaderTopTiles
+@enduml

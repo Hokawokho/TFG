@@ -1,0 +1,9 @@
+@startuml
+class Tile {
+    + startingPoint : bool
+    + ApplyBlockForCase(caseNumber:int) : void
+    + IsBlockedInCase(caseNumber:int) : bool
+}
+MonoBehaviour <|-- Tile
+Tile --> "cords" Vector2Int
+@enduml

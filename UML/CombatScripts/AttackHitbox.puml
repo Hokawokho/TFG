@@ -1,0 +1,9 @@
+@startuml
+class AttackHitbox {
+    + damage : int
+    + damageOnlyToTag : string
+    + lifetime : float
+}
+MonoBehaviour <|-- AttackHitbox
+AttackHitbox --> "owner" GameObject
+@enduml

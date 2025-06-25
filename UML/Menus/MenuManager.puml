@@ -1,0 +1,13 @@
+@startuml
+class MenuManager {
+    + SelectLevel() : void
+    + LoadLevelHard() : void
+    + LoadLevelEasy() : void
+    + LoadLevelMedium() : void
+    + QuitGame() : void
+    + OptionsMenu() : void
+    + GoBack() : void
+}
+MonoBehaviour <|-- MenuManager
+MenuManager --> "mainMenuUI" GameObject
+@enduml

@@ -1,0 +1,10 @@
+@startuml
+class Scenario {
+    + scenarioValue : float
+    + hasAttacked : bool
+    + Scenario(scenarioValue:float, startTile:Vector2Int, targetTile:Vector2Int, hasAttacked:bool)
+    + Scenario()
+}
+Scenario --> "startTile" Vector2Int
+Scenario --> "targetTile" Vector2Int
+@enduml

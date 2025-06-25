@@ -1,0 +1,8 @@
+@startuml
+class Projectile {
+    + speed : float
+    + maxDistance : float = 1f
+}
+MonoBehaviour <|-- Projectile
+Projectile --> "direction" Vector3
+@enduml

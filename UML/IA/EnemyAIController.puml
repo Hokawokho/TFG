@@ -1,0 +1,9 @@
+@startuml
+class EnemyAIController {
+    + AttackDistance : int = 1
+    + PerformAI() : IEnumerator
+    + MoveTo(position:Vector2Int) : IEnumerator
+}
+MonoBehaviour <|-- EnemyAIController
+EnemyAIController --> "selfEntity" UnitEntity
+@enduml

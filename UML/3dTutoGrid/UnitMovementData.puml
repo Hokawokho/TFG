@@ -1,0 +1,9 @@
+@startuml
+class UnitMovementData {
+    + maxTiles : int
+    + remainingTiles : int
+    + movementSpeed : float
+    + ResetMovement() : void
+}
+UnitMovementData --> "unitData" GameObject
+@enduml

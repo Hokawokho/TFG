@@ -1,0 +1,6 @@
+@startuml
+class Labeler {
+}
+MonoBehaviour <|-- Labeler
+Labeler o-> "cords" Vector2Int
+@enduml

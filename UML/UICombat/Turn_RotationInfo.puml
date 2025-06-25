@@ -1,0 +1,8 @@
+@startuml
+class Turn_RotationInfo {
+}
+MonoBehaviour <|-- Turn_RotationInfo
+Turn_RotationInfo --> "rotationText" TextMeshProUGUI
+Turn_RotationInfo --> "rotationUp" GameObject
+Turn_RotationInfo --> "rotationDown" GameObject
+@enduml

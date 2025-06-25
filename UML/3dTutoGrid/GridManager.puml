@@ -1,0 +1,17 @@
+@startuml
+class GridManager {
+    + UnityGridSize : int <<get>>
+    + GetNode(coordinates:Vector2Int) : Node
+    + BlockNode(coordinates:Vector2Int) : void
+    + UnblockNode(coordinates:Vector2Int) : void
+    + ResetNodes() : void
+    + GetCoordinatesFromPosition(position:Vector3) : Vector2Int
+    + GetPositionFromCoordinates(coordinates:Vector2Int) : Vector3
+    + BlockedNodeList() : List<Vector2Int>
+    + BlockConnection(from:Vector2Int, to:Vector2Int) : void
+}
+class "Dictionary`2"<T1,T2> {
+}
+MonoBehaviour <|-- GridManager
+GridManager --> "Grid<Vector2Int,Node>" "Dictionary`2"
+@enduml
