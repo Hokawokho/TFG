@@ -34,7 +34,6 @@ jobs:
             -createAssociation \
             -allInOne
 
-      # ← Aquí empiezan los pasos nuevos
       - name: Install Python & dependencies
         run: |
           python3 -m pip install --upgrade pip
@@ -43,11 +42,16 @@ jobs:
       - name: Split UML into components
         run: python3 scripts/split_uml.py
 
+      - name: Install PlantUML and Graphviz
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y default-jre graphviz plantuml
+
       - name: Render UML component images
-        uses: holowinski/plantuml-github-action@main
-        with:
-          args: '-tpng UML/components/*.puml'
-      # ← Aquí terminan los pasos nuevos
+        run: |
+          for f in UML/components/*.puml; do
+            plantuml -tpng "$f"
+          done
 
       - name: Commit UML diagrams
         uses: EndBug/add-and-commit@v9
