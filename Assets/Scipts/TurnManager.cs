@@ -144,23 +144,19 @@ public class TurnManager : MonoBehaviour
 
 
 
-        if (State == GameState.PLAYERTURN)
-        {
-            bool done = true;
-            foreach (var unit in playerUnits)
-                if (unit.HasActionsRemaining)
-                //TODO: setear las condiciones de Actions Remaining
-                {
-                    done = false;
-                    break;
-                }
-            if (done)
-                StartCoroutine(ChangeState(GameState.ENEMYTURN));
-
-
-
-
-        }
+        // if (State == GameState.PLAYERTURN)
+        // {
+        //     bool done = true;
+        //     foreach (var unit in playerUnits)
+        //         if (unit.HasActionsRemaining)
+        //         //TODO: setear las condiciones de Actions Remaining
+        //         {
+        //             done = false;
+        //             break;
+        //         }
+        //     if (done)
+        //         StartCoroutine(ChangeState(GameState.ENEMYTURN));
+        // }
     }
 
     private void OnGUI()

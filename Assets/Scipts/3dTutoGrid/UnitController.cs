@@ -135,6 +135,7 @@ public class UnitController : MonoBehaviour
     {
 
         if (!Input.GetMouseButtonDown(0)) return;
+        if (turnManager.State == TurnManager.GameState.START) return;
 
 
         if (rotation.isRotating) return;
@@ -214,8 +215,7 @@ public class UnitController : MonoBehaviour
                 
 
                 //COMENTAR PODER MOVER A LAS UNIDADES ENEMIGAS
-                if (turnManager.State == TurnManager.GameState.PLAYERTURN
-                && selectedUnit != null
+                if (selectedUnit != null
                 && selectedUnit.GetComponent<Player>() == null)
                     return;
                     
@@ -397,6 +397,10 @@ public class UnitController : MonoBehaviour
 
         currentAttackMode = AttackMode.None;
         ChangingShaderTopTiles.ClearAllHighlights();
+
+         if (selectedUnit == null || gridManager == null)
+            return;
+
 
         Vector2Int unitCoords = gridManager.GetCoordinatesFromPosition(selectedUnit.position);
         var unitData = GetUnitData(selectedUnit.gameObject);

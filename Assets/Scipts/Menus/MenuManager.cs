@@ -7,14 +7,18 @@ public class MenuManager : MonoBehaviour
 {
 
     public GameObject mainMenuUI;
-    public GameObject optionsMenuUI;
+
+    [SerializeField] private Animator selectorLevels;
+    
+
+    // public GameObject optionsMenuUI;
 
     // Start is called before the first frame update
     void Start()
     {
         // Set initial UI state
         if (mainMenuUI != null) mainMenuUI.SetActive(true);
-        if (optionsMenuUI != null) optionsMenuUI.SetActive(false);
+        // if (optionsMenuUI != null) optionsMenuUI.SetActive(false);
     }
 
     // Update is called once per frame
@@ -22,8 +26,8 @@ public class MenuManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (optionsMenuUI != null && optionsMenuUI.activeSelf)
-                GoBack();
+            // if (optionsMenuUI != null && optionsMenuUI.activeSelf)
+            //     GoBack();
         }
     }
 
@@ -32,10 +36,13 @@ public class MenuManager : MonoBehaviour
         Debug.Log("Selecting Level");
 
         //Meter nivel actual
-        SceneManager.LoadScene(1, LoadSceneMode.Single);
-
-
+        // SceneManager.LoadScene(1, LoadSceneMode.Single);
+        selectorLevels.SetBool("selecting", true);
     }
+
+    public void LoadLevelHard() =>  SceneManager.LoadScene(1, LoadSceneMode.Single);
+    public void LoadLevelEasy() =>  SceneManager.LoadScene(2, LoadSceneMode.Single);
+    public void LoadLevelMedium() =>  SceneManager.LoadScene(3, LoadSceneMode.Single);
 
     public void QuitGame()
     {
@@ -50,7 +57,7 @@ public class MenuManager : MonoBehaviour
     {
         Debug.Log("Opening Options");
 
-        if (optionsMenuUI != null) optionsMenuUI.SetActive(true);
+        // if (optionsMenuUI != null) optionsMenuUI.SetActive(true);
         if (mainMenuUI != null) mainMenuUI.SetActive(false);
         //Meter nivel inicial
         //SceneManager.LoadScene();
@@ -61,8 +68,9 @@ public class MenuManager : MonoBehaviour
     {
         Debug.Log("Going Back to Main Menu");
         // Hide options UI, show main menu UI
-        if (optionsMenuUI != null) optionsMenuUI.SetActive(false);
-        if (mainMenuUI != null) mainMenuUI.SetActive(true);
+        // if (optionsMenuUI != null) optionsMenuUI.SetActive(false);
+        // if (mainMenuUI != null) mainMenuUI.SetActive(true);
+        selectorLevels.SetBool("selecting", false);
     }
     
 }

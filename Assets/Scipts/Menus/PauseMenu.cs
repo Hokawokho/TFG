@@ -15,6 +15,11 @@ public class PauseMenu : MonoBehaviour
     void Awake()
     {
         audioManager = FindObjectOfType<AudioManager>();
+        Time.timeScale = 1f;
+        GameIsPaused = false;
+        if (pauseMenuUI != null)
+            pauseMenuUI.SetActive(false);
+        
     }
     // Update is called once per frame
     void Update()
