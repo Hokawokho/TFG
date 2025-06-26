@@ -34,6 +34,10 @@ for l in rels:
 
 # Para cada componente conectado, genera su propio .puml
 for i, comp in enumerate(nx.connected_components(G), start=1):
+    subgraph = G.subgraph(comp)
+    if subgraph.number_of_edges() == 0:
+        continue
+
     out_path = f'{OUTDIR}/comp_{i}.puml'
     with open(out_path, 'w', encoding='utf-8') as out:
         out.write('@startuml\n')
