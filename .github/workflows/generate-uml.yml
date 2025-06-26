@@ -28,7 +28,7 @@ jobs:
       - name: Generate PlantUML files (all-in-one)
         run: |
           export PATH="$PATH:$HOME/.dotnet/tools"
-          puml-gen Assets/Scripts UML \
+          puml-gen Assets/Scipts UML \
             -dir \
             -public \
             -createAssociation \
