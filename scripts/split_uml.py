@@ -58,8 +58,7 @@ for i, comp in enumerate(nx.connected_components(G), start=1):
                 out.write(r + '\n')
         
 
-         brace_balance = 0
-        # Recuenta según lo escrito: defs + rels
+        brace_balance = 0
         for idx, name in defs_all:
             if name in comp:
                 # contamos en el bloque de definición
@@ -74,6 +73,6 @@ for i, comp in enumerate(nx.connected_components(G), start=1):
         # Inyecta las llaves de cierre que falten
         for _ in range(brace_balance):
             out.write('}\n')
-            
+
         out.write('@enduml\n')
     print(f'Wrote {out_path}')

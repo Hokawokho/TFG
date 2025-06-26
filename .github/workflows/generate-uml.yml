@@ -1,5 +1,6 @@
 name: Generate UML Diagrams
 
+
 on:
   push:
     paths:
