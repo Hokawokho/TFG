@@ -1,69 +1,49 @@
-name: Generate UML Diagrams
+steps:
+  - name: Checkout code
+    uses: actions/checkout@v4
 
-on:
-  push:
-    paths:
-      - '**/*.cs'
-      - '.github/workflows/generate-uml.yml'
-  workflow_dispatch:
+  - name: Setup .NET SDK
+    uses: actions/setup-dotnet@v3
+    with:
+      dotnet-version: '8.0.x'
 
-jobs:
-  uml:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
+  - name: Install UML generator CLI
+    run: dotnet tool install --global PlantUmlClassDiagramGenerator
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+  - name: Generate PlantUML files (all-in-one)
+    run: |
+      export PATH="$PATH:$HOME/.dotnet/tools"
+      puml-gen Assets/Scipts UML \
+        -dir \
+        -public \
+        -createAssociation \
+        -allInOne
 
-      - name: Setup .NET SDK
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: '8.0.x'
+  - name: Install Python & dependencies
+    run: |
+      python3 -m pip install --upgrade pip
+      pip install networkx
 
-      - name: Install UML generator CLI
-        run: dotnet tool install --global PlantUmlClassDiagramGenerator
+  - name: Split UML into components
+    run: python3 scripts/split_uml.py
 
-      - name: Generate PlantUML files (all-in-one)
-        run: |
-          export PATH="$PATH:$HOME/.dotnet/tools"
-          puml-gen Assets/Scipts UML \
-            -dir \
-            -public \
-            -createAssociation \
-            -allInOne
+  - name: Install PlantUML and Graphviz
+    run: |
+      sudo apt-get update
+      sudo apt-get install -y default-jre graphviz plantuml
 
-      - name: Install Python & dependencies
-        run: |
-          python3 -m pip install --upgrade pip
-          pip install networkx
+  - name: Render UML component images
+    continue-on-error: true
+    run: |
+      sudo apt-get update
+      sudo apt-get install -y default-jre graphviz plantuml
+      for f in UML/components/*.puml; do
+        plantuml -tpng "$f" || echo "⚠️ $f falló, continuamos"
+      done
 
-      - name: Split UML into components
-        run: python3 scripts/split_uml.py
-
-      - name: Debug: Show first lines of components
-        run: |
-          for f in UML/components/*.puml; do
-            echo "=== $f ==="
-            head -n 10 "$f"
-            echo ""
-          done
-
-      - name: Install PlantUML and Graphviz
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y default-jre graphviz plantuml
-
-      - name: Render UML component images
-        run: |
-          for f in UML/components/*.puml; do
-            plantuml -tpng "$f"
-          done
-
-      - name: Commit UML diagrams
-        uses: EndBug/add-and-commit@v9
-        with:
-          author_name: 'github-actions[bot]'
-          author_email: 'github-actions[bot]@users.noreply.github.com'
-          message: 'chore: update UML diagrams'
+  - name: Commit UML diagrams
+    uses: EndBug/add-and-commit@v9
+    with:
+      author_name: 'github-actions[bot]'
+      author_email: 'github-actions[bot]@users.noreply.github.com'
+      message: 'chore: update UML diagrams'
