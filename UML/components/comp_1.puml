@@ -1,4 +1,5 @@
 @startuml
-class HooverShader {
+class Projectile {
 
+Projectile --> "direction" Vector3
 @enduml

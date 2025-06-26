@@ -1,6 +1,6 @@
 @startuml
-class HitPoints {
+struct ConnectionPair {
 
-HealthBar --> "hitPoints" HitPoints
-UnitEntity --> "hitpoints" HitPoints
+ConnectionPair --> "from" Vector2Int
+ConnectionPair --> "to" Vector2Int
 @enduml

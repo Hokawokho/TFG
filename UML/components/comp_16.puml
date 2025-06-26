@@ -1,6 +1,5 @@
 @startuml
-class Pool {
+enum GameState {
 
-ObjectPooler --> "pools<Pool>" "List`1"
-Pool --> "prefab" GameObject
+TurnManager --> "State" GameState
 @enduml

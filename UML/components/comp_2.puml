@@ -1,4 +1,7 @@
 @startuml
-class "HashSet`1"<T> {
+class Pathfinding {
 
+UnitController --> "pathFinder" Pathfinding
+Pathfinding --> "StartCords" Vector2Int
+Pathfinding --> "TargetCords" Vector2Int
 @enduml

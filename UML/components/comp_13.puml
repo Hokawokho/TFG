@@ -1,7 +1,7 @@
 @startuml
-class Node {
+class HealthBar {
 
-GridManager --> "Grid<Vector2Int,Node>" "Dictionary`2"
-Node --> "cords" Vector2Int
-Node --> "connectTo" Node
+HealthBar --> "hitPoints" HitPoints
+HealthBar --> "meterImage" Image
+HealthBar --> "hpText" TextMeshProUGUI
 @enduml

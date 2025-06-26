@@ -1,5 +1,4 @@
 @startuml
-class UnitMovementData {
+class "HashSet`1"<T> {
 
-UnitMovementData --> "unitData" GameObject
 @enduml

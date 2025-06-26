@@ -1,7 +1,6 @@
 @startuml
-class Pathfinding {
+class RendererGroundDetector {
 
-UnitController --> "pathFinder" Pathfinding
-Pathfinding --> "StartCords" Vector2Int
-Pathfinding --> "TargetCords" Vector2Int
+RendererGroundDetector --> "renderChanger" LayerRenderChanger
+RendererGroundDetector --> "currentCollision" Transform
 @enduml

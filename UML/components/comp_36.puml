@@ -1,7 +1,12 @@
 @startuml
-class Turn_RotationInfo {
+class AudioManager {
 
-Turn_RotationInfo --> "rotationText" TextMeshProUGUI
-Turn_RotationInfo --> "rotationUp" GameObject
-Turn_RotationInfo --> "rotationDown" GameObject
+AudioManager --> "gameMusic" AudioSource
+AudioManager --> "pauseMusic" AudioSource
+AudioManager --> "selectAudio" AudioClip
+AudioManager --> "unselectAudio" AudioClip
+AudioManager --> "meleeAudio" AudioClip
+AudioManager --> "rangeAudio" AudioClip
+AudioManager --> "unitDeathAudio" AudioClip
+AudioManager --> "rotationAudio" AudioClip
 @enduml

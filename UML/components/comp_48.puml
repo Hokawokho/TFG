@@ -1,4 +1,5 @@
 @startuml
-class Testing {
+class ImmuneRaycast {
 
+ImmuneRaycast --> "targetLayer" LayerMask
 @enduml

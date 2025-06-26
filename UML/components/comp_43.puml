@@ -1,5 +1,5 @@
 @startuml
-class EnemyAIController {
+class PauseMenu {
 
-EnemyAIController --> "selfEntity" UnitEntity
+PauseMenu --> "pauseMenuUI" GameObject
 @enduml

@@ -1,6 +1,6 @@
 @startuml
-class RendererGroundDetector {
+class HitPoints {
 
-RendererGroundDetector --> "renderChanger" LayerRenderChanger
-RendererGroundDetector --> "currentCollision" Transform
+HealthBar --> "hitPoints" HitPoints
+UnitEntity --> "hitpoints" HitPoints
 @enduml

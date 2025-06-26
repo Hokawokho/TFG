@@ -1,5 +1,5 @@
 @startuml
-class Projectile {
+class AttackHitbox {
 
-Projectile --> "direction" Vector3
+AttackHitbox --> "owner" GameObject
 @enduml

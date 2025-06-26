@@ -1,7 +1,6 @@
 @startuml
-class HealthBar {
+class ConnectionBlocker {
 
-HealthBar --> "hitPoints" HitPoints
-HealthBar --> "meterImage" Image
-HealthBar --> "hpText" TextMeshProUGUI
+ConnectionBlocker --> "gridManager" GridManager
+Rotation --> "connectionBlocker" ConnectionBlocker
 @enduml

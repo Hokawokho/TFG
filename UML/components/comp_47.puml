@@ -1,5 +1,4 @@
 @startuml
-class Tile {
+class GridScript {
 
-Tile --> "cords" Vector2Int
 @enduml

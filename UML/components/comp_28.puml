@@ -1,5 +1,10 @@
 @startuml
-class ImmuneRaycast {
+class InfoUnit {
 
-ImmuneRaycast --> "targetLayer" LayerMask
+InfoUnit --> "meleeAttackGO" GameObject
+InfoUnit --> "meleeAttackText" TextMeshProUGUI
+InfoUnit --> "movementGO" GameObject
+InfoUnit --> "movementText" TextMeshProUGUI
+InfoUnit --> "unitProfileGO" GameObject
+InfoUnit --> "enemyProfileGO" GameObject
 @enduml

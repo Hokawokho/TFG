@@ -1,5 +1,4 @@
 @startuml
-class "Singleton`1"<T> {
-class "Singleton`1"<T> {
+class ResizeSingleDirection {
 
 @enduml

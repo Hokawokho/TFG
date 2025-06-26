@@ -1,5 +1,5 @@
 @startuml
-class Rotation {
+class "Singleton`1"<T> {
+class "Singleton`1"<T> {
 
-Rotation --> "connectionBlocker" ConnectionBlocker
 @enduml

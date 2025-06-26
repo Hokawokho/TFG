@@ -1,5 +1,6 @@
 @startuml
-class PauseMenu {
+class Pool {
 
-PauseMenu --> "pauseMenuUI" GameObject
+ObjectPooler --> "pools<Pool>" "List`1"
+Pool --> "prefab" GameObject
 @enduml

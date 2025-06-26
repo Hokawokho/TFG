@@ -1,4 +1,7 @@
 @startuml
-class Labeler {
+class Turn_RotationInfo {
 
+Turn_RotationInfo --> "rotationText" TextMeshProUGUI
+Turn_RotationInfo --> "rotationUp" GameObject
+Turn_RotationInfo --> "rotationDown" GameObject
 @enduml

@@ -1,5 +1,4 @@
 @startuml
-class AttackHitbox {
+class Testing {
 
-AttackHitbox --> "owner" GameObject
 @enduml

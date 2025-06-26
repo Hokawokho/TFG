@@ -1,7 +1,5 @@
 @startuml
-class "Dictionary`2"<T1,T2> {
-class "Dictionary`2"<T1,T2> {
+class MenuManager {
 
-GridManager --> "Grid<Vector2Int,Node>" "Dictionary`2"
-ObjectPooler --> "poolDictionary<string,Queue<GameObject>>" "Dictionary`2"
+MenuManager --> "mainMenuUI" GameObject
 @enduml

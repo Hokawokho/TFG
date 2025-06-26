@@ -1,4 +1,7 @@
 @startuml
-class Player {
+class UnitEntity {
 
+EnemyAIController --> "selfEntity" UnitEntity
+LayerRenderChanger --> "unitEntity" UnitEntity
+UnitEntity --> "hitpoints" HitPoints
 @enduml

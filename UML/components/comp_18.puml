@@ -1,6 +1,4 @@
 @startuml
-class ConnectionBlocker {
+class MeleeAttacker {
 
-ConnectionBlocker --> "gridManager" GridManager
-Rotation --> "connectionBlocker" ConnectionBlocker
 @enduml

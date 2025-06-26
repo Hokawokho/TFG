@@ -1,6 +1,5 @@
 @startuml
-class UnitController {
+class Rotation {
 
-UnitController --> "selectedUnit" Transform
-UnitController --> "pathFinder" Pathfinding
+Rotation --> "connectionBlocker" ConnectionBlocker
 @enduml

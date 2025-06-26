@@ -1,5 +1,5 @@
 @startuml
-class Grid {
+class Tile {
 
-GridManager --> "Grid<Vector2Int,Node>" "Dictionary`2"
+Tile --> "cords" Vector2Int
 @enduml

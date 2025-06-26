@@ -1,7 +1,5 @@
 @startuml
-class UnitEntity {
+class UnitMovementData {
 
-EnemyAIController --> "selfEntity" UnitEntity
-LayerRenderChanger --> "unitEntity" UnitEntity
-UnitEntity --> "hitpoints" HitPoints
+UnitMovementData --> "unitData" GameObject
 @enduml

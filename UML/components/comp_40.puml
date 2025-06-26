@@ -1,5 +1,4 @@
 @startuml
-class FolowingUnit {
+class InputManager {
 
-FolowingUnit --> "defaultSource" Transform
 @enduml

@@ -1,5 +1,5 @@
 @startuml
-class MenuManager {
+class FolowingUnit {
 
-MenuManager --> "mainMenuUI" GameObject
+FolowingUnit --> "defaultSource" Transform
 @enduml
