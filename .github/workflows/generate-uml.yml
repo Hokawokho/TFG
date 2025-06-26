@@ -47,7 +47,7 @@ jobs:
           for f in UML/components/*.puml; do
             echo "=== $f ==="
             head -n 10 "$f"
-            echo
+            echo ""
           done
 
       - name: Install PlantUML and Graphviz
