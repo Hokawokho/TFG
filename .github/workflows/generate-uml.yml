@@ -34,10 +34,6 @@ jobs:
             -createAssociation \
             -allInOne
 
-      - name: Normalize include file
-        run: |
-          # mueve el .puml generado al nombre que espera split_uml.py
-          mv UML/*.puml UML/include.puml
 
       - name: Install Python & dependencies
         run: |
