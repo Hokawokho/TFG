@@ -1,0 +1,6 @@
+@startuml
+class RaycastDebugger {
+
+RaycastDebugger --> "targetLayer" LayerMask
+TopFolowingUnit --> "raycastDebugger" RaycastDebugger
+@enduml

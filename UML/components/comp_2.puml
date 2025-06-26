@@ -1,0 +1,4 @@
+@startuml
+class "HashSet`1"<T> {
+
+@enduml

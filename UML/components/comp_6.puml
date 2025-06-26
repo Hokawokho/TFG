@@ -1,0 +1,5 @@
+@startuml
+class RenderInfo {
+
+RenderInfo --> "spriteRenderer" SpriteRenderer
+@enduml

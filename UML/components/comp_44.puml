@@ -1,0 +1,6 @@
+@startuml
+class TurnManager {
+
+TurnManager --> "State" GameState
+TurnManager --> "turnAnims" Animator
+@enduml

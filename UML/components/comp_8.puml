@@ -1,0 +1,7 @@
+@startuml
+class Pathfinding {
+
+UnitController --> "pathFinder" Pathfinding
+Pathfinding --> "StartCords" Vector2Int
+Pathfinding --> "TargetCords" Vector2Int
+@enduml

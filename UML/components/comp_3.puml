@@ -1,0 +1,6 @@
+@startuml
+struct ConnectionPair {
+
+ConnectionPair --> "from" Vector2Int
+ConnectionPair --> "to" Vector2Int
+@enduml

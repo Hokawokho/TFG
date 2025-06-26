@@ -1,0 +1,6 @@
+@startuml
+class RendererGroundDetector {
+
+RendererGroundDetector --> "renderChanger" LayerRenderChanger
+RendererGroundDetector --> "currentCollision" Transform
+@enduml

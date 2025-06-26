@@ -1,0 +1,6 @@
+@startuml
+class UnitController {
+
+UnitController --> "selectedUnit" Transform
+UnitController --> "pathFinder" Pathfinding
+@enduml
