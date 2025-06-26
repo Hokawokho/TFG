@@ -56,6 +56,24 @@ for i, comp in enumerate(nx.connected_components(G), start=1):
         for r in rels:
             if any(re.search(r'\b'+re.escape(n)+r'\b', r) for n in comp):
                 out.write(r + '\n')
+        
 
+         brace_balance = 0
+        # Recuenta según lo escrito: defs + rels
+        for idx, name in defs_all:
+            if name in comp:
+                # contamos en el bloque de definición
+                for k in range(idx, len(lines)):
+                    line = lines[k]
+                    brace_balance += line.count('{') - line.count('}')
+                    if brace_balance <= 0:
+                        break
+        for r in rels:
+            if any(re.search(r'\b'+re.escape(n)+r'\b', r) for n in comp):
+                brace_balance += r.count('{') - r.count('}')
+        # Inyecta las llaves de cierre que falten
+        for _ in range(brace_balance):
+            out.write('}\n')
+            
         out.write('@enduml\n')
     print(f'Wrote {out_path}')
