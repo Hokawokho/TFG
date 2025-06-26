@@ -1,0 +1,6 @@
+@startuml
+class Pool {
+
+ObjectPooler --> "pools<Pool>" "List`1"
+Pool --> "prefab" GameObject
+@enduml

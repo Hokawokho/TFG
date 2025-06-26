@@ -1,0 +1,5 @@
+@startuml
+class Tile {
+
+Tile --> "cords" Vector2Int
+@enduml

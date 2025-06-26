@@ -1,0 +1,6 @@
+@startuml
+class ConnectionBlocker {
+
+ConnectionBlocker --> "gridManager" GridManager
+Rotation --> "connectionBlocker" ConnectionBlocker
+@enduml

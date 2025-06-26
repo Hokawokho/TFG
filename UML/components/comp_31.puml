@@ -1,0 +1,6 @@
+@startuml
+class GridManager {
+
+ConnectionBlocker --> "gridManager" GridManager
+GridManager --> "Grid<Vector2Int,Node>" "Dictionary`2"
+@enduml

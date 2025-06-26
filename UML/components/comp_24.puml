@@ -1,0 +1,5 @@
+@startuml
+class UnitMovementData {
+
+UnitMovementData --> "unitData" GameObject
+@enduml

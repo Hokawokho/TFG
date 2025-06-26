@@ -1,0 +1,6 @@
+@startuml
+class Scenario {
+
+Scenario --> "startTile" Vector2Int
+Scenario --> "targetTile" Vector2Int
+@enduml

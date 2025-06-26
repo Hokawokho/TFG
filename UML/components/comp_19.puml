@@ -1,0 +1,12 @@
+@startuml
+class AudioManager {
+
+AudioManager --> "gameMusic" AudioSource
+AudioManager --> "pauseMusic" AudioSource
+AudioManager --> "selectAudio" AudioClip
+AudioManager --> "unselectAudio" AudioClip
+AudioManager --> "meleeAudio" AudioClip
+AudioManager --> "rangeAudio" AudioClip
+AudioManager --> "unitDeathAudio" AudioClip
+AudioManager --> "rotationAudio" AudioClip
+@enduml

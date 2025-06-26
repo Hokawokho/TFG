@@ -1,0 +1,6 @@
+@startuml
+class HitPoints {
+
+HealthBar --> "hitPoints" HitPoints
+UnitEntity --> "hitpoints" HitPoints
+@enduml

@@ -1,0 +1,5 @@
+@startuml
+class Projectile {
+
+Projectile --> "direction" Vector3
+@enduml

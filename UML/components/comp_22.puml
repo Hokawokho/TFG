@@ -1,0 +1,7 @@
+@startuml
+class ObjectPooler {
+
+ObjectPooler --> "pools<Pool>" "List`1"
+ObjectPooler --> "poolDictionary<string,Queue<GameObject>>" "Dictionary`2"
+ObjectPooler --> "lookAtTarget" GameObject
+@enduml

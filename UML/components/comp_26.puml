@@ -1,0 +1,5 @@
+@startuml
+class Rotation {
+
+Rotation --> "connectionBlocker" ConnectionBlocker
+@enduml

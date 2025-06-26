@@ -1,0 +1,7 @@
+@startuml
+class Node {
+
+GridManager --> "Grid<Vector2Int,Node>" "Dictionary`2"
+Node --> "cords" Vector2Int
+Node --> "connectTo" Node
+@enduml

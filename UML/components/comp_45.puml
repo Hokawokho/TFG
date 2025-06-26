@@ -1,0 +1,7 @@
+@startuml
+class LayerRenderChanger {
+
+RendererGroundDetector --> "renderChanger" LayerRenderChanger
+LayerRenderChanger --> "invMesh" SpriteRenderer
+LayerRenderChanger --> "unitEntity" UnitEntity
+@enduml

@@ -1,0 +1,5 @@
+@startuml
+class PauseMenu {
+
+PauseMenu --> "pauseMenuUI" GameObject
+@enduml
