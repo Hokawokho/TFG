@@ -42,6 +42,14 @@ jobs:
       - name: Split UML into components
         run: python3 scripts/split_uml.py
 
+      - name: Debug: Show first lines of components
+        run: |
+          for f in UML/components/*.puml; do
+            echo "=== $f ==="
+            head -n 10 "$f"
+            echo
+          done
+
       - name: Install PlantUML and Graphviz
         run: |
           sudo apt-get update
