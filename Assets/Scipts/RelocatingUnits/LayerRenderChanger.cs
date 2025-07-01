@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.Animations;
 
@@ -44,6 +45,7 @@ public class LayerRenderChanger : MonoBehaviour
     private UnitController unitController;
 
 
+
     public void SuspendCollisions()
     {
         ignoreCollisions = true;
@@ -71,6 +73,7 @@ public class LayerRenderChanger : MonoBehaviour
         }
 
         unitController = FindObjectOfType<UnitController>();
+
 
     }
 
@@ -106,32 +109,7 @@ public class LayerRenderChanger : MonoBehaviour
                 }
             }
         }
-        //  // Mientras la unidad se mueve, garantizar al menos un sprite activo (original)
-        // if (unitController != null && unitController.isMoving)
-        // {
-        //     bool anyActive = false;
-        //     foreach (var info in renderers)
-        //     {
-        //         if (info.spriteRenderer != null && info.spriteRenderer.enabled)
-        //         {
-        //             anyActive = true;
-        //             break;
-        //         }
-        //     }
-        //     if (!anyActive)
-        //     {
-        //         Debug.Log("[LayerRenderChanger] Update: no hay sprites activos, buscando colisión actual");
-        //         foreach (var det in GetComponentsInChildren<RendererGroundDetector>())
-        //         {
-        //             if (det.currentCollision != null)
-        //             {
-        //                 SetTouching(det.layerRenderGround, true);
-        //                 Debug.Log($"[LayerRenderChanger] Update: activado layer '{det.layerRenderGround}' por movimiento");
-        //                 break;
-        //             }
-        //         }
-        //     }
-        // }
+
     }
     
 

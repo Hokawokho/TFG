@@ -55,11 +55,10 @@ public class MenuManager : MonoBehaviour
 
     public void OptionsMenu()
     {
-        Debug.Log("Opening Options");
+        Debug.Log("Options selected");
 
         // if (optionsMenuUI != null) optionsMenuUI.SetActive(true);
-        if (mainMenuUI != null) mainMenuUI.SetActive(false);
-        //Meter nivel inicial
+         //Meter nivel inicial
         //SceneManager.LoadScene();
 
     }

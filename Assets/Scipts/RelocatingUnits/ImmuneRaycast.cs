@@ -23,6 +23,8 @@ public class ImmuneRaycast : MonoBehaviour
     // Start is called before the first frame update
     private bool autoFire = true;
 
+    private bool isRotating = false;
+
     // Extraemos el raycast en un método
     public void TriggerRay()
     {
@@ -48,6 +50,16 @@ public class ImmuneRaycast : MonoBehaviour
 
     private void PerformRaycast(float duration)
     {
+        //EN CAS DE QUE S'ESTIGA ROTANT
+        if (isRotating)
+        {
+            detectedHit = null;
+            UpdateHit(false);
+            //Simplemente se pone todo a false/null i s'ix
+            return;
+
+        }
+
         Vector3 direction = customDirection.normalized;
         Vector3 startPosition = transform.position;
         bool hit = Physics.Raycast(startPosition, direction, out RaycastHit info, rayDistance, targetLayer);
@@ -66,7 +78,21 @@ public class ImmuneRaycast : MonoBehaviour
     private void UpdateHit(bool hit)
     {
         lastHitState = hit;
-//        Debug.Log($"[ImmuneRaycast] UpdateHit → hit = {hit}");
+        //        Debug.Log($"[ImmuneRaycast] UpdateHit → hit = {hit}");
         OnHitStateChanged?.Invoke(hit);
+    }
+    
+    void OnEnable() {
+        Rotation.OnRotationStateChanged += HandleRotationChanged;
+    }
+    void OnDisable() {
+        Rotation.OnRotationStateChanged -= HandleRotationChanged;
+    }
+    private void HandleRotationChanged(bool rotatingAction) {
+        isRotating = rotatingAction;              // ← actualizamos la bandera
+            // if (isRotating)
+            //     Debug.Log("Rotación ON → Raycast desactivado.");
+            // else
+            //     Debug.Log("Rotación OFF → Raycast activado.");
     }
 }

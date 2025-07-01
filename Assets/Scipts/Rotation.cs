@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -40,6 +41,8 @@ public class Rotation : MonoBehaviour
     public static event System.Action<int> OnCaseChanged;
 
     private TurnManager turnManager;
+
+    public static event Action<bool> OnRotationStateChanged;
 
 
 
@@ -152,88 +155,6 @@ public class Rotation : MonoBehaviour
         }
     }
 
-    // private void RelocatingUnitConstraints( LayerRenderChanger changer, RaycastDebugger selectedDebugger,  FolowingUnit selectedFollower)
-    // {
-    //     Debug.Log($"[Rotation] RelocatingUnitConstraints started with debugger '{selectedDebugger?.gameObject.name ?? "None"}' and follower '{selectedFollower?.gameObject.name ?? "None"}'");
-
-    //     // 2. DESACTIVAR EL VIEJO Y ACTIVAR EL NUEVO
-    //     // ——— Debugger ———
-    //     if (previousDebuggers.TryGetValue(changer, out var prevDbg) && prevDbg != null)
-    //         prevDbg.enabled = false;
-    //     if (selectedDebugger != null)
-    //         selectedDebugger.enabled = true;
-    //     previousDebuggers[changer] = selectedDebugger;
-
-    //     if (previousFollowers.TryGetValue(changer, out var prevFol) && prevFol != null)
-    //         prevFol.enabled = false;
-    //     if (selectedFollower != null)
-    //         selectedFollower.enabled = true;
-    //     previousFollowers[changer] = selectedFollower;
-
-    //     if (selectedFollower != null)
-    //     {
-    //         FolowingUnit[] allFollowers = FindObjectsOfType<FolowingUnit>();
-    //         foreach (var follower in allFollowers)
-    //         {
-    //             if (follower == selectedFollower || follower.transform.root != selectedFollower.transform.root)
-    //                 continue;
-
-    //             PositionConstraint constraint = follower.GetComponentInParent<PositionConstraint>();
-    //             if (constraint != null)
-    //             {
-    //                 //Debug.Log($"[Rotation] Updating PositionConstraint for follower '{follower.gameObject.name}'");
-
-    //                 Vector3 worldPos = follower.transform.position;
-    //                 //int oldCount = constraint.sourceCount;
-    //                 for (int i = constraint.sourceCount - 1; i >= 0; i--)
-    //                     constraint.RemoveSource(i);
-    //                /// Debug.Log($"[Rotation] Cleared {oldCount} sources for follower '{follower.gameObject.name}'");
-
-    //                 ConstraintSource newSource = new ConstraintSource
-    //                 {
-    //                     sourceTransform = selectedFollower.transform,
-    //                     weight = 1f
-    //                 };
-    //                 constraint.AddSource(newSource);
-    //                 constraint.translationOffset = worldPos - selectedFollower.transform.position;
-    //                 constraint.constraintActive = true;
-    //                //Debug.Log($"[Rotation] Added new source '{selectedFollower.gameObject.name}' to constraint on '{follower.gameObject.name}' with offset {constraint.translationOffset}");
-    //             }
-    //             else
-    //             {
-    //                 Debug.LogWarning($"[Rotation] No PositionConstraint found on '{follower.gameObject.name}'");
-    //             }
-    //         }
-    //     }
-    //     else
-    //     {
-    //         Debug.LogWarning("[Rotation] No selectedFollower provided to update constraints.");
-    //     }
-    // }
-
-    IEnumerator ApplyConstraintThenRotate(List<FolowingUnit> downFollowers)
-    {
-        //Debug.Log("[Rotation] Waiting for next FixedUpdate to apply constraints.");
-        // Esperar al siguiente paso de física para asegurar colisión
-        yield return new WaitForFixedUpdate();
-
-        // Esperamos fixed update y actualizamos cada follower
-        foreach (var follower in downFollowers)
-        {
-            yield return new WaitForFixedUpdate();
-            follower.UpdateFollowerPosition();
-            //Debug.Log($"[Rotation] Updated follower position for '{follower.gameObject.name}'");
-
-        }
-
-        // Señalamos que ya se aplicaron las constraints
-        // Arrancar rotación
-        // targetRotation = transform.eulerAngles.y + rotationAngle;
-        // gridManager.ResetNodes();
-        // yield return StartCoroutine(RotateSmoothly());
-    }
-
-
     private void GatherAllFollowers()
     {
 
@@ -263,6 +184,7 @@ public class Rotation : MonoBehaviour
     private IEnumerator RotateSmoothly()
     {
         isRotating = true;
+        OnRotationStateChanged?.Invoke(true);
         // if (layerRenderChanger != null)
         //     layerRenderChanger.SuspendCollisions();
         // Suspender colisiones en todos los LayerRenderChanger
@@ -305,6 +227,7 @@ public class Rotation : MonoBehaviour
 
         }
         isRotating = false;
+        OnRotationStateChanged?.Invoke(false);
     }
 
 
