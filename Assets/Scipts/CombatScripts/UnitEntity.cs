@@ -10,7 +10,13 @@ public class UnitEntity : MonoBehaviour
 
     public delegate void NotifyDamage(int damage);
     public event NotifyDamage OnHitEvent;
-    public HitPoints hitpoints;
+    // public HitPoints hitpoints;
+
+    public UnitType unitType;
+    public int currentHealth { get; private set; }
+    public int currentMovement { get; private set; }
+    public string attackType { get; private set; }
+
 
     public int maxActions = 2;
     public int currentActions;
@@ -23,8 +29,14 @@ public class UnitEntity : MonoBehaviour
 
     protected virtual void Start()
     {
-        hitpoints = Instantiate(hitpoints);
-        hitpoints.hitPoints = hitpoints.initialHitPoints;
+        // hitpoints = Instantiate(hitpoints);
+        // hitpoints.hitPoints = hitpoints.initialHitPoints;
+
+        currentHealth   = unitType.initialHitPoints;
+        // Movimiento
+        currentMovement = unitType.movement;
+        // Tipo de ataque ("melee" o "range")
+        attackType      = unitType.attackType.ToLower();
         ResetActions();
 
         //var root = selectedUnit.parent;
@@ -43,28 +55,33 @@ public class UnitEntity : MonoBehaviour
     }
 
 
-    public bool IsAlive => hitpoints.hitPoints > 0;
+    public bool IsAlive => currentHealth > 0;
 
     public bool HasActionsRemaining => currentActions > 0;
 
 
     public void TakeDamage(int damage)
     {
-        if (!enabled)
-            return;
-        if (invulnerable)
+        if (!enabled || invulnerable)
             return;
 
-        hitpoints.hitPoints -= damage;
-        if (hitpoints.hitPoints <= 0)
+        // hitpoints.hitPoints -= damage;
+        // if (hitpoints.hitPoints <= 0)
+        // {
+        //     hitpoints.hitPoints = 0;
+        //     Die();
+        // }
+        
+        currentHealth -= damage;
+        if (currentHealth <= 0)
         {
-            hitpoints.hitPoints = 0;
+            currentHealth = 0;
             Die();
         }
         else
         {
             foreach (var anim in animators)
-               anim.SetTrigger("Hit");
+                anim.SetTrigger("Hit");
             OnHitEvent?.Invoke(damage);
         }
     }
@@ -107,5 +124,5 @@ public class UnitEntity : MonoBehaviour
     }
 
     
-    public int CurrentHealth => hitpoints.hitPoints;
+    public int CurrentHealth => currentHealth;
 }

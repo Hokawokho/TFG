@@ -4473,6 +4473,10 @@ PrefabInstance:
       value: 0.08469457
       objectReference: {fileID: 0}
     - target: {fileID: 5840727540774775758, guid: c6870b55f89238b499f1664aff4e5a50, type: 3}
+      propertyPath: unitType
+      value: 
+      objectReference: {fileID: 11400000, guid: a5d58eceba83aa34faba5909ccf7f4f6, type: 2}
+    - target: {fileID: 5840727540774775758, guid: c6870b55f89238b499f1664aff4e5a50, type: 3}
       propertyPath: hitpoints
       value: 
       objectReference: {fileID: 11400000, guid: 009458be91ee91a4e9b2a42df8bb07a6, type: 2}
@@ -16298,6 +16302,10 @@ PrefabInstance:
       propertyPath: layerRenderGround
       value: Render_Ground
       objectReference: {fileID: 0}
+    - target: {fileID: 3663536315543305964, guid: 3d72aa8fb6ea5d24fbd3611f7d39a678, type: 3}
+      propertyPath: unitType
+      value: 
+      objectReference: {fileID: 11400000, guid: 2ee4376e6bda61a4ba72e83408c2d548, type: 2}
     - target: {fileID: 5488348302129435467, guid: 3d72aa8fb6ea5d24fbd3611f7d39a678, type: 3}
       propertyPath: m_SortingLayer
       value: 1
@@ -28396,6 +28404,10 @@ PrefabInstance:
       propertyPath: layerRenderGround
       value: Render_Ground
       objectReference: {fileID: 0}
+    - target: {fileID: 3663536315543305964, guid: 3d72aa8fb6ea5d24fbd3611f7d39a678, type: 3}
+      propertyPath: unitType
+      value: 
+      objectReference: {fileID: 11400000, guid: 2ee4376e6bda61a4ba72e83408c2d548, type: 2}
     - target: {fileID: 5488348302129435467, guid: 3d72aa8fb6ea5d24fbd3611f7d39a678, type: 3}
       propertyPath: m_SortingLayer
       value: 1
@@ -30790,6 +30802,10 @@ PrefabInstance:
       propertyPath: m_LocalRotation.z
       value: 0.08238724
       objectReference: {fileID: 0}
+    - target: {fileID: 5840727540774775758, guid: c6870b55f89238b499f1664aff4e5a50, type: 3}
+      propertyPath: unitType
+      value: 
+      objectReference: {fileID: 11400000, guid: a5d58eceba83aa34faba5909ccf7f4f6, type: 2}
     - target: {fileID: 5840727540774775758, guid: c6870b55f89238b499f1664aff4e5a50, type: 3}
       propertyPath: hitpoints
       value: 
@@ -33395,6 +33411,10 @@ PrefabInstance:
       propertyPath: layerRenderGround
       value: Render_Ground
       objectReference: {fileID: 0}
+    - target: {fileID: 3663536315543305964, guid: 3d72aa8fb6ea5d24fbd3611f7d39a678, type: 3}
+      propertyPath: unitType
+      value: 
+      objectReference: {fileID: 11400000, guid: 2ee4376e6bda61a4ba72e83408c2d548, type: 2}
     - target: {fileID: 5488348302129435467, guid: 3d72aa8fb6ea5d24fbd3611f7d39a678, type: 3}
       propertyPath: m_SortingLayer
       value: 1
@@ -33913,6 +33933,10 @@ PrefabInstance:
       propertyPath: m_LocalRotation.z
       value: 0.080156654
       objectReference: {fileID: 0}
+    - target: {fileID: 5840727540774775758, guid: c6870b55f89238b499f1664aff4e5a50, type: 3}
+      propertyPath: unitType
+      value: 
+      objectReference: {fileID: 11400000, guid: ea5124d3d3c0d5b48b512803ed1cf248, type: 2}
     - target: {fileID: 5840727540774775758, guid: c6870b55f89238b499f1664aff4e5a50, type: 3}
       propertyPath: hitpoints
       value: 

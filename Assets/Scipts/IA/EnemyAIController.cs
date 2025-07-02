@@ -140,7 +140,16 @@ public class EnemyAIController : MonoBehaviour
     private float EvaluateScenario(UnitEntity target, int pathCost)
     {
 
-        float healtScore = 100 - target.hitpoints.hitPoints;
+        // float healtScore = 100 - target.hitpoints.hitPoints;
+        float healtScore = 100 - target.currentHealth;
+
+// ALTRA FORMA DE EVALUAR ESCENARI, TINGUENT EN COMPTE LA VIDA RESTANT EN COMPARACIÓ A LA MÀXIMA-+-+-++-+-+-+-+
+        // cuánto daño le falta al objetivo
+        //float missingHP = target.unitType.initialHitPoints - target.currentHealth;
+        // opción: normalizarlo a un porcentaje si quieres que el peso sea comparable a distancia
+        // float missingPct = missingHP / target.unitType.initialHitPoints * 100f;
+
+
         float distancePenalty = pathCost * 5;
         return healtScore - distancePenalty;
     }

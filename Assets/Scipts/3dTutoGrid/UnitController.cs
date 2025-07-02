@@ -29,6 +29,7 @@ public class UnitController : MonoBehaviour
     public KeyCode keyToCloseAttack = KeyCode.A;
     public KeyCode keyToRangeAttack = KeyCode.D;
     public KeyCode keyToConfirmAttack = KeyCode.E;
+    public KeyCode keyToResetMovement = KeyCode.R;
 
     private ObjectShooter shooter;
 
@@ -52,7 +53,7 @@ public class UnitController : MonoBehaviour
 
     private Rotation rotation;
 
-    // public KeyCode keyToResetMovement;
+    
 
     // Start is called before the first frame update
     void Awake()
@@ -74,10 +75,19 @@ public class UnitController : MonoBehaviour
 
         // foreach (var data in unitMovementList)
         // {
-
-        //     Debug.Log("Movimiento de Unidades reseteado");
-        //     data.ResetMovement();
+        //     var entity = data.unitData.GetComponent<UnitEntity>();
+        //     if (entity != null)
+        //     {
+        //         data.remainingTiles = entity.currentMovement;
+        //     }
         // }
+
+        foreach (var data in unitMovementList)
+        {
+
+            Debug.Log("Movimiento de Unidades reseteado");
+            data.ResetMovement();
+        }
 
 
     }
@@ -122,13 +132,13 @@ public class UnitController : MonoBehaviour
 
 
         //RESETEAR MOVEMENT -> F
-        // if (Input.GetKeyDown(keyToResetMovement))
-        // {
-        //     foreach (var data in unitMovementList)
-        //     {
-        //         data.ResetMovement();
-        //     }
-        // }
+        if (Input.GetKeyDown(keyToResetMovement))
+        {
+            foreach (var data in unitMovementList)
+            {
+                data.ResetMovement();
+            }
+        }
     }
 
     private void HandleMouseKeys()
@@ -256,10 +266,7 @@ public class UnitController : MonoBehaviour
 
     private void HandleHotKeys()
     {
-        if (!unitSelected) return;
-        if (tileBlockedOnSelect)
-            return;
-
+        if (!unitSelected || tileBlockedOnSelect) return;
 
         CanvasGroup canvas = selectedUnit.GetComponentInChildren<CanvasGroup>();
 
@@ -268,13 +275,23 @@ public class UnitController : MonoBehaviour
         //ChangingShaderTopTiles.ClearAllHighlights();
 
         // Resalta las 4 adyacentes
+
+        //DESDE ACÍ ES FICA EN TYPE SI LA UNITAT ES DE RANGO O MELEE
+        var selEntity = selectedUnit.GetComponent<UnitEntity>();
+        string type = selEntity.attackType;
+
         if (Input.GetKeyDown(keyToCloseAttack))
         {
+
+            if (type != "melee")
+            {
+                Debug.Log("Esta unidad no puede atacar cuerpo a cuerpo");
+                return;
+            }
             if (currentAttackMode == AttackMode.Melee)
                 ExitAttackMode();
             else
             {
-                var selEntity = selectedUnit.GetComponent<UnitEntity>();
                 if (selEntity != null && !selEntity.HasActionsRemaining)
                 {
                     Debug.Log("No tienes acciones para cuerpo a cuerpo");
@@ -288,14 +305,20 @@ public class UnitController : MonoBehaviour
 
         if (Input.GetKeyDown(keyToRangeAttack))
         {
+
+            if (type != "range")
+            {
+                Debug.Log("Esta unidad no puede atacar a distancia");
+                return;
+            }
+
             if (currentAttackMode == AttackMode.Range)
                 ExitAttackMode();
             else
             {
-                var selEntity = selectedUnit.GetComponent<UnitEntity>();
                 if (selEntity != null && !selEntity.HasActionsRemaining)
                 {
-                    Debug.Log("No tienes acciones para cuerpo a cuerpo");
+                    Debug.Log("No tienes acciones para atacar a distancia");
                     return;
                 }
                 EnterAttackMode(AttackMode.Range);

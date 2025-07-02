@@ -123,11 +123,11 @@ public class TurnManager : MonoBehaviour
     private void Update()
     {
         
-        if (Input.GetKeyDown(keyToResetMovement))
-        {
-            Debug.Log("Reseteando movimiento");
-            ResetAll();
-        }
+        // if (Input.GetKeyDown(keyToResetMovement))
+        // {
+        //     Debug.Log("Reseteando movimiento");
+        //     ResetAll();
+        // }
 
 
         //Botón Finalizar Turno
