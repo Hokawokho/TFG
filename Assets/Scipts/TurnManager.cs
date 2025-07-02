@@ -16,9 +16,9 @@ public class TurnManager : MonoBehaviour
 
     private UnitController unitController;
 
-    public KeyCode keyToResetMovement = KeyCode.R;
-
     public KeyCode keyToEndTurn = KeyCode.F;
+
+    public KeyCode keyToResetAll = KeyCode.Q;
 
     private List<UnitMovementData> unitMovemenList;
 
@@ -72,7 +72,7 @@ public class TurnManager : MonoBehaviour
         foreach (var data in unitMovemenList)
         {
 
-            Debug.Log("Movimiento de Unidades reseteado");
+//            Debug.Log("Movimiento de Unidades reseteado");
             data.ResetMovement();
         }
 
@@ -123,11 +123,11 @@ public class TurnManager : MonoBehaviour
     private void Update()
     {
         
-        // if (Input.GetKeyDown(keyToResetMovement))
-        // {
-        //     Debug.Log("Reseteando movimiento");
-        //     ResetAll();
-        // }
+        if (Input.GetKeyDown(keyToResetAll))
+        {
+            Debug.Log("Reseteando TODO");
+            ResetAll();
+        }
 
 
         //Botón Finalizar Turno

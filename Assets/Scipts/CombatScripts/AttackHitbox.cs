@@ -32,7 +32,7 @@ public class AttackHitbox : MonoBehaviour
             if (hit != null)
             {
                 hit.TakeDamage(damage);
-                 Debug.Log($"Has golpeado a {hit.name}. Vida restante: {hit.CurrentHealth}");
+                Debug.Log($"Has golpeado a {hit.name}. Vida restante: {hit.CurrentHealth}");
             }
             Die();
         }
