@@ -10,19 +10,26 @@ using Image = UnityEngine.UI.Image;
 public class UnitSelector : MonoBehaviour
 {
 
-    public List <UnitType> unitsSelected;
+    private readonly List<UnitType> unitsSelected = new List<UnitType>(3);
 
     [SerializeField] private List<Image> spritesSelected;
+
+    [SerializeField] private UnitType meleeUnitType;   // arrastra meleeUnit.asset
+    [SerializeField] private UnitType rangeUnitType;
     private int currentIndex = 0;
 
     // Start is called before the first frame update
     void Start()
     {
+        unitsSelected.Clear();
+        currentIndex = 0;
+
         foreach (var img in spritesSelected)
         {
             img.enabled = false;
             img.sprite = null;
         }
+
     }
 
     // Update is called once per frame
@@ -31,21 +38,19 @@ public class UnitSelector : MonoBehaviour
 
     }
 
-    public void selectMeleeUnit()
+    public void selectMeleeUnit(GameObject buttonGO)
     {
-        AddUnitImage(senderButton: UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject, 
-                     scale: new Vector3(3.59124f, 3.59124f, 3.59124f));
+        AddUnit(senderButton: buttonGO, size: new Vector2(19f, 27f), meleeUnitType);
 
     }
 
-    public void selectRangeUnit()
+    public void selectRangeUnit(GameObject buttonGO)
     {
-        AddUnitImage(senderButton: UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject, 
-                     scale: new Vector3(3.591713f, 3.591713f, 3.591713f));
+        AddUnit(senderButton: buttonGO, size: new Vector2(19f, 21f), rangeUnitType);
 
     }
 
-    private void AddUnitImage(GameObject senderButton, Vector3 scale)
+    private void AddUnit(GameObject senderButton, Vector3 size, UnitType unitType)
     {
         if (currentIndex >= spritesSelected.Count) return;
 
@@ -55,7 +60,15 @@ public class UnitSelector : MonoBehaviour
         Image targetImage = spritesSelected[currentIndex];
         targetImage.sprite = sourceImage.sprite;
         targetImage.enabled = true;
-        targetImage.transform.localScale = scale;
+
+        RectTransform rt = targetImage.rectTransform;
+        rt.sizeDelta = size;
+
+
+        if (unitsSelected.Count > currentIndex)     // AÇÒ PAL FUTUR SOBREESCRIURE UNA UNITAT ANTERIOR PER UNA NOVA
+            unitsSelected[currentIndex] = unitType;
+        else                                        // slot nuevo
+            unitsSelected.Add(unitType);
 
         currentIndex++;
     }
@@ -66,9 +79,10 @@ public class UnitSelector : MonoBehaviour
         // unitsSelected.Add();
     }
 
-    void discardUnits()
+    public void discardUnits()
     {
         currentIndex = 0;
+        unitsSelected.Clear();
 
         foreach (var img in spritesSelected)
         {
@@ -91,6 +105,20 @@ public class UnitSelector : MonoBehaviour
 
         //PONER ESTO EN EL TURNMANAGER COMO UN NUEVO ESTADO
     }
+    
+    public void PrintSelectedUnits()
+{
+    Debug.Log("=== Unidades seleccionadas ===");
+
+    for (int i = 0; i < unitsSelected.Count; i++)
+    {
+        UnitType unit = unitsSelected[i];
+        if (unit != null)
+            Debug.Log($"Posición {i}: {unit.name}");
+        else
+            Debug.Log($"Posición {i}: (vacía)");
+    }
+}
 
 
 }

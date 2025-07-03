@@ -11,6 +11,11 @@ public class PauseMenu : MonoBehaviour
 
     private AudioManager audioManager;
 
+    [SerializeField] private Animator pauseAnims;
+    [SerializeField] private GameObject combatUI;
+    private CanvasGroup combatCanvas;  
+
+
 
     void Awake()
     {
@@ -19,6 +24,10 @@ public class PauseMenu : MonoBehaviour
         GameIsPaused = false;
         if (pauseMenuUI != null)
             pauseMenuUI.SetActive(false);
+
+        if (combatUI != null)
+            combatCanvas = combatUI.GetComponent<CanvasGroup>();
+        
         
     }
     // Update is called once per frame
@@ -40,6 +49,8 @@ public class PauseMenu : MonoBehaviour
     public void Resume()
     {
         pauseMenuUI.SetActive(false);
+        combatCanvas.alpha = 1f;
+
         Time.timeScale = 1f;
         GameIsPaused = false;
         if (audioManager != null)
@@ -50,6 +61,7 @@ public class PauseMenu : MonoBehaviour
     void Pause()
     {
         pauseMenuUI.SetActive(true);
+        combatCanvas.alpha = 0f;
         Time.timeScale = 0f;
         GameIsPaused = true;
         if (audioManager != null)
@@ -58,20 +70,45 @@ public class PauseMenu : MonoBehaviour
 
     }
 
-    public void RestartLevel()
+    public void OpenRestartOptins()
     {
         Debug.Log("Restarting Level");
-        
+
         //Meter nivel actual
-        string mapa = SceneManager.GetActiveScene().name;
+        // string mapa = SceneManager.GetActiveScene().name;
+        //SceneManager.LoadScene(mapa, LoadSceneMode.Single);
+        pauseAnims.SetBool("restarting", true);
 
     // Opción B: si tienes una escena persistente “bootstrap” y NO es la que quieres recargar,
-    // guarda en una variable el nombre o índice del mapa cuando lo cargas por primera vez.
-    // Por ejemplo: GameManager.CurrentMapName = "Mapa Real1";
+        // guarda en una variable el nombre o índice del mapa cuando lo cargas por primera vez.
+        // Por ejemplo: GameManager.CurrentMapName = "Mapa Real1";
 
-    SceneManager.LoadScene(mapa, LoadSceneMode.Single);
+
         //Resume();
 
+    }
+
+    public void RestartWithUnits()
+    {
+        
+
+    }
+
+    public void RestartWithoutUnits()
+    {
+        
+
+    }
+
+    
+
+    public void GoBack()
+    {
+        Debug.Log("Going Back to Main Menu");
+        // Hide options UI, show main menu UI
+        // if (optionsMenuUI != null) optionsMenuUI.SetActive(false);
+        // if (mainMenuUI != null) mainMenuUI.SetActive(true);
+        pauseAnims.SetBool("restarting", false);
     }
 
     public void QuitLevel()

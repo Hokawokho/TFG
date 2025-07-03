@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 public class TurnManager : MonoBehaviour
 {
 
-    public enum GameState { START, PLAYERTURN, ENEMYTURN, WIN, LOST }
+    public enum GameState { SELECTUNITS, START, PLAYERTURN, ENEMYTURN, WIN, LOST }
 
     public GameState State;
 

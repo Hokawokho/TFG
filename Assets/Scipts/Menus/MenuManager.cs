@@ -24,11 +24,7 @@ public class MenuManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            // if (optionsMenuUI != null && optionsMenuUI.activeSelf)
-            //     GoBack();
-        }
+
     }
 
     public void SelectLevel()
