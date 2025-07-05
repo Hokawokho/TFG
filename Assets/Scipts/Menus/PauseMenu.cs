@@ -5,17 +5,12 @@ using UnityEngine.SceneManagement;
 
 public class PauseMenu : MonoBehaviour
 {
-
     public static bool GameIsPaused = false;
     public GameObject pauseMenuUI;
-
     private AudioManager audioManager;
-
     [SerializeField] private Animator pauseAnims;
     [SerializeField] private GameObject combatUI;
     private CanvasGroup combatCanvas;  
-
-
 
     void Awake()
     {
@@ -37,12 +32,10 @@ public class PauseMenu : MonoBehaviour
         {
             if (GameIsPaused)
                 Resume();
-
             else
             {
                 Pause();
             }
-
         }
     }
 
@@ -90,13 +83,26 @@ public class PauseMenu : MonoBehaviour
 
     public void RestartWithUnits()
     {
-        
+        // Obtener selección actual
+        var selector = FindObjectOfType<UnitSelector>();
+        if (selector != null)
+        {
+            RestartData.cachedPlayerTypes = new List<UnitType>(selector.unitsSelected);
+        }
+        else
+        {
+            Debug.LogWarning("UnitSelector no encontrado. Se reiniciará sin mantener unidades.");
+            RestartData.Clear();
+        }
+
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
 
     }
 
     public void RestartWithoutUnits()
     {
-        
+        RestartData.Clear();  // ← sin mantener selección previa
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
 
     }
 

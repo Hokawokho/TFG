@@ -10,7 +10,7 @@ using Image = UnityEngine.UI.Image;
 public class UnitSelector : MonoBehaviour
 {
 
-    private readonly List<UnitType> unitsSelected = new List<UnitType>(3);
+    public readonly List<UnitType> unitsSelected = new List<UnitType>(3);
 
     [SerializeField] private List<Image> spritesSelected;
 
@@ -104,6 +104,11 @@ public class UnitSelector : MonoBehaviour
         // SceneManager.LoadScene(0, LoadSceneMode.Single);
 
         //PONER ESTO EN EL TURNMANAGER COMO UN NUEVO ESTADO
+
+        var tm = FindObjectOfType<TurnManager>();
+        if (tm != null)
+            tm.OnUnitsSelectionConfirmed(unitsSelected);
+        
     }
     
     public void PrintSelectedUnits()

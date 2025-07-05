@@ -4422,6 +4422,18 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 862727988425473580, guid: e5f722c5dba60044db3af38ce3604cb2, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 862727988425473580, guid: e5f722c5dba60044db3af38ce3604cb2, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 862727988425473580, guid: e5f722c5dba60044db3af38ce3604cb2, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 2160124665396259376, guid: e5f722c5dba60044db3af38ce3604cb2, type: 3}
       propertyPath: m_Enabled
       value: 1
@@ -8122,6 +8134,8 @@ MonoBehaviour:
   remainingRotations: 0
   totalPlayerTurns: 10
   remainingPlayerTurns: 0
+  selectUnitsCanvas: {fileID: 1340559262}
+  audioManager: {fileID: 0}
 --- !u!114 &498269262
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21373,7 +21387,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1340559261
 RectTransform:
   m_ObjectHideFlags: 0
@@ -21407,7 +21421,7 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1340559257}
   m_Enabled: 1
-  m_Alpha: 1
+  m_Alpha: 0
   m_Interactable: 1
   m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
@@ -32671,7 +32685,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1680381853}
         m_TargetAssemblyTypeName: UnitSelector, Assembly-CSharp
-        m_MethodName: PrintSelectedUnits
+        m_MethodName: startGame
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

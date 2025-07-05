@@ -48,6 +48,19 @@ public class UnitEntity : MonoBehaviour
 
     }
 
+    public void ApplyUnitType(UnitType newType)
+    {
+        unitType = newType;
+
+        currentHealth = newType.initialHitPoints;
+        currentMovement = newType.movement;
+        attackType = newType.attackType.ToLower();
+
+        // Si quieres resetear acciones al cambiar de tipo
+        ResetActions();
+    }
+
+
     public void Wake()
     {
         enabled = true;

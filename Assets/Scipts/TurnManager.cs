@@ -35,6 +35,11 @@ public class TurnManager : MonoBehaviour
 
     public int totalPlayerTurns = 10;
     public int remainingPlayerTurns;
+
+    [SerializeField] private CanvasGroup selectUnitsCanvas;
+    private readonly List<GameObject> previouslyActiveCGs = new();
+
+    [SerializeField] private AudioManager audioManager;
     
     
 
@@ -42,6 +47,8 @@ public class TurnManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        audioManager  = FindObjectOfType<AudioManager>();   // NUEVO
+        audioManager?.gameMusic.Stop(); 
 
         remainingPlayerTurns = totalPlayerTurns;
 
@@ -55,15 +62,115 @@ public class TurnManager : MonoBehaviour
 
         RegisterExistingUnits();
 
-        ResetAll();
-        // Registro de unidades ya colocadas en escena
+        if (RestartData.HasSavedSelection)
+        {
+            Debug.Log("Reiniciando con selección de unidades previa");
+            ApplyPlayerUnitSelection(RestartData.cachedPlayerTypes);
+            RestartData.Clear();  // se borra después de usarlo
+
+            if (audioManager != null)
+            {
+                audioManager.gameMusic.time = 0f;
+                audioManager.gameMusic.Play();
+            }
+
+            StartCoroutine(SetupGame());  // ← va directo a START
+        }
+        else
+        {
+            State = GameState.SELECTUNITS;
+            ActivateSelectUnitsUI();
+        }
+
+        // ResetAll();
+        // // Registro de unidades ya colocadas en escena
 
 
-        //TODO: RETOCAR  PARA EN START de 'SetupGame()' HACER ALGO MÁS-+-+-+-+
-        StartCoroutine(SetupGame());
+        // //TODO: RETOCAR  PARA EN START de 'SetupGame()' HACER ALGO MÁS-+-+-+-+
+        // StartCoroutine(SetupGame());
 
 
     }
+
+    private void ActivateSelectUnitsUI()
+    {
+        previouslyActiveCGs.Clear();
+        // Desactivar cualquier CanvasGroup que no sea el de selección
+        foreach (var cg in FindObjectsOfType<CanvasGroup>())
+
+            if (cg == selectUnitsCanvas)
+            {
+                cg.gameObject.SetActive(true);
+                cg.blocksRaycasts = true;
+                
+                cg.alpha = 1f;
+            }
+
+            else
+            {
+                if (cg.gameObject.activeSelf)
+                    previouslyActiveCGs.Add(cg.gameObject);   // lo recordamos
+
+                cg.gameObject.SetActive(false);               // lo ocultamos
+            }
+    }
+
+    private void ApplyPlayerUnitSelection(IReadOnlyList<UnitType> types)
+    {
+        // 0) Protección
+        if (types == null || types.Count == 0)
+        {
+            Debug.LogError("No hay unidades seleccionadas; abortando");
+            return;
+        }
+
+        /* 1) Si el jugador eligió menos de las que hay en escena
+              destruimos las sobrantes y limpiamos las listas */
+        for (int i = playerUnits.Count - 1; i >= types.Count; i--)
+        {
+            var extra = playerUnits[i];
+            playerUnits.RemoveAt(i);
+            unitMovemenList.RemoveAll(d => d.unitData == extra.gameObject);
+            Destroy(extra.gameObject);
+        }
+
+        /* 2) Re-asignar cada UnitEntity */
+        for (int i = 0; i < types.Count && i < playerUnits.Count; i++)
+        {
+            var entity = playerUnits[i];
+            var newType = types[i];
+
+            entity.ApplyUnitType(newType);   // ← una línea
+        }
+
+        /* 3) Asegurar mismo orden en TurnManager y colocación */
+        // (ya estamos usando el mismo índice de playerUnits y 'types')
+    }
+
+
+
+    public void OnUnitsSelectionConfirmed(List<UnitType> types)
+    {
+        ApplyPlayerUnitSelection(types);
+        // 1) Ocultar el canvas de selección
+        if (selectUnitsCanvas != null)
+            selectUnitsCanvas.gameObject.SetActive(false);
+        
+        foreach (var go in previouslyActiveCGs)
+        if (go != null) go.SetActive(true);
+
+    // 3) Arrancar la música de juego
+        if (audioManager != null)
+        {
+            audioManager.gameMusic.time = 0f;   // opcional: empieza desde el principio
+            audioManager.gameMusic.Play();
+        }
+
+        // 2) Arrancar el flujo normal del juego
+        StartCoroutine(SetupGame());   // ← esto pondrá State = START internamente
+    }
+
+
 
 
     void ResetAll()
