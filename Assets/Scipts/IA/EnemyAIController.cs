@@ -70,7 +70,10 @@ public class EnemyAIController : MonoBehaviour
 
         foreach (var pos in validTiles)
         {
-            if (!gridManager.GetNode(pos).walkable) continue;
+            // if (!gridManager.GetNode(pos).walkable) continue;
+            var node = gridManager.GetNode(pos);
+            if (node == null || !node.walkable)
+                continue;
 
             int pathCost = unitController.CalculatePathCost(selfPos, pos);
             if (pathCost == 0 || pathCost > 99)
@@ -89,6 +92,12 @@ public class EnemyAIController : MonoBehaviour
         }
 
         var unitData = unitController.GetUnitData(gameObject);
+        if (unitData == null)
+        {
+            Debug.LogWarning($"IA: no encontré UnitMovementData para {gameObject.name}");
+            yield break;
+        }
+
 
         // 4. Mover a la mejor casilla
         if (bestScenario.scenarioValue > -100000)
@@ -104,11 +113,11 @@ public class EnemyAIController : MonoBehaviour
                 yield return ShootAt(bestTarget);
             }
             else
-        {
-            Debug.Log($" No hay posiciones desde las que atacar. Me acerco al objetivo...");
-            yield return ApproachTargetTile(bestScenario.targetTile, selfPos, unitData.remainingTiles);
+            {
+                Debug.Log($" No hay posiciones desde las que atacar. Me acerco al objetivo...");
+                yield return ApproachTargetTile(bestScenario.targetTile, selfPos, unitData.remainingTiles);
 
-        }
+            }
         }
 
         

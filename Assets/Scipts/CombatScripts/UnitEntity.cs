@@ -72,6 +72,18 @@ public class UnitEntity : MonoBehaviour
 
     public bool HasActionsRemaining => currentActions > 0;
 
+    public bool TryHeal(int amount)
+    {
+        int maxHP = unitType.initialHitPoints;
+        if (currentHealth >= maxHP)
+            return false;
+        // ya está al máximo
+
+        currentHealth = Mathf.Min(currentHealth + amount, maxHP);
+        return true;
+    }
+
+
 
     public void TakeDamage(int damage)
     {
@@ -84,7 +96,7 @@ public class UnitEntity : MonoBehaviour
         //     hitpoints.hitPoints = 0;
         //     Die();
         // }
-        
+
         currentHealth -= damage;
         if (currentHealth <= 0)
         {

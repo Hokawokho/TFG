@@ -140,36 +140,53 @@ public class GridManager : MonoBehaviour
         return blockedNodes;
     }
 
+    // private void CreateGrid()
+    // {
+    //     // for (int x = 0; x < gridSize.x; x++)
+    //     // {
+    //     //     for (int y = 0; y < gridSize.y; y++)
+
+    //     //ESTE ES EL CORRECTE
+    //     for (int x = -gridSize.x; x < gridSize.x; x++)
+    //     {
+    //         for (int y = -gridSize.y; y < gridSize.y; y++)
+    //         {
+
+    //             Vector2Int cords = new Vector2Int(x, y);
+    //             Node node = new Node(cords, true);
+    //             grid.Add(cords, node);
+
+    //             //AÇÒ DE BAIX MANTINDREU COMENTAT
+
+    //             //  GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+    //             //  Vector3 position = new Vector3(cords.x * unityGridSize, 0f, cords.y * unityGridSize);
+    //             //  cube.transform.position = position;
+    //             //  cube.transform.SetParent(transform);
+
+
+    //         }
+    //     }
+    // }
     private void CreateGrid()
     {
-        // for (int x = 0; x < gridSize.x; x++)
-        // {
-        //     for (int y = 0; y < gridSize.y; y++)
-        for (int x = -gridSize.x; x < gridSize.x; x++)
+        grid.Clear();
+        // Busca todos los Tiles y usa sus coords reales
+        foreach (var tile in FindObjectsOfType<Tile>())
         {
-            for (int y = -gridSize.y; y < gridSize.y; y++)
-            {
-
-                Vector2Int cords = new Vector2Int(x, y);
-                Node node = new Node(cords, true);
-                grid.Add(cords, node);
-
-                //  GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                //  Vector3 position = new Vector3(cords.x * unityGridSize, 0f, cords.y * unityGridSize);
-                //  cube.transform.position = position;
-                //  cube.transform.SetParent(transform);
-
-
-            }
+            Vector2Int c = tile.cords;
+            grid[c] = new Node(c, !tile.IsBlockedInCase(1));
         }
     }
 
+
     //AÇO ES PER A BLOQUEJAR FRONTERES+++++++++++++++++++
-    public void BlockConnection(Vector2Int from, Vector2Int to) {
-    if (grid.ContainsKey(from) && grid.ContainsKey(to)) {
-        Vector2Int direction = to - from;
-        grid[from].blockedConnections.Add(direction);
-        grid[to].blockedConnections.Add(-direction);
+    public void BlockConnection(Vector2Int from, Vector2Int to)
+    {
+        if (grid.ContainsKey(from) && grid.ContainsKey(to))
+        {
+            Vector2Int direction = to - from;
+            grid[from].blockedConnections.Add(direction);
+            grid[to].blockedConnections.Add(-direction);
         }
     }
 

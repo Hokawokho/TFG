@@ -121,6 +121,8 @@ public class PauseMenu : MonoBehaviour
     {
         Debug.Log("Exit Level");
         //Meter nivel inicial
+        Time.timeScale = 1f;
+        GameIsPaused = false;
         SceneManager.LoadScene(0, LoadSceneMode.Single);
 
     }

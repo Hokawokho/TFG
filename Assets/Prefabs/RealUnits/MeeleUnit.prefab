@@ -360,7 +360,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   renderChanger: {fileID: 0}
-  LayerRenderGround: Render_Ground
+  layerRenderGround: 
+  visualLayerMask: Ground
 --- !u!65 &5218562613605003520
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -645,6 +646,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72cfa73ae2db9114db6552aa0c75b083, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _rotationCase: 1
 --- !u!114 &5840727540774775758
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -657,8 +659,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cce7e3ae1ed16c24ba025f2734ec181b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hitpoints: {fileID: 11400000, guid: 009458be91ee91a4e9b2a42df8bb07a6, type: 2}
-  maxActions: 4
+  unitType: {fileID: 0}
+  maxActions: 1
   currentActions: 0
   invulnerable: 0
 --- !u!114 &7240604396647159711
@@ -899,7 +901,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   renderChanger: {fileID: 0}
-  LayerRenderGround: Render_Ground
+  layerRenderGround: 
+  visualLayerMask: Ground
 --- !u!65 &3073017542719606131
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1041,7 +1044,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   renderChanger: {fileID: 0}
-  LayerRenderGround: Render_Ground
+  layerRenderGround: 
+  visualLayerMask: Ground
 --- !u!65 &4253374317145192150
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1445,7 +1449,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   renderChanger: {fileID: 0}
-  LayerRenderGround: Render_Ground
+  layerRenderGround: 
+  visualLayerMask: Ground
 --- !u!65 &876000524825665082
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1600,7 +1605,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6093544394538449689}
-  m_LocalRotation: {x: -0.26264122, y: 0.368366, z: 0.10930923, w: 0.88508624}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1.8518517, y: 1.8518517, z: 1.8518517}
   m_ConstrainProportionsScale: 0
@@ -2034,7 +2039,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   renderChanger: {fileID: 0}
-  LayerRenderGround: Render_Ground
+  layerRenderGround: 
+  visualLayerMask: Ground
 --- !u!1 &6603571216370513954
 GameObject:
   m_ObjectHideFlags: 0
@@ -2382,7 +2388,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   renderChanger: {fileID: 0}
-  LayerRenderGround: Render_Ground
+  layerRenderGround: 
+  visualLayerMask: Ground
 --- !u!65 &2159669038566353775
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2685,21 +2692,27 @@ MonoBehaviour:
   - layerName: Render_H3
     spriteRenderer: {fileID: 3743792915531991215}
     isTouching: 0
+    visualTouching: 0
   - layerName: Render_H1'5
     spriteRenderer: {fileID: 4686829313812347112}
     isTouching: 0
+    visualTouching: 0
   - layerName: Render_H1
     spriteRenderer: {fileID: 2655553538762175560}
     isTouching: 0
+    visualTouching: 0
   - layerName: Render_H0
     spriteRenderer: {fileID: 658187020518113560}
     isTouching: 0
+    visualTouching: 0
   - layerName: Render_H-1
     spriteRenderer: {fileID: 6520952336190011842}
     isTouching: 0
+    visualTouching: 0
   - layerName: Render_H-2
     spriteRenderer: {fileID: 254458139894896187}
     isTouching: 0
+    visualTouching: 0
   invMesh: {fileID: 61747337362617967}
   unitEntity: {fileID: 5840727540774775758}
 --- !u!54 &582288676236867924

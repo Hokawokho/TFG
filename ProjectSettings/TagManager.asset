@@ -46,3 +46,6 @@ TagManager:
   - name: SpriteLayer
     uniqueID: 328145913
     locked: 0
+  - name: CanvasUnit
+    uniqueID: 3078045499
+    locked: 0

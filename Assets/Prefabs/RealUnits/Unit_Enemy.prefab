@@ -317,7 +317,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   renderChanger: {fileID: 7503153612528989869}
-  LayerRenderGround: Render_Ground
+  layerRenderGround: 
+  visualLayerMask: Ground
 --- !u!65 &2940494913187258903
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -750,7 +751,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   renderChanger: {fileID: 7503153612528989869}
-  LayerRenderGround: Render_Ground
+  layerRenderGround: 
+  visualLayerMask: Ground
 --- !u!65 &1403842531906420310
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1397,7 +1399,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   renderChanger: {fileID: 7503153612528989869}
-  LayerRenderGround: Render_Ground
+  layerRenderGround: 
+  visualLayerMask: Ground
 --- !u!65 &5111929799701929799
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1673,7 +1676,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   renderChanger: {fileID: 7503153612528989869}
-  LayerRenderGround: Render_Ground
+  layerRenderGround: 
+  visualLayerMask: Ground
 --- !u!65 &494291611108412232
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2074,7 +2078,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   renderChanger: {fileID: 7503153612528989869}
-  LayerRenderGround: Render_Ground
+  layerRenderGround: 
+  visualLayerMask: Ground
 --- !u!65 &571722456313262543
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2253,6 +2258,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72cfa73ae2db9114db6552aa0c75b083, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _rotationCase: 1
 --- !u!114 &3663536315543305964
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2265,7 +2271,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cce7e3ae1ed16c24ba025f2734ec181b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hitpoints: {fileID: 11400000, guid: 009458be91ee91a4e9b2a42df8bb07a6, type: 2}
+  unitType: {fileID: 0}
   maxActions: 2
   currentActions: 0
   invulnerable: 0
@@ -2651,21 +2657,27 @@ MonoBehaviour:
   - layerName: Render_H3
     spriteRenderer: {fileID: 831415934017688527}
     isTouching: 0
+    visualTouching: 0
   - layerName: Render_H1'5
     spriteRenderer: {fileID: 1775488699722827972}
     isTouching: 0
+    visualTouching: 0
   - layerName: Render_H1
     spriteRenderer: {fileID: 5488348302129435467}
     isTouching: 0
+    visualTouching: 0
   - layerName: Render_H0
     spriteRenderer: {fileID: 7124737378441844964}
     isTouching: 0
+    visualTouching: 0
   - layerName: Render_H-1
     spriteRenderer: {fileID: 7424257991768026626}
     isTouching: 0
+    visualTouching: 0
   - layerName: Render_H-2
     spriteRenderer: {fileID: 6512797788036367572}
     isTouching: 0
+    visualTouching: 0
   invMesh: {fileID: 1254773473796552616}
   unitEntity: {fileID: 3663536315543305964}
 --- !u!54 &6768689020149805773
@@ -2815,7 +2827,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   renderChanger: {fileID: 7503153612528989869}
-  LayerRenderGround: Render_Ground
+  layerRenderGround: 
+  visualLayerMask: Ground
 --- !u!65 &2712985405049013222
 BoxCollider:
   m_ObjectHideFlags: 0

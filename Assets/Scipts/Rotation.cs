@@ -174,12 +174,12 @@ public class Rotation : MonoBehaviour
     }
 
 
-    private void OnGUI()
-    {
-        GUI.Label(new Rect(10, 10, 150, 30), transform.eulerAngles.ToString());
-        GUI.Label(new Rect(10, 40, 150, 30), isRotating.ToString());
+    // private void OnGUI()
+    // {
+    //     GUI.Label(new Rect(10, 10, 150, 30), transform.eulerAngles.ToString());
+    //     GUI.Label(new Rect(10, 40, 150, 30), isRotating.ToString());
 
-    }
+    // }
 
     private IEnumerator RotateSmoothly()
     {

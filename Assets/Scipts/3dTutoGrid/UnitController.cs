@@ -26,10 +26,13 @@ public class UnitController : MonoBehaviour
     [SerializeField] public List<UnitMovementData> unitMovementList = new List<UnitMovementData>();
 
     //Teclas de ataque    
-    public KeyCode keyToCloseAttack = KeyCode.A;
+    public KeyCode keyToAttack = KeyCode.A;
     public KeyCode keyToRangeAttack = KeyCode.D;
-    public KeyCode keyToConfirmAttack = KeyCode.E;
+    // public KeyCode keyToConfirmAttack = KeyCode.E;
     public KeyCode keyToResetMovement = KeyCode.R;
+    public KeyCode keyToImproveMovement;   
+    public KeyCode keyToHealUnit;  
+
 
     private ObjectShooter shooter;
 
@@ -47,11 +50,13 @@ public class UnitController : MonoBehaviour
 
     private Animator[] selectedAnimators;
 
-    private AudioManager audioManager;
+    [SerializeField]private AudioManager audioManager;
 
     private bool tileBlockedOnSelect;
 
     private Rotation rotation;
+
+    private UIController selectionUI;
 
     
 
@@ -137,8 +142,13 @@ public class UnitController : MonoBehaviour
             foreach (var data in unitMovementList)
             {
                 data.ResetMovement();
+                var entity = data.unitData.GetComponent<UnitEntity>();
+                if (entity != null)
+                    entity.ResetActions();
             }
         }
+
+        
     }
 
     private void HandleMouseKeys()
@@ -280,71 +290,130 @@ public class UnitController : MonoBehaviour
         var selEntity = selectedUnit.GetComponent<UnitEntity>();
         string type = selEntity.attackType;
 
-        if (Input.GetKeyDown(keyToCloseAttack))
+        if (Input.GetKeyDown(keyToImproveMovement))
         {
-
-            if (type != "melee")
+            if (currentAttackMode != AttackMode.None) return;
+            // ¿Tiene acciones?
+            if (!selEntity.HasActionsRemaining)
             {
-                Debug.Log("Esta unidad no puede atacar cuerpo a cuerpo");
-                return;
+                Debug.Log("No tienes acciones para mejorar movimiento");
             }
-            if (currentAttackMode == AttackMode.Melee)
-                ExitAttackMode();
             else
             {
-                if (selEntity != null && !selEntity.HasActionsRemaining)
-                {
-                    Debug.Log("No tienes acciones para cuerpo a cuerpo");
-                    return;
-                }
-                EnterAttackMode(AttackMode.Melee);
-                if (canvas != null)
-                    canvas.alpha = 0f;
+
+                var moveData = GetUnitData(selectedUnit.gameObject);
+                if (moveData == null) return;
+
+                int baseMove = selEntity.unitType.movement;
+                moveData.remainingTiles += baseMove;
+
+                selEntity.UseAction();
+                RefreshUI();
+
+                // 5) (Opcional) actualizamos el highlight de movimiento
+                ChangingShaderTopTiles.ClearAllHighlights();
+                Vector2Int unitCoords = gridManager.GetCoordinatesFromPosition(selectedUnit.position);
+                ChangingShaderTopTiles.HighlightCostTiles(unitCoords, gridManager, moveData.remainingTiles);
+
+                Debug.Log($"Movimiento aumentado en {baseMove}. Te quedan {moveData.remainingTiles} casillas.");
             }
         }
 
-        if (Input.GetKeyDown(keyToRangeAttack))
+        if (Input.GetKeyDown(keyToHealUnit))
         {
-
-            if (type != "range")
+            if (currentAttackMode != AttackMode.None) return;
+            
+            // ¿Tiene acciones?
+            if (!selEntity.HasActionsRemaining)
             {
-                Debug.Log("Esta unidad no puede atacar a distancia");
+                Debug.Log("No tienes acciones para curar");
+            }
+            else
+            {
+                // 2) Intentamos curar 1 punto
+                bool didHeal = selEntity.TryHeal(1);
+                if (!didHeal)
+                {
+                    Debug.Log("La unidad seleccionada tiene toda la vida");
+                }
+                else
+                {
+                    // 3) Consumimos acción
+                    selEntity.UseAction();
+                    RefreshUI();
+
+                    if (healthBar != null)
+                        healthBar.SetUnit(selEntity);
+
+                    Debug.Log($"Unidad curada +1. Vida actual: {selEntity.CurrentHealth}");
+                }
+            }
+        }
+
+
+        if (Input.GetKeyDown(keyToAttack))
+        {
+            // 1) Validaciones básicas
+            if (!selEntity.HasActionsRemaining)
+            {
+                Debug.Log("No tienes acciones para atacar");
                 return;
             }
 
-            if (currentAttackMode == AttackMode.Range)
-                ExitAttackMode();
+            // 2) Leemos el tipo de ataque de la unidad
+            if (type == "melee")
+            {
+                // Si ya estamos en Melee, salimos
+                if (currentAttackMode == AttackMode.Melee)
+                {
+                    ExitAttackMode();
+                }
+                else
+                {
+                    EnterAttackMode(AttackMode.Melee);
+                    // if (canvas != null) canvas.alpha = 0f;
+                }
+            }
+            else if (type == "range")
+            {
+                // Si ya estamos en Range, salimos
+                if (currentAttackMode == AttackMode.Range)
+                {
+                    ExitAttackMode();
+                }
+                else
+                {
+                    EnterAttackMode(AttackMode.Range);
+                    // if (canvas != null) canvas.alpha = 0f;
+                }
+            }
             else
             {
-                if (selEntity != null && !selEntity.HasActionsRemaining)
-                {
-                    Debug.Log("No tienes acciones para atacar a distancia");
-                    return;
-                }
-                EnterAttackMode(AttackMode.Range);
-                if (canvas != null)
-                    canvas.alpha = 0f;
+                Debug.Log("Esta unidad no puede atacar");
             }
         }
+    
 
-        if (currentAttackMode == AttackMode.Range && Input.GetKeyDown(keyToConfirmAttack))
-        {
+        // if (currentAttackMode == AttackMode.Range && Input.GetKeyDown(keyToConfirmAttack))
+            // {
 
-            ConfirmAttack();
-        }
+            //     ConfirmAttack();
+            // }
 
-        if (currentAttackMode == AttackMode.Melee && Input.GetKeyDown(keyToConfirmAttack))
-        {
+            // if (currentAttackMode == AttackMode.Melee && Input.GetKeyDown(keyToConfirmAttack))
+            // {
 
 
-            ConfirmAttack();
-        }
+            //     ConfirmAttack();
+            // }
 
     }
+        
 
 
     private void EnterAttackMode(AttackMode mode)
     {
+        selectionUI.SetAllZero();
         //ExitAttackMode();
         ChangingShaderTopTiles.ClearAllHighlights();
         currentAttackMode = mode;
@@ -385,11 +454,11 @@ public class UnitController : MonoBehaviour
             PlayMeleeAudioEvent();
 
         if (selectedAnimators == null || selectedAnimators.Length == 0)
-            {
-                Debug.LogWarning($"No se encontraron animators para la unidad «{selectedUnit?.name}»");
-                // Si prefieres, puedes salir aquí:
-                return;
-            }
+        {
+            Debug.LogWarning($"No se encontraron animators para la unidad «{selectedUnit?.name}»");
+            // Si prefieres, puedes salir aquí:
+            return;
+        }
 
         bool fired = shooter.TryShoot();
         if (!fired)
@@ -397,8 +466,9 @@ public class UnitController : MonoBehaviour
         else
         {
             bool isEnemy = selectedUnit.GetComponent<Player>() == null;
-             var entity = selectedUnit.GetComponent<UnitEntity>();
+            var entity = selectedUnit.GetComponent<UnitEntity>();
             entity.UseAction();
+            RefreshUI();
             foreach (var anim in selectedAnimators)
             {
                 if (currentAttackMode == AttackMode.Melee || isEnemy)
@@ -417,6 +487,7 @@ public class UnitController : MonoBehaviour
     //Per a tornar a mostrar el movimient i no el rango de ataque+++
     private void ExitAttackMode()
     {
+        selectionUI.SetAllOne();
 
         currentAttackMode = AttackMode.None;
         ChangingShaderTopTiles.ClearAllHighlights();
@@ -485,6 +556,12 @@ public class UnitController : MonoBehaviour
 
         selectedUnit = unit;
         unitSelected = true;
+
+        // 1) capturo el UIController que vive en el canvas de esta unidad (inactivo ok)
+        selectionUI = selectedUnit.GetComponentInChildren<UIController>(true);
+        // 2) y refresco al arrancar
+        RefreshUI();
+
         var root = selectedUnit.parent;
         selectedAnimators = root.GetComponentsInChildren<Animator>();
 
@@ -534,6 +611,26 @@ public class UnitController : MonoBehaviour
 
 
     }
+
+    private void RefreshUI()
+    {
+        if (selectionUI == null || selectedUnit == null) return;
+
+        var entity = selectedUnit.GetComponent<UnitEntity>();
+        bool hasActions = entity.HasActionsRemaining;
+        bool canRotate = turnManager.remainingRotations > 0;
+
+        //UI  de rotación
+        selectionUI.SetRotationEnabled(canRotate);
+
+        //UI de acciones
+        selectionUI.SetActionsEnabled(hasActions);
+
+        //UI de la acción cura
+        bool canHeal = hasActions && entity.CurrentHealth < entity.unitType.initialHitPoints;
+        selectionUI.SetHealEnabled(canHeal);
+    }
+
 
     public void DeselectCurrentUnit()
     {
@@ -605,7 +702,7 @@ public class UnitController : MonoBehaviour
         path.Clear();
         path = pathFinder.GetNewPath(coordinates);
 
-        //Debug.Log($"Nodos en el camino: {path.Count}");
+        Debug.Log($"Nodos en el camino: {path.Count}");
 
 
         if (path.Count > 1)
@@ -637,7 +734,7 @@ public class UnitController : MonoBehaviour
         for (int i = 1; i < path.Count; i++)
         // int i = 0 seria la unidad en su posición actual
         {
-            //Debug.Log($"[UC]  Step {i}/{path.Count - 1}: {path[i - 1].cords} → {path[i].cords}");
+            Debug.Log($"[UC]  Step {i}/{path.Count - 1}: {path[i - 1].cords} → {path[i].cords}");
 
 
             Vector3 startPosition = selectedUnit.position;
