@@ -71,8 +71,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 328145913
+  m_SortingLayer: 1
   m_SortingOrder: 0
   m_Sprite: {fileID: -4031649041515450744, guid: 7c034256b50a83746bced0f4dbb8c24d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -317,7 +317,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   renderChanger: {fileID: 7503153612528989869}
-  layerRenderGround: 
+  layerRenderGround: Render_Ground
   visualLayerMask: Ground
 --- !u!65 &2940494913187258903
 BoxCollider:
@@ -596,8 +596,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 328145913
+  m_SortingLayer: 1
   m_SortingOrder: 0
   m_Sprite: {fileID: -4031649041515450744, guid: 7c034256b50a83746bced0f4dbb8c24d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -751,7 +751,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   renderChanger: {fileID: 7503153612528989869}
-  layerRenderGround: 
+  layerRenderGround: Render_Ground
   visualLayerMask: Ground
 --- !u!65 &1403842531906420310
 BoxCollider:
@@ -919,8 +919,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 328145913
+  m_SortingLayer: 1
   m_SortingOrder: 0
   m_Sprite: {fileID: -4031649041515450744, guid: 7c034256b50a83746bced0f4dbb8c24d, type: 3}
   m_Color: {r: 1, g: 0.59335345, b: 0.35686278, a: 0.7294118}
@@ -1244,8 +1244,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 328145913
+  m_SortingLayer: 1
   m_SortingOrder: 0
   m_Sprite: {fileID: -4031649041515450744, guid: 7c034256b50a83746bced0f4dbb8c24d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -1399,7 +1399,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   renderChanger: {fileID: 7503153612528989869}
-  layerRenderGround: 
+  layerRenderGround: Render_Ground
   visualLayerMask: Ground
 --- !u!65 &5111929799701929799
 BoxCollider:
@@ -1676,7 +1676,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   renderChanger: {fileID: 7503153612528989869}
-  layerRenderGround: 
+  layerRenderGround: Render_Ground
   visualLayerMask: Ground
 --- !u!65 &494291611108412232
 BoxCollider:
@@ -1770,8 +1770,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 328145913
+  m_SortingLayer: 1
   m_SortingOrder: 0
   m_Sprite: {fileID: -4031649041515450744, guid: 7c034256b50a83746bced0f4dbb8c24d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -1923,8 +1923,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 328145913
+  m_SortingLayer: 1
   m_SortingOrder: 0
   m_Sprite: {fileID: -4031649041515450744, guid: 7c034256b50a83746bced0f4dbb8c24d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -2078,7 +2078,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   renderChanger: {fileID: 7503153612528989869}
-  layerRenderGround: 
+  layerRenderGround: Render_Ground
   visualLayerMask: Ground
 --- !u!65 &571722456313262543
 BoxCollider:
@@ -2271,7 +2271,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cce7e3ae1ed16c24ba025f2734ec181b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unitType: {fileID: 0}
+  unitType: {fileID: 11400000, guid: 2ee4376e6bda61a4ba72e83408c2d548, type: 2}
   maxActions: 2
   currentActions: 0
   invulnerable: 0
@@ -2443,8 +2443,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 328145913
+  m_SortingLayer: 1
   m_SortingOrder: 0
   m_Sprite: {fileID: -4031649041515450744, guid: 7c034256b50a83746bced0f4dbb8c24d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -2827,7 +2827,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   renderChanger: {fileID: 7503153612528989869}
-  layerRenderGround: 
+  layerRenderGround: Render_Ground
   visualLayerMask: Ground
 --- !u!65 &2712985405049013222
 BoxCollider:

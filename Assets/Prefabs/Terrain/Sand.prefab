@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8487318510115106414}
   - component: {fileID: 7762205511871005527}
   - component: {fileID: 4416897428443152470}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Sand
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -105,8 +105,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 1.2, y: 0.2, z: 1.2}
+  m_Center: {x: 0, y: 0.4, z: 0}
 --- !u!1001 &3864185769558688479
 PrefabInstance:
   m_ObjectHideFlags: 0
