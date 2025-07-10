@@ -90,6 +90,15 @@ public class Rotation : MonoBehaviour
         FolowingUnit.OnFollowerPositionUpdated -= HandleFollowerUpdated;
     }
 
+    public void RemoveLayerRenderChanger(LayerRenderChanger changer)
+    {
+        if (layerRenderChangers.Remove(changer))
+        {
+            // Decrement expected updates to avoid waiting on this dead unit
+            updatesExpected = Mathf.Max(0, updatesExpected - 1);
+        }
+    }
+
 
 
     void Update()
@@ -115,30 +124,13 @@ public class Rotation : MonoBehaviour
             unitController.DeselectCurrentUnit();
             // updatesDone = 0;
             // updatesExpected = layerRenderChangers.Count;
-
-
-
-            // Antes de empezar la rotación limpia la lista:
-            layerRenderChangers = layerRenderChangers
-                .Where(c => c != null && c.gameObject.activeInHierarchy)
-                .ToList();
+                            
 
             foreach (var changer in layerRenderChangers)
             {
                 //Debug.Log($"[Rotation] Processing LayerRenderChanger on '{changer.gameObject.name}'");
-
-                //DE ACÍ 
-
                 changer.SetUpScripts_and_RaycastTop();
 
-
-                //FINS ACÍ+-+-+--+-+-
-
-
-                foreach (var unit in downFollowers)
-                {
-
-                }
             }
             // if (cont >= layerRenderChangers.Count)
             // {

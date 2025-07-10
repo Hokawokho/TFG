@@ -32,11 +32,11 @@ public class UnitEntity : MonoBehaviour
         // hitpoints = Instantiate(hitpoints);
         // hitpoints.hitPoints = hitpoints.initialHitPoints;
 
-        currentHealth   = unitType.initialHitPoints;
+        currentHealth = unitType.initialHitPoints;
         // Movimiento
         currentMovement = unitType.movement;
         // Tipo de ataque ("melee" o "range")
-        attackType      = unitType.attackType.ToLower();
+        attackType = unitType.attackType.ToLower();
         ResetActions();
 
         //var root = selectedUnit.parent;
@@ -45,6 +45,7 @@ public class UnitEntity : MonoBehaviour
 
         audioManager = FindObjectOfType<AudioManager>();
         OnDieEvent += PlayDeathAudio;
+        OnDieEvent += NotifyLayerRenderChanger;
 
     }
 
@@ -175,6 +176,20 @@ public class UnitEntity : MonoBehaviour
         {
             Debug.LogWarning("AudioManager o unitDeathAudio no asignado.");
         }
+    }
+    private void NotifyLayerRenderChanger()
+    {
+        // Locate the LayerRenderChanger on our parent
+        var parentTransform = transform.parent;
+        if (parentTransform == null) return;
+
+        var changer = parentTransform.GetComponent<LayerRenderChanger>();
+        if (changer == null) return;
+
+        // Find the Rotation controller and remove this changer
+        var rotation = FindObjectOfType<Rotation>();
+        if (rotation != null)
+            rotation.RemoveLayerRenderChanger(changer);
     }
 
     
