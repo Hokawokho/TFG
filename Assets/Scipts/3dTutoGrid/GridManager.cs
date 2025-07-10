@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GridManager : MonoBehaviour
 {
@@ -11,16 +12,19 @@ public class GridManager : MonoBehaviour
 
     private BlockingTrigger trigger;
 
-    public int UnityGridSize{
+    public int UnityGridSize
+    {
 
-        get { return unityGridSize; }}
+        get { return unityGridSize; }
+    }
 
-    
+
     Dictionary<Vector2Int, Node> grid = new Dictionary<Vector2Int, Node>();
-              //la clau (la Def) es la posició del Node 
+    //la clau (la Def) es la posició del Node 
     //Açò es una estructura de datos per a guardar parelles de valors clau (Paraula, Def)
-    public Dictionary<Vector2Int, Node> Grid { 
-        get { return grid;}
+    public Dictionary<Vector2Int, Node> Grid
+    {
+        get { return grid; }
     }
 
     private void Awake()
@@ -31,10 +35,41 @@ public class GridManager : MonoBehaviour
 
     }
 
+     private void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    private void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    // Este método se llama justo después de que Unity haya terminado de
+    // instanciar la escena y ejecutar todos los Awake/Start.
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        // 1) Vuelvo a crear el diccionario desde los Tiles de la escena
+        CreateGrid();    // :contentReference[oaicite:1]{index=1}
+
+        // 2) Limpio los flags de pathfinding (explored, path, connectTo…)
+        ResetNodes();
+
+        // 3) Y por si hubiera conexiones bloqueadas “antiguas”
+        foreach (var entry in grid)
+            entry.Value.blockedConnections.Clear();
+
+        // 4) Reasigno el trigger de rotación
+        trigger = FindObjectOfType<BlockingTrigger>();
+    }
+
+
+    
+
     private void Update()
-    {   
-        if(Input.GetKeyDown(KeyCode.Alpha2))
-        ShowBlockNodes();   
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+            ShowBlockNodes();
     }
 
     public Node GetNode(Vector2Int coordinates)
@@ -50,18 +85,20 @@ public class GridManager : MonoBehaviour
         }
     }
 
-    public void BlockNode(Vector2Int coordinates){
+    public void BlockNode(Vector2Int coordinates)
+    {
 
-        if(grid.ContainsKey(coordinates)){
+        if (grid.ContainsKey(coordinates))
+        {
 
             grid[coordinates].walkable = false;
-           // FindObjectOfType<Pathfinding>().GetNewPath();
-            
+            // FindObjectOfType<Pathfinding>().GetNewPath();
+
             //LA ÚLTIMA LINEA RESETEA L'ALGORITME, LLEVAR DESPRÉS.....+++++++++++++++++++
         }
     }
-    
-    
+
+
     public void UnblockNode(Vector2Int coordinates)
     {   //Gaste esta funció pa desbloquejar durant l'execució de la rotació
 
@@ -72,9 +109,11 @@ public class GridManager : MonoBehaviour
     }
 
 
-    public void ResetNodes(){
+    public void ResetNodes()
+    {
 
-        foreach(KeyValuePair<Vector2Int, Node> entry in grid){
+        foreach (KeyValuePair<Vector2Int, Node> entry in grid)
+        {
 
             entry.Value.connectTo = null;
             entry.Value.explored = false;
@@ -82,30 +121,32 @@ public class GridManager : MonoBehaviour
         }
     }
 
-    
 
 
 
-    public Vector2Int GetCoordinatesFromPosition(Vector3 position){
+
+    public Vector2Int GetCoordinatesFromPosition(Vector3 position)
+    {
 
         Vector2Int coordinates = new Vector2Int();
 
         // coordinates.x = Mathf.RoundToInt(position.x / unityGridSize);
         // coordinates.y = Mathf.RoundToInt(position.z / unityGridSize);
-        
-        
-        
+
+
+
         coordinates.x = Mathf.FloorToInt(position.x / unityGridSize);
         coordinates.y = Mathf.FloorToInt(position.z / unityGridSize);
-        
+
         //++REDONDEJAR CAP A BAIX PER ELS NUMS NEGATIUS+++++++++++++
-        
+
 
         return coordinates;
     }
 
 
-    public Vector3 GetPositionFromCoordinates(Vector2Int coordinates){
+    public Vector3 GetPositionFromCoordinates(Vector2Int coordinates)
+    {
 
         Vector3 position = new Vector3();
 
@@ -119,7 +160,8 @@ public class GridManager : MonoBehaviour
 
     //TODO: Llevar açò al final, es sols per vore els nodes Blocked++++++++++++++++++++++
 
-    void ShowBlockNodes(){
+    void ShowBlockNodes()
+    {
 
         Debug.Log("Blocked nodes: " + string.Join(",", BlockedNodeList()));
     }

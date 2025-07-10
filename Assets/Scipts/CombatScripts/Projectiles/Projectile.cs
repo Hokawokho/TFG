@@ -12,21 +12,21 @@ public class Projectile : MonoBehaviour
     public float speed;
     private Rigidbody rb;
 
-    public float maxDistance = 1f; 
+    // public float maxDistance = 1f; 
     private Vector3 startPosition;
 
-    void Start()
+    void Awake()
     {
         rb = GetComponent<Rigidbody>();
     }
 
-    // void OnEnable()
-    // {
-    //     // 1) Cada vez que salga del pool, marcamos su punto de inicio
-    //     startPosition = transform.position;
-    //     // y forzamos la velocidad de salida
-    //     rb.velocity = direction * speed;
-    // }
+    void OnEnable()
+    {
+        // 1) Cada vez que salga del pool, marcamos su punto de inicio
+        startPosition = transform.position;
+        // y forzamos la velocidad de salida
+        // rb.velocity = direction * speed;
+    }
 
 
 
@@ -39,13 +39,13 @@ public class Projectile : MonoBehaviour
 
     void Update()
     {
-        startPosition = transform.position;
+        // startPosition = transform.position;
         rb.velocity = direction * speed;
-         float traveled = Vector3.Distance(startPosition, transform.position);
-        if (traveled >= maxDistance)
-        {
-            // Vuélvelo al pool desactivándolo
-            gameObject.SetActive(false);
-        }
+        // float traveled = Vector3.Distance(startPosition, transform.position);
+        // if (traveled >= maxDistance)
+        // {
+        //     // Vuélvelo al pool desactivándolo
+        //     gameObject.SetActive(false);
+        // }
     }
 }

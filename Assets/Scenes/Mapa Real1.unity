@@ -8026,17 +8026,17 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 415233319}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.85109615, y: 0.85109615, z: 0.85109615}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 816562983}
-  m_Father: {fileID: 1031410157}
+  m_Father: {fileID: 1851003954}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -12.71228, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &415233321
@@ -9770,10 +9770,10 @@ MonoBehaviour:
   pools:
   - tag: arrow-proj
     prefab: {fileID: 8201511987823733363, guid: e4fbccac6a97f50439e8680b3cf6e25f, type: 3}
-    size: 1
+    size: 2
   - tag: meleeHitbox
     prefab: {fileID: 6174773705741210466, guid: 285c13f034ff1dd4e956aa948bc2e91a, type: 3}
-    size: 1
+    size: 2
   lookAtTarget: {fileID: 1828106942}
 --- !u!4 &498269260
 Transform:
@@ -15828,7 +15828,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: :10
+  m_text: :1
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: ec9fd8e197a6113458b4904c73ad5a88, type: 2}
   m_sharedMaterial: {fileID: 9108931125387195821, guid: ec9fd8e197a6113458b4904c73ad5a88, type: 2}
@@ -19583,8 +19583,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1403411022}
-  - {fileID: 415233320}
+  - {fileID: 1851003954}
   - {fileID: 1198053157}
   m_Father: {fileID: 2109031643}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -25517,7 +25516,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: :10
+  m_text: :2
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: ec9fd8e197a6113458b4904c73ad5a88, type: 2}
   m_sharedMaterial: {fileID: 9108931125387195821, guid: ec9fd8e197a6113458b4904c73ad5a88, type: 2}
@@ -25768,17 +25767,17 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1403411021}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.107381605, y: 0.107381605, z: 0.107381605}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 1391879873}
-  m_Father: {fileID: 1031410157}
+  m_Father: {fileID: 1851003954}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 13, y: 0}
+  m_AnchoredPosition: {x: 0.28771973, y: 0}
   m_SizeDelta: {x: 1024, y: 1536}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1403411023
@@ -35332,6 +35331,43 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 44762fd7c150cb542839de1cee6241a3, type: 3}
+--- !u!1 &1851003953
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1851003954}
+  m_Layer: 5
+  m_Name: Attack
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1851003954
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1851003953}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1403411022}
+  - {fileID: 415233320}
+  m_Father: {fileID: 1031410157}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 12.712288, y: 0}
+  m_SizeDelta: {x: 110.534195, y: 164.93814}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!4 &1854844785 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6067576008745971585, guid: d04b20a9482fe7c4398c96a27b5066f2, type: 3}
@@ -38891,6 +38927,14 @@ PrefabInstance:
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 4356558718437918795, guid: e24b1e0914994174db14ce5dd2491ce3, type: 3}
+      propertyPath: meleeShotDelay
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4356558718437918795, guid: e24b1e0914994174db14ce5dd2491ce3, type: 3}
+      propertyPath: rangeShotDelay
+      value: 0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 4356558718437918795, guid: e24b1e0914994174db14ce5dd2491ce3, type: 3}
       propertyPath: keyToCloseAttack
       value: 97
       objectReference: {fileID: 0}
@@ -41417,7 +41461,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   meleeAttackGO: {fileID: 1403411021}
-  meleeAttackText: {fileID: 1391879874}
+  rangeAttackGO: {fileID: 415233319}
   movementGO: {fileID: 1198053156}
   movementText: {fileID: 181934965}
   unitProfileGO: {fileID: 1917474823}

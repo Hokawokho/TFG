@@ -33,6 +33,9 @@ public class UnitController : MonoBehaviour
     public KeyCode keyToImproveMovement;   
     public KeyCode keyToHealUnit;  
 
+    [SerializeField] private float meleeShotDelay = 0.1f;
+    [SerializeField] private float rangeShotDelay = 0.5f;
+
 
     private ObjectShooter shooter;
 
@@ -300,22 +303,8 @@ public class UnitController : MonoBehaviour
             }
             else
             {
-
-                var moveData = GetUnitData(selectedUnit.gameObject);
-                if (moveData == null) return;
-
-                int baseMove = selEntity.unitType.movement;
-                moveData.remainingTiles += baseMove;
-
-                selEntity.UseAction();
-                RefreshUI();
-
-                // 5) (Opcional) actualizamos el highlight de movimiento
-                ChangingShaderTopTiles.ClearAllHighlights();
-                Vector2Int unitCoords = gridManager.GetCoordinatesFromPosition(selectedUnit.position);
-                ChangingShaderTopTiles.HighlightCostTiles(unitCoords, gridManager, moveData.remainingTiles);
-
-                Debug.Log($"Movimiento aumentado en {baseMove}. Te quedan {moveData.remainingTiles} casillas.");
+                ImproveMovement(selEntity);
+                
             }
         }
 
@@ -330,23 +319,7 @@ public class UnitController : MonoBehaviour
             }
             else
             {
-                // 2) Intentamos curar 1 punto
-                bool didHeal = selEntity.TryHeal(1);
-                if (!didHeal)
-                {
-                    Debug.Log("La unidad seleccionada tiene toda la vida");
-                }
-                else
-                {
-                    // 3) Consumimos acción
-                    selEntity.UseAction();
-                    RefreshUI();
-
-                    if (healthBar != null)
-                        healthBar.SetUnit(selEntity);
-
-                    Debug.Log($"Unidad curada +1. Vida actual: {selEntity.CurrentHealth}");
-                }
+                HealUnit(selEntity);
             }
         }
 
@@ -408,7 +381,60 @@ public class UnitController : MonoBehaviour
             // }
 
     }
-        
+
+    private void ImproveMovement(UnitEntity selEntity)
+    {
+        var moveData = GetUnitData(selectedUnit.gameObject);
+        // if (moveData == null) return false;
+        if (moveData == null) return;
+        int baseMove = selEntity.unitType.movement;
+        moveData.remainingTiles += baseMove;
+
+        selEntity.UseAction();
+
+        foreach (var anim in selectedAnimators)
+        {
+            anim.SetTrigger("ImproveMovement");
+            Debug.LogWarning("Movimiento mejorado"); 
+        }
+
+        RefreshUI();
+
+        // 5) (Opcional) actualizamos el highlight de movimiento
+        ChangingShaderTopTiles.ClearAllHighlights();
+        Vector2Int unitCoords = gridManager.GetCoordinatesFromPosition(selectedUnit.position);
+        ChangingShaderTopTiles.HighlightCostTiles(unitCoords, gridManager, moveData.remainingTiles);
+
+        Debug.Log($"Movimiento aumentado en {baseMove}. Te quedan {moveData.remainingTiles} casillas.");
+        // return true;
+    }
+
+    private void HealUnit(UnitEntity selEntity)
+    {
+        // 2) Intentamos curar 1 punto
+        bool didHeal = selEntity.TryHeal(1);
+        if (!didHeal)
+        {
+            Debug.Log("La unidad seleccionada tiene toda la vida");
+        }
+        else
+        {
+            foreach (var anim in selectedAnimators)
+        {
+            anim.SetTrigger("Heal");
+            Debug.LogWarning("Unidad curada"); 
+        }
+
+            // 3) Consumimos acción
+            selEntity.UseAction();
+            RefreshUI();
+
+            if (healthBar != null)
+                healthBar.SetUnit(selEntity);
+
+            Debug.Log($"Unidad curada +1. Vida actual: {selEntity.CurrentHealth}");
+        }
+    }
 
 
     private void EnterAttackMode(AttackMode mode)
@@ -460,39 +486,71 @@ public class UnitController : MonoBehaviour
             return;
         }
 
-        bool fired = shooter.TryShoot();
-        if (!fired)
-            Debug.Log("No puede disparar (cooldown o sin acciones)");
-        else
-        {
+        // bool fired = shooter.TryShoot();
+        // if (!fired)
+        //     Debug.Log("No puede disparar (cooldown o sin acciones)");
+        // else
+        // {
             bool isEnemy = selectedUnit.GetComponent<Player>() == null;
             var entity = selectedUnit.GetComponent<UnitEntity>();
+
+            // calculamos el delay según el modo
+            float delay = (currentAttackMode == AttackMode.Melee || isEnemy)
+                ? meleeShotDelay
+                : rangeShotDelay;
+
+
+        // entity.UseAction();
+        // RefreshUI();
+        foreach (var anim in selectedAnimators)
+        {
+            if (currentAttackMode == AttackMode.Melee || isEnemy)
+            {
+                anim.SetTrigger("Attack");
+                Debug.LogWarning("Ataca cuerpo a cuerpo");
+            }
+            else if (currentAttackMode == AttackMode.Range)
+            {
+                anim.SetTrigger("Shoot");
+                Debug.LogWarning("Ataca a distancia");
+            }
+
+        }
+        // arrancamos el disparo diferido
+    StartCoroutine(ShootWithDelay(delay, entity));
+    ExitAttackMode();
+        // }
+    }
+    private IEnumerator ShootWithDelay(float delay, UnitEntity entity)
+    {
+        // espera configurada
+        yield return new WaitForSeconds(delay);
+
+        bool fired = shooter.TryShoot();
+        if (!fired)
+        {
+            Debug.Log("No puede disparar (cooldown o sin acciones)");
+        }
+        else
+        {
+            // consumimos la acción y refrescamos UI sólo si efectivamente disparó
             entity.UseAction();
             RefreshUI();
-            foreach (var anim in selectedAnimators)
-            {
-                if (currentAttackMode == AttackMode.Melee || isEnemy)
-                {
-                    anim.SetTrigger("Attack");
-                    Debug.LogWarning("Ataca cuerpo a cuerpo");
-                }
-                else if (currentAttackMode == AttackMode.Range)
-                    anim.SetTrigger("Shoot");
-            }
-            ExitAttackMode();
         }
     }
+
 
 
     //Per a tornar a mostrar el movimient i no el rango de ataque+++
     private void ExitAttackMode()
     {
         selectionUI.SetAllOne();
+        RefreshUI();
 
         currentAttackMode = AttackMode.None;
         ChangingShaderTopTiles.ClearAllHighlights();
 
-         if (selectedUnit == null || gridManager == null)
+        if (selectedUnit == null || gridManager == null)
             return;
 
 
