@@ -468,9 +468,11 @@ public class TurnManager : MonoBehaviour
                 CheckEndConditions();
                 if (State == GameState.ENEMYTURN)
                 {
-                    OnEnemyTurnStart();
-                    // Reproducir animación
                     turnAnims.Play("StateChangeEnemy_in");
+                    yield return new WaitForSeconds(turnAnims.GetCurrentAnimatorStateInfo(0).length);
+                    OnEnemyTurnStart();
+                    
+                    
                 }
                 break;
 
@@ -478,6 +480,7 @@ public class TurnManager : MonoBehaviour
                 Debug.Log("You Win!");
                 // Reproducir animación
                 turnAnims.Play("Victory");
+                yield return new WaitForSeconds(turnAnims.GetCurrentAnimatorStateInfo(0).length);
                 SceneManager.LoadScene(0, LoadSceneMode.Single);
                 // TODO: Show win screen
                 break;

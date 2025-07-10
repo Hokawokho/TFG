@@ -112,10 +112,39 @@ public class UnitEntity : MonoBehaviour
     }
     public void Die()
     {
+        // Lanza la corrutina que maneja la animación y la desactivación
+        StartCoroutine(DieRoutine());
+    }
+
+    private IEnumerator DieRoutine()
+    {
+        // 1) Disparar animación y evento
         foreach (var anim in animators)
             anim.SetTrigger("Die");
         OnDieEvent?.Invoke();
-        enabled = false;
+
+        // 2) Esperar a que el Animator entre en estado "Die"
+        //    Necesitamos un frame para que el trigger haga efecto
+        yield return null;
+
+        // 3) Calcular la duración real del clip de muerte
+        float longest = 0f;
+        foreach (var anim in animators)
+        {
+            var clips = anim.GetCurrentAnimatorClipInfo(0);
+            if (clips.Length > 0)
+                longest = Mathf.Max(longest, clips[0].clip.length);
+        }
+
+        // 4) Esperar clip + extra 0.2s
+        yield return new WaitForSeconds(longest + 0.2f);
+
+        // 5) Desactivar todo el GO padre (o este si no hay padre)
+        var parentTransform = transform.parent;
+        if (parentTransform != null)
+            parentTransform.gameObject.SetActive(false);
+        else
+            gameObject.SetActive(false);
     }
 
 

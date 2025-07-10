@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.VisualScripting;
 // using UnityEditor.MemoryProfiler;
 using UnityEngine;
@@ -114,6 +115,13 @@ public class Rotation : MonoBehaviour
             unitController.DeselectCurrentUnit();
             // updatesDone = 0;
             // updatesExpected = layerRenderChangers.Count;
+
+
+
+            // Antes de empezar la rotación limpia la lista:
+            layerRenderChangers = layerRenderChangers
+                .Where(c => c != null && c.gameObject.activeInHierarchy)
+                .ToList();
 
             foreach (var changer in layerRenderChangers)
             {

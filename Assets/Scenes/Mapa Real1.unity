@@ -9808,7 +9808,7 @@ MonoBehaviour:
   keyToEndTurn: 102
   keyToResetAll: 113
   turnAnims: {fileID: 110881709}
-  maxRotationsPerTurn: 10
+  maxRotationsPerTurn: 2
   remainingRotations: 0
   totalPlayerTurns: 10
   remainingPlayerTurns: 0
