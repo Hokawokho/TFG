@@ -7,6 +7,7 @@ public class BlockingTrigger : MonoBehaviour
 
     GridManager gridManager;
     public int _rotationCase = 1;
+    private Vector2Int? currentBlocked;
     // Start is called before the first frame update
 
 
@@ -30,6 +31,12 @@ public class BlockingTrigger : MonoBehaviour
 
     void OnDisable()
     {
+        // Si la unidad muere y desactiva este objeto, limpiamos la última casilla
+        if (currentBlocked.HasValue)
+        {
+            gridManager.UnblockNode(currentBlocked.Value);
+            currentBlocked = null;
+        }
         Rotation.OnCaseChanged -= HandleCaseChanged;
     }
 
@@ -42,11 +49,14 @@ public class BlockingTrigger : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if(other.CompareTag("Tile")){
+        if (other.CompareTag("Tile"))
+        {
 
             Tile tile = other.GetComponent<Tile>();
             Vector2Int cords = tile.cords;
             gridManager.BlockNode(cords);
+            
+            currentBlocked = cords;
             
         }
 
@@ -64,6 +74,8 @@ public class BlockingTrigger : MonoBehaviour
             {
                 Debug.Log($"current case es: {_rotationCase}");
                 gridManager.UnblockNode(cords);
+                if (currentBlocked.HasValue && currentBlocked.Value == cords)
+                    currentBlocked = null;
 //                Debug.Log($"Casilla desbloqueada: ({cords.x}, {cords.y})");
             }
         }

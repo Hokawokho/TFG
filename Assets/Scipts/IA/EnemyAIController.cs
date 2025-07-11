@@ -61,6 +61,17 @@ public class EnemyAIController : MonoBehaviour
         Vector2Int selfPos = gridManager.GetCoordinatesFromPosition(transform.position);
         Vector2Int targetPos = gridManager.GetCoordinatesFromPosition(bestTarget.transform.position);
 
+        //AÑADIDO PARA QUE ATAQUE SI ESTA ADYACENTE+-+--+-+-+-+-+----------------+++++++++++++++++++---------------+++++++++
+        int manhattan = Mathf.Abs(selfPos.x - targetPos.x) + Mathf.Abs(selfPos.y - targetPos.y);
+        if (manhattan <= AttackDistance)
+        {
+            yield return ShootAt(bestTarget);
+            yield break;
+        }
+        //AÑADIDO PARA QUE ATAQUE SI ESTA ADYACENTE+-+--+-+-+-+-+----------------+++++++++++++++++++---------------+++++++++FIN
+
+
+
         // 3. Buscar tiles válidas para atacar (línea recta, distancia <= 4)
         List<Vector2Int> validTiles = FindTilesToAttackFrom(targetPos, AttackDistance);
         validTiles.RemoveAll(tile => tile == selfPos);
