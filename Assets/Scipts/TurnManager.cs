@@ -266,13 +266,13 @@ public class TurnManager : MonoBehaviour
         // }
     }
 
-    private void OnGUI()
-    {
-        Rect labelRect = new Rect(10, 70, 200, 30);
-        string text = $"Turno : {State}";
-        GUI.Label(labelRect, text);
+    // private void OnGUI()
+    // {
+    //     Rect labelRect = new Rect(10, 70, 200, 30);
+    //     string text = $"Turno : {State}";
+    //     GUI.Label(labelRect, text);
 
-    }
+    // }
 
 
     private IEnumerator SetupGame()
@@ -473,11 +473,11 @@ public class TurnManager : MonoBehaviour
                 {
                     turnAnims.Play("StateChangeEnemy_in");
                     var stateInfo = turnAnims.GetCurrentAnimatorStateInfo(0);
-                    if (stateInfo.IsName("StateChangeEnemy_in") && stateInfo.length > 0f)
-                    {
-                        Debug.Log("HA ENTRADO EN LA ESPERA");
+                    // if (stateInfo.IsName("StateChangeEnemy_in") && stateInfo.length > 0f)
+                    // {
+                    //     Debug.Log("HA ENTRADO EN LA ESPERA");
                         yield return new WaitForSeconds(stateInfo.length);
-                    }
+                    // }
                     OnEnemyTurnStart();
                     
                     

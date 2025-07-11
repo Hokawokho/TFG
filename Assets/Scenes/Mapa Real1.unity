@@ -33460,8 +33460,12 @@ PrefabInstance:
       value: MainToolset
       objectReference: {fileID: 0}
     - target: {fileID: 2229834446987459847, guid: d002bd073c1048f4b881d6642a53c5ea, type: 3}
+      propertyPath: totalPlayerTurns
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2229834446987459847, guid: d002bd073c1048f4b881d6642a53c5ea, type: 3}
       propertyPath: maxRotationsPerTurn
-      value: 20
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7041121516700563136, guid: d002bd073c1048f4b881d6642a53c5ea, type: 3}
       propertyPath: m_LocalPosition.x
