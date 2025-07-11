@@ -94,15 +94,19 @@ public class PauseMenu : MonoBehaviour
             Debug.LogWarning("UnitSelector no encontrado. Se reiniciará sin mantener unidades.");
             RestartData.Clear();
         }
-
+        if (audioManager != null) audioManager.StopMusic();
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        
 
     }
 
     public void RestartWithoutUnits()
     {
         RestartData.Clear();  // ← sin mantener selección previa
+        if (audioManager != null) audioManager.StopMusic();
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        
+            
 
     }
 
@@ -123,6 +127,7 @@ public class PauseMenu : MonoBehaviour
         //Meter nivel inicial
         Time.timeScale = 1f;
         GameIsPaused = false;
+        if (audioManager != null) audioManager.StopMusic();
         SceneManager.LoadScene(0, LoadSceneMode.Single);
 
     }

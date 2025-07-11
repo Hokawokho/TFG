@@ -281,6 +281,8 @@ public class TurnManager : MonoBehaviour
 
         //Ejecuta la animación
         turnAnims.Play("StartState");
+
+        audioManager.BeginMusic();
         
 
         // TODO: Spawn or position player and enemy units

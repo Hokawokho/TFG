@@ -71,10 +71,27 @@ public class AudioManager : MonoBehaviour
     {
        // gameMusic.volume = musicVolume;
         pauseMusic.volume = 0f;
-        gameMusic.Play();
-        pauseMusic.Play();
+        // gameMusic.Play();
+        // pauseMusic.Play();
     }
 
+    public void BeginMusic()
+    {
+        gameMusic.Play();
+        pauseMusic.Play();
+
+    }
+
+    public void StopMusic()
+    {
+        StopAllCoroutines();
+        gameMusic.Stop();
+        pauseMusic.Stop();
+        // Reset volumes to initial state
+        gameMusic.volume = 1f;
+        pauseMusic.volume = 0f;
+    }
+    
     public void FadeToPauseMusic()
     {
         StopAllCoroutines();
