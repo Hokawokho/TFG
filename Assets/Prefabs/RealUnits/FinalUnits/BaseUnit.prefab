@@ -195,6 +195,7 @@ GameObject:
   - component: {fileID: 4726071061173119613}
   - component: {fileID: 5307564817204733147}
   - component: {fileID: 6555137841310016974}
+  - component: {fileID: 1672126443863421729}
   m_Layer: 0
   m_Name: Mesh
   m_TagString: Untagged
@@ -210,7 +211,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 325050582693602250}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.26446208, y: 0.36838642, z: 0.11015476, w: 0.88443047}
+  m_LocalRotation: {x: -0.25294167, y: 0.31709218, z: 0.08815951, w: 0.9097808}
   m_LocalPosition: {x: 1.9711652, y: -4.3, z: 1.9794215}
   m_LocalScale: {x: 10.35039, y: 10.35039, z: 10.35039}
   m_ConstrainProportionsScale: 1
@@ -290,6 +291,26 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!1183024399 &1672126443863421729
+LookAtConstraint:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 325050582693602250}
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Weight: 1
+  m_RotationAtRest: {x: 0, y: 0, z: 0}
+  m_RotationOffset: {x: 0, y: 0, z: 0}
+  m_Roll: 0
+  m_WorldUpObject: {fileID: 0}
+  m_UseUpObject: 0
+  m_Active: 1
+  m_IsLocked: 0
+  m_Sources:
+  - sourceTransform: {fileID: 0}
+    weight: 1
 --- !u!1 &615458144127268559
 GameObject:
   m_ObjectHideFlags: 0
@@ -637,6 +658,7 @@ GameObject:
   - component: {fileID: 3617563550736881866}
   - component: {fileID: 5402939256323572879}
   - component: {fileID: 6654468948989107967}
+  - component: {fileID: 6399750170029168882}
   m_Layer: 6
   m_Name: Sprite
   m_TagString: Untagged
@@ -652,7 +674,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1479686189086758873}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.26711825, y: 0.3462904, z: 0.103547625, w: 0.89331335}
+  m_LocalRotation: {x: -0.2501761, y: 0.313033, z: 0.08585406, w: 0.91216856}
   m_LocalPosition: {x: 0.87, y: -5.35, z: 1.04}
   m_LocalScale: {x: 10.35039, y: 10.35039, z: 10.35039}
   m_ConstrainProportionsScale: 1
@@ -732,6 +754,26 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!1183024399 &6399750170029168882
+LookAtConstraint:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1479686189086758873}
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Weight: 1
+  m_RotationAtRest: {x: 0, y: 0, z: 0}
+  m_RotationOffset: {x: 0, y: 0, z: -1.22}
+  m_Roll: 0
+  m_WorldUpObject: {fileID: 0}
+  m_UseUpObject: 0
+  m_Active: 1
+  m_IsLocked: 0
+  m_Sources:
+  - sourceTransform: {fileID: 0}
+    weight: 1
 --- !u!1 &2142168389642502516
 GameObject:
   m_ObjectHideFlags: 0
@@ -743,6 +785,7 @@ GameObject:
   - component: {fileID: 6390095033800853699}
   - component: {fileID: 4828456777038984184}
   - component: {fileID: 8492642076065418652}
+  - component: {fileID: 4575098592135020791}
   m_Layer: 0
   m_Name: Mesh
   m_TagString: Untagged
@@ -758,7 +801,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2142168389642502516}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.26446208, y: 0.36838642, z: 0.11015476, w: 0.88443047}
+  m_LocalRotation: {x: -0.25219202, y: 0.31592742, z: 0.08751035, w: 0.9104565}
   m_LocalPosition: {x: 1.9711652, y: -4.3, z: 1.9794215}
   m_LocalScale: {x: 10.35039, y: 10.35039, z: 10.35039}
   m_ConstrainProportionsScale: 1
@@ -838,6 +881,26 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!1183024399 &4575098592135020791
+LookAtConstraint:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2142168389642502516}
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Weight: 1
+  m_RotationAtRest: {x: 0, y: 0, z: 0}
+  m_RotationOffset: {x: 0, y: 0, z: 0}
+  m_Roll: 0
+  m_WorldUpObject: {fileID: 0}
+  m_UseUpObject: 0
+  m_Active: 1
+  m_IsLocked: 0
+  m_Sources:
+  - sourceTransform: {fileID: 0}
+    weight: 1
 --- !u!1 &2211505011994937849
 GameObject:
   m_ObjectHideFlags: 0
@@ -1478,6 +1541,7 @@ GameObject:
   - component: {fileID: 8238797075525357056}
   - component: {fileID: 1179756019143068450}
   - component: {fileID: 3078122974640455691}
+  - component: {fileID: 4916006432310200533}
   m_Layer: 0
   m_Name: Mesh
   m_TagString: Untagged
@@ -1493,7 +1557,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3981948521538455479}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.26446208, y: 0.36838642, z: 0.11015476, w: 0.88443047}
+  m_LocalRotation: {x: -0.25257197, y: 0.31651676, z: 0.08783865, w: 0.9101148}
   m_LocalPosition: {x: 1.9711652, y: -4.3, z: 1.9794215}
   m_LocalScale: {x: 10.35039, y: 10.35039, z: 10.35039}
   m_ConstrainProportionsScale: 1
@@ -1573,6 +1637,26 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!1183024399 &4916006432310200533
+LookAtConstraint:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3981948521538455479}
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Weight: 1
+  m_RotationAtRest: {x: 0, y: 0, z: 0}
+  m_RotationOffset: {x: 0, y: 0, z: 0}
+  m_Roll: 0
+  m_WorldUpObject: {fileID: 0}
+  m_UseUpObject: 0
+  m_Active: 1
+  m_IsLocked: 0
+  m_Sources:
+  - sourceTransform: {fileID: 0}
+    weight: 1
 --- !u!1 &4272505608938115762
 GameObject:
   m_ObjectHideFlags: 0
@@ -2677,6 +2761,7 @@ GameObject:
   - component: {fileID: 2182552214753262638}
   - component: {fileID: 8778880798424414799}
   - component: {fileID: 3672892613156806866}
+  - component: {fileID: 8530172951250539682}
   m_Layer: 0
   m_Name: Mesh
   m_TagString: Untagged
@@ -2692,7 +2777,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6583511636078392729}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.26446208, y: 0.36838642, z: 0.11015476, w: 0.88443047}
+  m_LocalRotation: {x: -0.25098807, y: 0.31406987, z: 0.08647857, w: 0.9115298}
   m_LocalPosition: {x: 1.971165, y: -4.3, z: 1.979421}
   m_LocalScale: {x: 10.35039, y: 10.35039, z: 10.35039}
   m_ConstrainProportionsScale: 1
@@ -2772,6 +2857,26 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!1183024399 &8530172951250539682
+LookAtConstraint:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6583511636078392729}
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Weight: 1
+  m_RotationAtRest: {x: 0, y: 0, z: 0}
+  m_RotationOffset: {x: 0, y: 0, z: 0}
+  m_Roll: 0
+  m_WorldUpObject: {fileID: 0}
+  m_UseUpObject: 0
+  m_Active: 1
+  m_IsLocked: 0
+  m_Sources:
+  - sourceTransform: {fileID: 0}
+    weight: 1
 --- !u!1 &7184978361733861170
 GameObject:
   m_ObjectHideFlags: 0
@@ -3262,6 +3367,7 @@ GameObject:
   - component: {fileID: 3346538947908822597}
   - component: {fileID: 804649191661963784}
   - component: {fileID: 8073528196734461532}
+  - component: {fileID: 7832470045354852718}
   m_Layer: 0
   m_Name: Mesh
   m_TagString: Untagged
@@ -3277,7 +3383,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7738842420961030130}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.26446208, y: 0.36838642, z: 0.11015476, w: 0.88443047}
+  m_LocalRotation: {x: -0.25160262, y: 0.3150159, z: 0.08700355, w: 0.9109838}
   m_LocalPosition: {x: 1.9711652, y: -4.3, z: 1.9794215}
   m_LocalScale: {x: 10.35039, y: 10.35039, z: 10.35039}
   m_ConstrainProportionsScale: 1
@@ -3357,6 +3463,26 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!1183024399 &7832470045354852718
+LookAtConstraint:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7738842420961030130}
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Weight: 1
+  m_RotationAtRest: {x: 0, y: 0, z: 0}
+  m_RotationOffset: {x: 0, y: 0, z: 0}
+  m_Roll: 0
+  m_WorldUpObject: {fileID: 0}
+  m_UseUpObject: 0
+  m_Active: 1
+  m_IsLocked: 0
+  m_Sources:
+  - sourceTransform: {fileID: 0}
+    weight: 1
 --- !u!1 &7765017828075725186
 GameObject:
   m_ObjectHideFlags: 0
@@ -3571,6 +3697,7 @@ GameObject:
   - component: {fileID: 3074481611143271296}
   - component: {fileID: 7996754250590733992}
   - component: {fileID: 4150793014227430035}
+  - component: {fileID: 8306443178555419329}
   m_Layer: 0
   m_Name: Mesh
   m_TagString: Untagged
@@ -3586,7 +3713,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8051996205333092919}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.26446208, y: 0.36838642, z: 0.11015476, w: 0.88443047}
+  m_LocalRotation: {x: -0.25180185, y: 0.3153235, z: 0.08717448, w: 0.910806}
   m_LocalPosition: {x: 1.9711652, y: -4.3, z: 1.9794215}
   m_LocalScale: {x: 10.35039, y: 10.35039, z: 10.35039}
   m_ConstrainProportionsScale: 1
@@ -3666,6 +3793,26 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!1183024399 &8306443178555419329
+LookAtConstraint:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8051996205333092919}
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Weight: 1
+  m_RotationAtRest: {x: 0, y: 0, z: 0}
+  m_RotationOffset: {x: 0, y: 0, z: 0}
+  m_Roll: 0
+  m_WorldUpObject: {fileID: 0}
+  m_UseUpObject: 0
+  m_Active: 1
+  m_IsLocked: 0
+  m_Sources:
+  - sourceTransform: {fileID: 0}
+    weight: 1
 --- !u!1 &8297654909639700076
 GameObject:
   m_ObjectHideFlags: 0

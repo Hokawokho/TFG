@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine.Animations;
 
 //using System.Numerics;
 using TMPro;
@@ -209,6 +210,40 @@ public class UnitController : MonoBehaviour
                     else if (delta.y != 0 && delta.x == 0)
                         dir = delta.y > 0 ? Vector3.forward : Vector3.back;
                     shooter.currentDirection = dir;
+
+
+                    //RETOQUE DE DIRECCIÓN DE LA ANIMACIÓN+-+-++-+-+-+-+-+-+-+-+-+-+-+
+                    // Ajustar LookAtConstraint offset según dirección de disparo
+                    var layerChanger = selectedUnit.parent?.GetComponent<LayerRenderChanger>();
+                    if (layerChanger != null)
+                    {
+                        foreach (var info in layerChanger.renderers)
+                        {
+                            var constraint = info.spriteRenderer.GetComponent<LookAtConstraint>();
+                            if (constraint != null)
+                            {
+                                // right & down → zero; left & up → 180° on Y
+                                if (dir.x > 0 || dir.z < 0)
+                                    constraint.rotationOffset = Vector3.zero;
+                                else if (dir.x < 0 || dir.z > 0)
+                                    constraint.rotationOffset = new Vector3(0, 180, 0);
+                            }
+                        }
+
+                        if (layerChanger.invMesh != null)
+                        {
+                            var invConstraint = layerChanger.invMesh.GetComponent<LookAtConstraint>();
+                            if (invConstraint != null)
+                            {
+                                if (dir.x > 0 || dir.z < 0)
+                                    invConstraint.rotationOffset = new Vector3(0, 0, -2);
+                                else if (dir.x < 0 || dir.z > 0)
+                                    invConstraint.rotationOffset = new Vector3(0, 180, 2);
+                            }
+                        }
+                    }
+                    //RETOQUE DE DIRECCIÓN DE LA ANIMACIÓN+-+-++-+-+-+-+-+-+FIN-+-+-+-+-+
+
                     ConfirmAttack();
                 }
                 else
@@ -785,6 +820,50 @@ public class UnitController : MonoBehaviour
 
         foreach (var anim in selectedAnimators)
             anim.SetBool("isMoving", true);
+
+
+
+        
+        //RETOQUE DE DIRECCIÓN DE LA ANIMACIÓN+-+-++-+-+-+-+-+-+
+        if (path.Count > 1)
+        {
+            var firstDelta = path[1].cords - path[0].cords;
+            var layerChanger = selectedUnit.parent?.GetComponent<LayerRenderChanger>();
+            if (layerChanger != null)
+            {
+                foreach (var layer in layerChanger.renderers)
+                {
+                    var constraint = layer.spriteRenderer.GetComponent<LookAtConstraint>();
+                    if (constraint != null)
+                    {
+                        // Facing right → flip 180° on Y; facing left → reset
+                        if (firstDelta.x > 0 || firstDelta.y < 0)
+                            constraint.rotationOffset = Vector3.zero;
+                        else if (firstDelta.x < 0 || firstDelta.y > 0)
+                            constraint.rotationOffset = new Vector3(0, 180, 0);
+                    }
+                }
+
+                if (layerChanger.invMesh != null)
+                {
+                    var invConstraint = layerChanger.invMesh.GetComponent<LookAtConstraint>();
+                    if (invConstraint != null)
+                    {
+                        if (firstDelta.x > 0 || firstDelta.y < 0)
+                            invConstraint.rotationOffset = new Vector3(0, 0, -2);
+                        else if (firstDelta.x < 0 || firstDelta.y > 0)
+                            invConstraint.rotationOffset = new Vector3(0, 180, 2);
+                    }
+                }
+            }
+        }
+        //RETOQUE DE DIRECCIÓN DE LA ANIMACIÓN+-+-++-+-+-+-+-+-+FIN-+-+-+-+-+
+
+
+
+
+
+
         // Debug.Log($"[UC] FollowPath START  count={path.Count}");
         //IEnumerator es para CORRUTINAS+++++++++++++++++++
         //mes info en notes rapides
@@ -803,6 +882,44 @@ public class UnitController : MonoBehaviour
 
             //Esto es para mantener la altura de la unidad cuando se mueva
             endPosition.y = selectedUnit.position.y + travelPercent;
+
+
+
+
+            //RETOQUE DE DIRECCIÓN DE LA ANIMACIÓN+-+-++-+-+-+-+-+-+-+-+-+-+-+
+            // Adjust LookAtConstraint offset when moving horizontally
+            var delta = path[i].cords - path[i - 1].cords;
+            var layerChanger = selectedUnit.parent?.GetComponent<LayerRenderChanger>();
+            if (layerChanger != null)
+            {
+                foreach (var layer in layerChanger.renderers)
+                {
+                    var constraint = layer.spriteRenderer.GetComponent<LookAtConstraint>();
+                    if (constraint != null)
+                    {
+                        if (delta.x > 0 || delta.y < 0)
+                            constraint.rotationOffset = Vector3.zero;
+                        else if (delta.x < 0 || delta.y > 0)
+                            constraint.rotationOffset = new Vector3(0, 180, 0);
+                    }
+                }
+
+                if (layerChanger.invMesh != null)
+                {
+                    var invConstraint = layerChanger.invMesh.GetComponent<LookAtConstraint>();
+                    if (invConstraint != null)
+                    {
+                        if (delta.x > 0 || delta.y < 0)
+                            invConstraint.rotationOffset = new Vector3(0, 0, -2);
+                        else if (delta.x < 0 || delta.y > 0)
+                            invConstraint.rotationOffset = new Vector3(0, 180, 2);
+                    }
+                }
+            }
+            //RETOQUE DE DIRECCIÓN DE LA ANIMACIÓN+-+-++-+-+-+-+-+-+FIN-+-+-+-+-+
+
+
+
 
             //selectedUnit.LookAt(endPosition);
             //Esta linea es per si foren figures complexes, que miren a la endPosition (es a dir que es giren)

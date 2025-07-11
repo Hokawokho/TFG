@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
+using UnityEngine.Animations;
 using UnityEngine;
 
 public class EnemyAIController : MonoBehaviour
@@ -213,6 +214,39 @@ public class EnemyAIController : MonoBehaviour
             }
 
             shooter.currentDirection = shotDirection.normalized;
+
+            //RETOQUE DE DIRECCIÓN DE LA ANIMACIÓN+-+-++-+-+-+-+-+-+-+-+-+-+-+
+             // Ajustar LookAtConstraint offset según dirección de disparo
+            var layerChanger = GetComponentInParent<LayerRenderChanger>();
+            if (layerChanger != null)
+            {
+                // Para cada renderer de la unidad
+                foreach (var info in layerChanger.renderers)
+                {
+                    var constraint = info.spriteRenderer.GetComponent<LookAtConstraint>();
+                    if (constraint != null)
+                    {
+                        // right & down → zero; left & up → 180° on Y
+                        if (shotDirection.x > 0 || shotDirection.z < 0)
+                            constraint.rotationOffset = Vector3.zero;
+                        else if (shotDirection.x < 0 || shotDirection.z > 0)
+                            constraint.rotationOffset = new Vector3(0, 180, 0);
+                    }
+                }
+                // También ajustar invMesh
+                if (layerChanger.invMesh != null)
+                {
+                    var invConstraint = layerChanger.invMesh.GetComponent<LookAtConstraint>();
+                    if (invConstraint != null)
+                    {
+                        if (shotDirection.x > 0 || shotDirection.z < 0)
+                            invConstraint.rotationOffset = Vector3.zero;
+                        else if (shotDirection.x < 0 || shotDirection.z > 0)
+                            invConstraint.rotationOffset = new Vector3(0, 180, 0);
+                    }
+                }
+            }
+            //RETOQUE DE DIRECCIÓN DE LA ANIMACIÓN+-+-++-+-+-+-+-+-+FIN-+-+-+-+-+
 
             Debug.Log($"{gameObject.name} apunta en dirección {shooter.currentDirection} hacia {target.gameObject.name}");
 

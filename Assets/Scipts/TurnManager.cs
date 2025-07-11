@@ -282,7 +282,8 @@ public class TurnManager : MonoBehaviour
         //Ejecuta la animación
         turnAnims.Play("StartState");
 
-        audioManager.BeginMusic();
+        if(audioManager != null)
+            audioManager.BeginMusic();
         
 
         // TODO: Spawn or position player and enemy units
@@ -452,7 +453,7 @@ public class TurnManager : MonoBehaviour
 
 
         State = newState;
-        yield return new WaitForSeconds(0.3f);
+        // yield return new WaitForSeconds(0.f);
 
         switch (newState)
         {
@@ -471,7 +472,12 @@ public class TurnManager : MonoBehaviour
                 if (State == GameState.ENEMYTURN)
                 {
                     turnAnims.Play("StateChangeEnemy_in");
-                    yield return new WaitForSeconds(turnAnims.GetCurrentAnimatorStateInfo(0).length);
+                    var stateInfo = turnAnims.GetCurrentAnimatorStateInfo(0);
+                    if (stateInfo.IsName("StateChangeEnemy_in") && stateInfo.length > 0f)
+                    {
+                        Debug.Log("HA ENTRADO EN LA ESPERA");
+                        yield return new WaitForSeconds(stateInfo.length);
+                    }
                     OnEnemyTurnStart();
                     
                     
